@@ -64,41 +64,6 @@ $route['role'] = 'Home/role';
 $route['permissionrole/(:num)'] = 'Home/permissionrole/$1';
 $route['user'] = 'Home/user';
 
-// Article
-$route['warna'] = 'Home/warna';
-$route['motif'] = 'Home/motif';
-$route['size'] = 'Home/size';
-$route['sex'] = 'Home/sex';
-$route['lokasi'] = 'Home/lokasi';
-
-// Inventory
-$route['itemmasterdata'] = 'Home/itemmasterdata';
-$route['penerimaanbarang'] = 'Home/penerimaanbarang';
-$route['pengeluaranbarang'] = 'Home/pengeluaranbarang';
-$route['bookingstok'] = 'Home/bookingstok';
-
-// CRM
-$route['sales'] = 'Home/sales';
-$route['customer'] = 'Home/customer';
-
-// General
-$route['perusahaan'] = 'Home/perusahaan';
-$route['bmk'] = 'Home/bmk';
-$route['term'] = 'Home/term';
-$route['xpdc'] = 'Home/xpdc';
-
-// TRX
-$route['pos'] = 'Home/pos';
-$route['return'] = 'Home/return';
-
-// Finance
-$route['CashFlow'] = 'Home/CashFlow';
-
-// Laporan
-
-$route['laporanpenjualan'] = 'Home/laporanpenjualan';
-$route['laporanstok'] = 'Home/laporanstok';
-$route['laporanpenjualanshopee'] = 'Home/laporanpenjualanshopee';
-$route['laporanbookingstok'] = 'Home/laporanbookingstok';
-$route['laporanmutasi'] = 'Home/laporanmutasi';
-$route['laporanlabarugi'] = 'Home/laporanlabarugi';
+// content
+$route['kategori'] = 'Home/kategori';
+$route['buku'] = 'Home/buku';

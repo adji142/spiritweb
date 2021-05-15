@@ -94,115 +94,14 @@ class home extends CI_Controller {
 		$this->load->view('V_Auth/users');
 	}
 
-	// Article
+	// content
 
-	public function warna()
+	public function kategori()
 	{
-		$this->load->view('V_Article/articlewarna');
+		$this->load->view('V_Content/kategoricontent');
 	}
-	public function motif()
+	public function buku()
 	{
-		$this->load->view('V_Article/articlemotif');
-	}
-	public function size()
-	{
-		$this->load->view('V_Article/articlesize');
-	}
-	public function sex()
-	{
-		$this->load->view('V_Article/articlesex');
-	}
-	public function lokasi()
-	{
-		$this->load->view('V_Article/articlelokasi');
-	}
-
-	// Inventory
-
-	public function itemmasterdata()
-	{
-		$this->load->view('V_inventory/itemmasterdata');
-	}
-	public function penerimaanbarang()
-	{
-		$this->load->view('V_inventory/penerimaanbarang');
-	}
-	public function pengeluaranbarang()
-	{
-		$this->load->view('V_inventory/pengeluaranbarang');
-	}
-	public function bookingstok()
-	{
-		$this->load->view('V_inventory/bookingstok');
-	}
-
-	// CRM
-	public function sales()
-	{
-		$this->load->view('V_CRM/sales');
-	}
-	public function customer()
-	{
-		$this->load->view('V_CRM/customer');
-	}
-
-	// General Setting
-	public function perusahaan()
-	{
-		$this->load->view('V_General/perusahaan');
-	}
-	public function bmk()
-	{
-		$this->load->view('V_General/hargabertingkat');
-	}
-	public function term()
-	{
-		$this->load->view('V_General/paymentterm');
-	}
-	public function xpdc()
-	{
-		$this->load->view('V_General/expedisi');
-	}
-
-	// Transaction
-	public function pos()
-	{
-		$this->load->view('V_Trx/POSPenjualan');
-	}
-	public function return()
-	{
-		$this->load->view('V_Trx/ReturPenjualan');
-	}
-
-	// Finance
-	public function CashFlow()
-	{
-		$this->load->view('V_Finance/cahsflow');
-	}
-
-	// Laporan
-	public function laporanpenjualan()
-	{
-		$this->load->view('V_Report/laporanpenjualan');
-	}
-	public function laporanstok()
-	{
-		$this->load->view('V_Report/laporanstok');	
-	}
-	public function laporanpenjualanshopee()
-	{
-		$this->load->view('V_Report/laporanpenjualanecomerce');	
-	}
-	public function laporanbookingstok()
-	{
-		$this->load->view('V_Report/laporanbookingstok');	
-	}
-	public function laporanmutasi()
-	{
-		$this->load->view('V_Report/laporanmutasistok');
-	}
-	public function laporanlabarugi()
-	{
-		$this->load->view('V_Report/laporanlabarugi');
+		$this->load->view('V_Content/buku');
 	}
 }

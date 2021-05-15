@@ -3,15 +3,15 @@
 
  Source Server         : localhost
  Source Server Type    : MySQL
- Source Server Version : 100210
+ Source Server Version : 100419
  Source Host           : localhost:3306
  Source Schema         : spiritbooks
 
  Target Server Type    : MySQL
- Target Server Version : 100210
+ Target Server Version : 100419
  File Encoding         : 65001
 
- Date: 13/05/2021 09:54:13
+ Date: 16/05/2021 00:44:46
 */
 
 SET NAMES utf8mb4;
@@ -35,7 +35,7 @@ CREATE TABLE `permission`  (
   `MobileRoute` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `MobileLogo` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of permission
@@ -44,8 +44,8 @@ INSERT INTO `permission` VALUES (1, 'User Management', NULL, 'fa-user', '0', b'1
 INSERT INTO `permission` VALUES (2, 'Daftar Pengguna Aplikasi', 'Home/user', NULL, '1', b'1', b'0', 1, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (3, 'Daftar Pengguna Aplikasi', NULL, NULL, '1', b'1', b'0', 2, b'0', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (4, 'Management Content', NULL, 'fa-folder-open', '0', b'1', b'0', 3, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (5, 'Kategori Buku', NULL, NULL, '4', b'1', b'0', 4, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (6, 'Daftar Buku', NULL, NULL, '4', b'1', b'0', 5, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (5, 'Kategori Buku', 'Home/kategori', NULL, '4', b'1', b'0', 4, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (6, 'Daftar Buku', 'Home/buku', NULL, '4', b'1', b'0', 5, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (7, 'Transaksi', NULL, 'fa-briefcase', '0', b'1', b'0', 6, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (8, 'Daftar Media Pembayaran', NULL, NULL, '7', b'1', b'0', 7, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (9, 'Daftar Transaksi', NULL, NULL, '7', b'1', b'0', 8, b'1', NULL, NULL, NULL);
@@ -60,7 +60,7 @@ DROP TABLE IF EXISTS `permissionrole`;
 CREATE TABLE `permissionrole`  (
   `roleid` int(11) NOT NULL,
   `permissionid` int(11) NOT NULL
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of permissionrole
@@ -98,7 +98,7 @@ CREATE TABLE `roles`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `rolename` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of roles
@@ -109,6 +109,48 @@ INSERT INTO `roles` VALUES (3, 'Publisher');
 INSERT INTO `roles` VALUES (4, 'User');
 
 -- ----------------------------
+-- Table structure for tbuku
+-- ----------------------------
+DROP TABLE IF EXISTS `tbuku`;
+CREATE TABLE `tbuku`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `KodeItem` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `kategoriID` int(11) NOT NULL,
+  `judul` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `releasedate` datetime(0) NOT NULL,
+  `releaseperiod` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `picture` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `picture_base64` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `harga` double(19, 2) NOT NULL,
+  `ppn` double(19, 2) NOT NULL,
+  `otherprice` double(10, 2) NOT NULL,
+  `epub` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `epub_base64` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `avgrate` double(10, 2) NOT NULL DEFAULT 0,
+  `status_publikasi` int(255) NOT NULL COMMENT '1: Publish, 2:draft,3:discard,0:pasive',
+  `createdby` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `createdon` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for tkategori
+-- ----------------------------
+DROP TABLE IF EXISTS `tkategori`;
+CREATE TABLE `tkategori`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `NamaKategori` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tkategori
+-- ----------------------------
+INSERT INTO `tkategori` VALUES (1, 'Junior');
+INSERT INTO `tkategori` VALUES (2, 'go back 2');
+
+-- ----------------------------
 -- Table structure for userrole
 -- ----------------------------
 DROP TABLE IF EXISTS `userrole`;
@@ -116,7 +158,7 @@ CREATE TABLE `userrole`  (
   `userid` int(11) NOT NULL,
   `roleid` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`userid`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of userrole
@@ -157,7 +199,7 @@ CREATE TABLE `users`  (
   `HardwareID` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `ImageProfile` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 46 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 46 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of users
