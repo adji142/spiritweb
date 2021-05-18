@@ -36,20 +36,27 @@ class C_Buku extends CI_Controller {
 
 		$SQL ='';
 
-		$SQL .= '
+		$SQL .= "
 				SELECT 
 					a.*,
-					b.NamaKategori
+					b.NamaKategori,
+					CASE WHEN a.status_publikasi = 1 THEN 'Publish' ELSE 
+						CASE WHEN a.status_publikasi = 2 THEN 'Draft' ELSE  
+							CASE WHEN a.status_publikasi = 3 THEN 'Discard' ELSE 
+								CASE WHEN a.status_publikasi = 0 THEN 'Pasive' ELSE '' END
+							END 
+						END 
+					END Status_
 				FROM tbuku a
 				LEFT JOIN tkategori b on a.kategoriID = b.id
-			';
+			";
 
 		if ($id != '') {
-			$SQL .= ' WHERE a.id '.$id.' ';
+			$SQL .= "WHERE a.KodeItem = '".$id."'";
 		}
 
 		if ($kategoriID != '') {
-			$SQL .= ' and a.kategoriID '.$kategoriID.' ';
+			$SQL .= " and a.kategoriID ='".$kategoriID."' ";
 		}
 
 		if ($script != '' ) {
@@ -82,15 +89,17 @@ class C_Buku extends CI_Controller {
 		$judul = $this->input->post('judul');
 		$description = $this->input->post('description');
 		$releasedate = $this->input->post('releasedate');
-		$releaseperiod = $this->input->post('releaseperiod');
+		$releaseperiod = strval(date('Y',strtotime($releasedate)).''.date('m',strtotime($releasedate)));
 		// $picture = $this->input->post('picture');
 		$picture_base64 = $this->input->post('picture_base64');
 		$harga = $this->input->post('harga');
 		$ppn = $this->input->post('ppn');
 		$otherprice = $this->input->post('otherprice');
 		// $epub = $this->input->post('epub');
-		$epub_base64 = $this->input->post('epub_base64');
-		$avgrate = $this->input->post('avgrate');
+		// $epub_base64 = $this->input->post('epub_base64');
+		$epub_base64 = '';
+		$avgrate = 0;
+		// $avgrate = $this->input->post('avgrate');
 		$status_publikasi = $this->input->post('status_publikasi');
 		$createdby = $this->input->post('createdby');
 		$createdon = $this->input->post('createdon');
@@ -104,7 +113,7 @@ class C_Buku extends CI_Controller {
 			$date = date("ymd");
 	        $config['upload_path'] = './localData/image';
 	        $config['max_size'] = '60000';
-	        $config['allowed_types'] = 'jpg|png|jpeg';
+	        $config['allowed_types'] = 'png';
 	        $config['overwrite'] = TRUE;
 	        $config['remove_spaces'] = TRUE;
 	        $config['file_name'] = str_replace(' ', '', $KodeItem);
@@ -112,39 +121,60 @@ class C_Buku extends CI_Controller {
 	        $this->load->library('upload', $config);
 	        $this->upload->initialize($config);
 
-	        if(!$this->upload->do_upload('picture')) {
-	            $data['message'] = $this->upload->display_errors();
+	        if(!$this->upload->do_upload('Attachment')) {
+	        	if ($formtype == 'edit' || $formtype == 'delete' || $formtype == 'Publish') {
+	        		$x='';
+	        	}
+	        	else{
+	        		$x = $this->upload->data();
+		        	// var_dump($x);
+		        	$data['success'] = false;
+		            $data['message'] = $this->upload->display_errors();
+		            goto jumpx;
+	        	}
 	        }else{
 	            $dataDetails = $this->upload->data();
-	            $ext = implode('.',$dataDetails['file_name']);
-	            $picture_ext = $ext[1];
+	            $picture_ext = $dataDetails['file_ext'];
 	        }	
 		} catch (Exception $e) {
+			$data['success'] = false;
 			$data['message'] = $e->getMessage();
+			goto jumpx;
 		}
 
 		// Epub
 
 		try {
-			unset($config_epub); 
+			unset($config); 
 			$date = date("ymd");
-	        $config_epub['upload_path'] = './localData/epub';
-	        $config_epub['max_size'] = '60000';
-	        $config_epub['allowed_types'] = 'epub';
-	        $config_epub['overwrite'] = TRUE;
-	        $config_epub['remove_spaces'] = TRUE;
-	        $config_epub['file_name'] = str_replace(' ', '', $KodeItem);
+	        $config['upload_path'] = './localData/epub';
+	        $config['max_size'] = '60000';
+	        $config['allowed_types'] = 'epub';
+	        $config['overwrite'] = TRUE;
+	        $config['remove_spaces'] = TRUE;
+	        $config['file_name'] = str_replace(' ', '', $KodeItem);
 
-	        $this->load->library('upload', $config_epub);
-	        $this->upload->initialize($config_epub);
+	        $this->load->library('upload', $config);
+	        $this->upload->initialize($config);
 
-	        if(!$this->upload->do_upload('epub')) {
-	            $data['message'] = $this->upload->display_errors();
+	        if(!$this->upload->do_upload('Attachment_epub')) {
+	        	if ($formtype == 'edit' || $formtype == 'delete' || $formtype == 'Publish') {
+	        		$x='';
+	        	}
+	        	else{
+	        		$x = $this->upload->data();
+		        	// var_dump($x);
+		        	$data['success'] = false;
+		            $data['message'] = $this->upload->display_errors();
+		            goto jumpx;
+	        	}
 	        }else{
 	            $videoDetails = $this->upload->data();
 	        }	
 		} catch (Exception $e) {
+			$data['success'] = false;
 			$data['message'] = $e->getMessage();
+			goto jumpx;
 		}
 
 		$param = array(
@@ -154,11 +184,11 @@ class C_Buku extends CI_Controller {
 			'description' => $description,
 			'releasedate' => $releasedate,
 			'releaseperiod' => $releaseperiod,
-			'picture' => base_url().'localData/picture/'.str_replace(' ', '', $KodeItem).'.'.$ext,
+			'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).'.PNG',
 			'picture_base64' => $picture_base64,
-			'harga' => $harga,
-			'ppn' => $ppn,
-			'otherprice' => $otherprice,
+			'harga' => str_replace(',', '', $harga),
+			'ppn' => str_replace(',', '', $ppn),
+			'otherprice' => str_replace('', '', $otherprice),
 			'epub' => base_url().'localData/epub/'.str_replace(' ', '', $KodeItem).'.epub',
 			'epub_base64' => $epub_base64,
 			'avgrate' => $avgrate,
@@ -188,7 +218,7 @@ class C_Buku extends CI_Controller {
 		}
 		elseif ($formtype == 'edit') {
 			try {
-				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('id'=> $id),'tbuku');
+				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('KodeItem'=> $KodeItem),'tbuku');
 				if ($rs) {
 					$data['success'] = true;
 				}
@@ -203,7 +233,23 @@ class C_Buku extends CI_Controller {
 		}
 		elseif ($formtype == 'delete') {
 			try {
-				$SQL = "UPDATE ".'tbuku'." SET isActive = 0 WHERE id = '".$id."'";
+				$SQL = "UPDATE ".'tbuku'." SET status_publikasi = 0 WHERE KodeItem = '".$KodeItem."'";
+				$rs = $this->db->query($SQL);
+				if ($rs) {
+					$data['success'] = true;
+				}
+				else{
+					$undone = $this->db->error();
+					$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+				}
+			} catch (Exception $e) {
+				$data['success'] = false;
+				$data['message'] = "Gagal memproses data ". $e->getMessage();
+			}
+		}
+		elseif ($formtype == 'Publish') {
+			try {
+				$SQL = "UPDATE ".'tbuku'." SET status_publikasi = 1 WHERE KodeItem = '".$KodeItem."'";
 				$rs = $this->db->query($SQL);
 				if ($rs) {
 					$data['success'] = true;
@@ -221,6 +267,7 @@ class C_Buku extends CI_Controller {
 			$data['success'] = false;
 			$data['message'] = "Invalid Form Type";
 		}
+		jumpx:
 		echo json_encode($data);
 	}
 	public function Getindex()

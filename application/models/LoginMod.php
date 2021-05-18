@@ -23,13 +23,13 @@ class LoginMod extends CI_Model
     {
         $sql = "
             SELECT 
-                a.id,a.username,a.nama,a.email,c.rolename
+                a.id,a.username,a.nama,a.email,c.id roleid ,c.rolename
             FROM users a
             LEFT JOIN userrole b on a.id = b.userid
             LEFT JOIN roles c on c.id = b.roleid
         ";
         if ($id != "") {
-            $sql .= "where a.id = $id";
+            $sql .= "where a.username = '$id'";
         }
         return $this->db->query($sql);
     }

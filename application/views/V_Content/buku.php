@@ -95,10 +95,10 @@
                     <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Cover <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
-                      <input type="file" id="Attachment" name="Attachment" accept=".jpg , .jpeg , .png" />
+                      <input type="file" id="Attachment" name="Attachment" accept=".png" />
                       <img src="" id="profile-img-tag" width="200" />
-                      <textarea id="picture_base64" name="picture_base64"></textarea>
-                      <!-- <textarea id="Image" name="Image" style="display: none;"></textarea> -->
+                      <!-- <textarea id="picture_base64" name="picture_base64"></textarea> -->
+                      <textarea id="Image" name="Image" style="display: none;"></textarea>
                     </div>
                   </div>
 
@@ -132,7 +132,6 @@
                     <div class="col-md-6 col-sm-6 ">
                       <input type="file" id="Attachment_epub" name="Attachment_epub" accept=".epub" />
                       <!-- <textarea id="epub_base64" name="epub_base64"></textarea> -->
-                      <textarea id="Image" name="Image" style="display: none;"></textarea>
                     </div>
                   </div>
 
@@ -170,13 +169,15 @@
     var _URLePub = window.URL || window.webkitURL;
 
     $(document).ready(function () {
+      $('#status_publikasi').val(2);
+
       var where_field = '';
       var where_value = '';
       var table = 'users';
 
       $.ajax({
         type: "post",
-        url: "<?=base_url()?>content/C_Buku/Read",
+        url: "<?=base_url()?>C_Buku/Read",
         data: {'id':''},
         dataType: "json",
         success: function (response) {
@@ -188,14 +189,36 @@
       $('#btn_Save').text('Tunggu Sebentar.....');
       $('#btn_Save').attr('disabled',true);
 
-      e.preventDefault();
-      var me = $(this);
+      var id = $('#id').val();
+      var KodeItem = $('#KodeItem').val();
+      var kategoriID = $('#kategoriID').val();
+      var judul = $('#judul').val();
+      var description = $('#description').val();
+      var releasedate = $('#releasedate').val();
+      var releaseperiod = $('#releaseperiod').val();
+      var picture = $('#Attachment').prop('files')[0];
+      var picture_base64 = $('#picture_base64').val();
+      var harga = $('#harga').val().replace(',','');
+      var ppn = $('#ppn').val().replace(',','');
+      var otherprice = $('#otherprice').val().replace(',','');
+      var epub = $('#Attachment_epub').prop('files')[0];
+      var epub_base64 = '';
+      var avgrate = 0;
+      var status_publikasi = $('#status_publikasi').val();
+      var formtype = $('#formtype').val();
 
+      e.preventDefault();
+      // var me = $(this);
+      var form_data = new FormData(this);
+
+      console.log(form_data);
       $.ajax({
-          type    :'post',
-          url     : '<?=base_url()?>content/C_Kategori/CRUD',
-          data    : me.serialize(),
+          type    : 'post',
+          url     : '<?=base_url()?>C_Buku/CRUD',
+          data    : form_data,
           dataType: 'json',
+          processData: false,
+          contentType: false,
           success : function (response) {
             if(response.success == true){
               $('#modal_').modal('toggle');
@@ -250,30 +273,6 @@
     $('.close').click(function() {
       location.reload();
     });
-    function GetData(id) {
-      var where_field = 'id';
-      var where_value = id;
-      var table = 'users';
-      $.ajax({
-            type: "post",
-            url: "<?=base_url()?>content/C_Kategori/Read",
-            data: {'id':id},
-            dataType: "json",
-            success: function (response) {
-              $.each(response.data,function (k,v) {
-                console.log(v.KelompokUsaha);
-                // $('#KodePenyakit').val(v.KodePenyakit).change;
-                $('#id').val(v.id);
-                $('#NamaKategori').val(v.NamaKategori);
-                // $('#Nilai').val(v.Nilai);
-
-                $('#formtype').val("edit");
-
-                $('#modal_').modal('show');
-              });
-            }
-          });
-    }
     function bindGrid(data) {
 
       $("#gridContainer").dxDataGrid({
@@ -291,8 +290,8 @@
             editing: {
                 mode: "row",
                 allowAdding:true,
-                allowUpdating: true,
-                allowDeleting: true,
+                // allowUpdating: true,
+                // allowDeleting: true,
                 texts: {
                     confirmDeleteMessage: ''  
                 }
@@ -343,10 +342,54 @@
                     allowEditing:false
                 },
                 {
-                    dataField: "status_publikasi",
+                    dataField: "Status_",
                     caption: "Publikasi",
                     allowEditing:false
                 },
+                {
+                  dataField: "FileItem",
+                  caption : "Action",
+                  allowEditing : false,
+                  cellTemplate: function(cellElement, cellInfo) {
+                    var html = "";
+                    var akses = 0;
+                    var userid = "<?php echo $this->session->userdata('username'); ?>";
+                    // 2 admin
+                    // 3 Publisher
+
+                    // $.ajax({
+                    //   type: "post",
+                    //   url: "<?=base_url()?>Auth/GetAccess",
+                    //   data: {'userid':userid},
+                    //   dataType: "json",
+                    //   success: function (response) {
+                    //     if (response.success == true) {
+                    //       // console.log(response.data[0]['roleid']);
+                    //       akses = response.data[0]['roleid']
+                    //       if (akses == 2) {
+                    //         html = ""
+                    //       }
+                    //     }
+                    //   }
+                    // });
+                    // html += "<button class='btn btn-round btn-sm btn-secondary' onClick = 'Review("+cellInfo.data.KodeItem+")'>Preview</button>";
+                    html += "<button class='btn btn-round btn-sm btn-warning' onClick = 'btAction("+cellInfo.data.KodeItem+",1)'>Edit</button>";
+                    if (cellInfo.data.Status_ == 'Publish') {
+                      html += "<button class='btn btn-round btn-sm btn-success' disabled onClick = 'btAction("+cellInfo.data.KodeItem+",2)'>Publish</button>";
+                      html += "<button class='btn btn-round btn-sm btn-danger' onClick = 'btAction("+cellInfo.data.KodeItem+",3)'>Take Down</button>"; 
+                    }
+                    else if (cellInfo.data.Status_ == 'Pasive') {
+                      html += "<button class='btn btn-round btn-sm btn-success' onClick = 'btAction("+cellInfo.data.KodeItem+",2)'>Publish</button>";
+                      html += "<button class='btn btn-round btn-sm btn-danger' disabled onClick = 'btAction("+cellInfo.data.KodeItem+",3)'>Take Down</button>"; 
+                    }
+                    else if (cellInfo.data.Status_ == 'Draft') {
+                      html += "<button class='btn btn-round btn-sm btn-success' disabled onClick = 'btAction("+cellInfo.data.KodeItem+",2)'>Publish</button>";
+                      html += "<button class='btn btn-round btn-sm btn-danger' disabled onClick = 'btAction("+cellInfo.data.KodeItem+",3)'>Take Down</button>"; 
+                    }
+
+                    cellElement.append(html);
+                  }
+                }
                 // {
                 //     dataField: "NamaPenyakit",
                 //     caption: "Nama Penyakit",
@@ -365,7 +408,7 @@
               $.ajax({
                   async:false,
                   type: "post",
-                  url: "<?=base_url()?>content/C_Buku/GetIndex",
+                  url: "<?=base_url()?>C_Buku/GetIndex",
                   data: {'Kolom':'KodeItem','Table':'tbuku','Prefix':'1'},
                   dataType: "json",
                   success: function (response) {
@@ -505,4 +548,147 @@
         return x1 + x2;
     }
   });
+  function GetData(id) {
+    var where_field = 'id';
+    var where_value = id;
+    var table = 'users';
+    $.ajax({
+      type: "post",
+      url: "<?=base_url()?>C_Buku/Read",
+      data: {'id':id},
+      dataType: "json",
+      success: function (response) {
+        $.each(response.data,function (k,v) {
+          $('#KodeItem').val(v.KodeItem);
+          $('#kategoriID').val(v.kategoriID).change();
+          $('#judul').val(v.judul);
+          $('#description').val(v.description);
+          $('#releasedate').val(v.releasedate);
+          $('#releaseperiod').val(v.releaseperiod);
+          // $('#picture').val(v.picture);
+          $('#profile-img-tag').attr('src', v.picture);
+          $('#picture_base64').val(v.picture_base64);
+          $('#harga').val(v.harga);
+          $('#ppn').val(v.ppn);
+          $('#otherprice').val(v.otherprice);
+          $('#status_publikasi').val(v.status_publikasi).change();
+          
+          $('#formtype').val("edit");
+
+          $('#modal_').modal('show');
+        });
+      }
+    });
+  }
+
+  function btAction(id, action) {
+    // 1 edit
+    // 2 publish
+    // 3 delete
+
+    switch(action){
+      case 1:
+        GetData(id);
+        // console.log(id);
+        break;
+      case 2:
+        Swal.fire({
+          title: 'Apakah anda yakin?',
+          text: "anda akan Publish Item ini !",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Publish!'
+        }).then((result) => {
+          if (result.value) {
+            var table = 'app_setting';
+            var field = 'id';
+            var value = id;
+
+            $.ajax({
+                type    :'post',
+                url     : '<?=base_url()?>C_Buku/CRUD',
+                data    : {'KodeItem':id,'formtype':'Publish'},
+                dataType: 'json',
+                success : function (response) {
+                  if(response.success == true){
+                    Swal.fire(
+                  'Deleted!',
+                  'Your file has been deleted.',
+                  'success'
+                ).then((result)=>{
+                      location.reload();
+                    });
+                  }
+                  else{
+                    Swal.fire({
+                      type: 'error',
+                      title: 'Woops...',
+                      text: response.message,
+                      // footer: '<a href>Why do I have this issue?</a>'
+                    }).then((result)=>{
+                      location.reload();
+                    });
+                  }
+                }
+              });
+            
+          }
+          else{
+            location.reload();
+          }
+        })
+        break;
+      case 3:
+        Swal.fire({
+          title: 'Apakah anda yakin?',
+          text: "anda akan Take Down Item ini !",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Take Down'
+        }).then((result) => {
+          if (result.value) {
+            var table = 'app_setting';
+            var field = 'id';
+            var value = id;
+
+            $.ajax({
+                type    :'post',
+                url     : '<?=base_url()?>C_Buku/CRUD',
+                data    : {'KodeItem':id,'formtype':'delete'},
+                dataType: 'json',
+                success : function (response) {
+                  if(response.success == true){
+                    Swal.fire(
+                  'Deleted!',
+                  'Your file has been deleted.',
+                  'success'
+                ).then((result)=>{
+                      location.reload();
+                    });
+                  }
+                  else{
+                    Swal.fire({
+                      type: 'error',
+                      title: 'Woops...',
+                      text: response.message,
+                      // footer: '<a href>Why do I have this issue?</a>'
+                    }).then((result)=>{
+                      location.reload();
+                    });
+                  }
+                }
+              });
+            
+          }
+          else{
+            location.reload();
+          }
+        })
+        break;
+    }
+  }
 </script>

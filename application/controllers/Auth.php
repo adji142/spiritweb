@@ -270,4 +270,24 @@ class Auth extends CI_Controller {
 
 		echo json_encode($data);
 	}
+	public function GetAccess()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array(),'decript'=>'');
+
+		$userid = $this->input->post('userid');
+
+		$rs = $this->LoginMod->GetUser($userid);
+
+		if ($rs) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		else{
+			$undone = $this->db->error();
+			$data['success'] = false;
+			$data['
+			message'] = $undone['message'];
+		}
+		echo json_encode($data);
+	}
 }
