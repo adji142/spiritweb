@@ -67,3 +67,12 @@ $route['user'] = 'Home/user';
 // content
 $route['kategori'] = 'Home/kategori';
 $route['buku'] = 'Home/buku';
+
+// API Kategori
+
+$route['APIkategori'] = 'API/API_Kategori/GetKategori';
+
+
+// API Buku
+
+$route['APIbuku'] = 'API/API_Buku/GetBuku';
