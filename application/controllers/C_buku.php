@@ -77,9 +77,9 @@ class C_Buku extends CI_Controller {
 	}
 	public function CRUD()
 	{
-		ini_set('memory_limit', '32M');
-		ini_set('upload_max_filesize', '200M');
-		ini_set('post_max_size', '300M');
+		ini_set('memory_limit', '1000M');
+		ini_set('upload_max_filesize', '1000M');
+		ini_set('post_max_size', '1000M');
 
 		$data = array('success' => false ,'message'=>array());
 

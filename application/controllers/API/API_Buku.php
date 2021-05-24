@@ -20,15 +20,31 @@ class API_Buku extends CI_Controller {
 		$KodeKategori 	= $this->input->post('KodeKategori');
 		$script 		= $this->input->post('script');
 		$ordering 		= $this->input->post('ordering');
+		$publikasi 		= $this->input->post('publikasi');
+		$gratis 		= $this->input->post('gratis');
+		$page 			= $this->input->post('page');
+
+		$maxperpage 	= 10;
 
 		$SQL = "";
 		if ($token != '') {
+
+			$SQL .= "SELECT * FROM ( SELECT 
+						id,KodeItem,0 kategoriID,judul,description,releasedate,
+						releaseperiod,picture,harga,ppn,otherprice,epub,
+						avgrate,status_publikasi
+					FROM tbuku WHERE harga = 0 UNION ALL ";
+
 			$SQL .= "SELECT 
 						id,KodeItem,kategoriID,judul,description,releasedate,
 						releaseperiod,picture,harga,ppn,otherprice,epub,
 						avgrate,status_publikasi
-					FROM tbuku WHERE status_publikasi = 1 ";
-			if ($kodeBuku != '') {
+					FROM tbuku)x WHERE 1 = 1 ";
+
+			if ($publikasi == "1" ) {
+				$SQL .= " AND status_publikasi = ".$publikasi." ";
+			}
+			if ($KodeKategori != '') {
 				$SQL .= " AND kategoriID = ".$KodeKategori." ";
 			}
 
@@ -40,6 +56,10 @@ class API_Buku extends CI_Controller {
 				$SQL .= " AND ".$script." ";
 			}
 
+			if ($gratis == "1") {
+				$SQL .= " AND harga = 0 ";
+			}
+
 			if ($ordering == '') {
 				$SQL .= " ORDER BY releasedate DESC ";
 			}
@@ -47,6 +67,8 @@ class API_Buku extends CI_Controller {
 				$SQL .= " ORDER BY ".$ordering;
 			}
 
+			$SQL .= "LIMIT ".$page.",".$maxperpage.";";
+			// var_dump($SQL);
 			$rs = $this->db->query($SQL);
 			if ($rs) {
 				$data['success'] = true;
@@ -62,6 +84,6 @@ class API_Buku extends CI_Controller {
 			$data['message'] = 'Invalid Token';
 		}
 
-		echo json_encode($data);
+		echo json_encode($rs->result());
 	}
 }

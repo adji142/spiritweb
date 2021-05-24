@@ -76,7 +76,7 @@
 
       $.ajax({
         type: "post",
-        url: "<?=base_url()?>content/C_Kategori/Read",
+        url: "<?=base_url()?>C_Kategori/Read",
         data: {'id':''},
         dataType: "json",
         success: function (response) {
@@ -93,7 +93,7 @@
 
       $.ajax({
             type    :'post',
-            url     : '<?=base_url()?>content/C_Kategori/CRUD',
+            url     : '<?=base_url()?>C_Kategori/CRUD',
             data    : me.serialize(),
             dataType: 'json',
             success : function (response) {
@@ -133,7 +133,7 @@
       var table = 'users';
       $.ajax({
             type: "post",
-            url: "<?=base_url()?>content/C_Kategori/Read",
+            url: "<?=base_url()?>C_Kategori/Read",
             data: {'id':id},
             dataType: "json",
             success: function (response) {
@@ -245,7 +245,7 @@
 
                   $.ajax({
                       type    :'post',
-                      url     : '<?=base_url()?>content/C_Kategori/CRUD',
+                      url     : '<?=base_url()?>C_Kategori/CRUD',
                       data    : {'id':id,'formtype':'delete'},
                       dataType: 'json',
                       success : function (response) {

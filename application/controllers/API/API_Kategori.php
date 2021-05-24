@@ -17,11 +17,13 @@ class API_Kategori extends CI_Controller {
 		$token = $this->input->post('token');
 
 		$page = $this->input->post('page');
-		$maxperpage = 5;
+		$maxperpage = 2;
 
 		if ($token != '') {
-			$SQL = "SELECT * FROM tkategori LIMIT ".$page.",".$maxperpage.";";
-
+			$SQL = "SELECT * FROM (SELECT 0 id,'GRATIS !!' NamaKategori, 1 ShowHomePage FROM DUAL UNION ALL ";
+			$SQL .= "SELECT * FROM tkategori)x ";
+			// LIMIT ".$page.",".$maxperpage.";
+			// var_dump($SQL);
 			$rs = $this->db->query($SQL);
 
 			if ($rs) {

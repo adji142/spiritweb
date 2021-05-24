@@ -98,15 +98,20 @@
                       <input type="file" id="Attachment" name="Attachment" accept=".png" />
                       <img src="" id="profile-img-tag" width="200" />
                       <!-- <textarea id="picture_base64" name="picture_base64"></textarea> -->
-                      <textarea id="Image" name="Image" style="display: none;"></textarea>
+                      <textarea id="picture_base64" name="picture_base64" style="display: none;"></textarea>
                     </div>
                   </div>
 
                   <div class="item form-group">
                     <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Harga <span class="required">*</span>
                     </label>
-                    <div class="col-md-6 col-sm-6 ">
+                    <div class="col-md-5 col-sm-5 ">
                       <input type="text" name="harga" id="harga" required="" placeholder="Harga" class="form-control ">
+                    </div>
+                    <label class="col-form-label col-md-2 col-sm-2 label-align" for="first-name">Gratis <span class="required"></span>
+                    </label>
+                    <div class="col-md-2 col-sm-2 ">
+                      <input type="checkbox" name="Gratis" id="Gratis" class="form-control" value="1">
                     </div>
                   </div>
 
@@ -184,6 +189,25 @@
           bindGrid(response.data);
         }
       });
+    });
+    $('#Gratis').click(function () {
+
+      if ($("#Gratis").prop("checked") == true) {
+        $('#harga').val(0);
+        $('#ppn').val(0);
+        $('#otherprice').val(0);
+
+        $("#harga").prop('disabled', true);
+        $("#ppn").prop('disabled', true);
+        $("#otherprice").prop('disabled', true);
+      }
+      else{
+        $("#harga").prop('disabled', false);
+        $("#ppn").prop('disabled', false);
+        $("#otherprice").prop('disabled', false);
+      }
+
+      // console.log($("#Gratis").prop("checked"));
     });
     $('#post_').submit(function (e) {
       $('#btn_Save').text('Tunggu Sebentar.....');
@@ -383,7 +407,7 @@
                       html += "<button class='btn btn-round btn-sm btn-danger' disabled onClick = 'btAction("+cellInfo.data.KodeItem+",3)'>Take Down</button>"; 
                     }
                     else if (cellInfo.data.Status_ == 'Draft') {
-                      html += "<button class='btn btn-round btn-sm btn-success' disabled onClick = 'btAction("+cellInfo.data.KodeItem+",2)'>Publish</button>";
+                      html += "<button class='btn btn-round btn-sm btn-success' onClick = 'btAction("+cellInfo.data.KodeItem+",2)'>Publish</button>";
                       html += "<button class='btn btn-round btn-sm btn-danger' disabled onClick = 'btAction("+cellInfo.data.KodeItem+",3)'>Take Down</button>"; 
                     }
 
@@ -573,6 +597,21 @@
           $('#otherprice').val(v.otherprice);
           $('#status_publikasi').val(v.status_publikasi).change();
           
+          if (v.harga > 0) {
+            $("#harga").prop('disabled', false);
+            $("#ppn").prop('disabled', false);
+            $("#otherprice").prop('disabled', false);
+
+            $("#Gratis").prop('checked', false);
+          }
+          else{
+            $("#harga").prop('disabled', true);
+            $("#ppn").prop('disabled', true);
+            $("#otherprice").prop('disabled', true);
+
+            $("#Gratis").prop('checked', true);
+          }
+
           $('#formtype').val("edit");
 
           $('#modal_').modal('show');
