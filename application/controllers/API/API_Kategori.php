@@ -20,8 +20,18 @@ class API_Kategori extends CI_Controller {
 		$maxperpage = 2;
 
 		if ($token != '') {
-			$SQL = "SELECT * FROM (SELECT 0 id,'GRATIS !!' NamaKategori, 1 ShowHomePage FROM DUAL UNION ALL ";
-			$SQL .= "SELECT * FROM tkategori)x ";
+			$SQL = "SELECT x.id,x.NamaKategori, CASE WHEN x.id = 0 THEN 1 ELSE COALESCE(y.jml,0) END jml FROM (SELECT 0 id,'GRATIS !!' NamaKategori, 1 ShowHomePage FROM DUAL UNION ALL ";
+			$SQL .= "SELECT * FROM tkategori) x ";
+
+			$SQL .= " LEFT JOIN (
+							SELECT 
+								a.kategoriID,
+								count(*) jml
+							FROM tbuku a
+							where status_publikasi = 1
+							group by a.kategoriID
+						) y on x.id = y.kategoriID
+					" ;
 			// LIMIT ".$page.",".$maxperpage.";
 			// var_dump($SQL);
 			$rs = $this->db->query($SQL);
@@ -39,6 +49,6 @@ class API_Kategori extends CI_Controller {
 			$data['message'] = 'Invalid Token';
 		}
 
-		echo json_encode($data);
+		echo json_encode($rs->result());
 	}
 }
