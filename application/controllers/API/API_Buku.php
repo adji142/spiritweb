@@ -23,13 +23,14 @@ class API_Buku extends CI_Controller {
 		$publikasi 		= $this->input->post('publikasi');
 		$gratis 		= $this->input->post('gratis');
 		$page 			= $this->input->post('page');
+		$kriteria 		= $this->input->post('kriteria');
 
 		$maxperpage 	= 10;
 
 		$SQL = "";
 		if ($token != '') {
 
-			$SQL .= "SELECT * FROM ( SELECT 
+			$SQL .= "SELECT x.*, CASE WHEN x.kategoriID = 0 THEN 'Gratis' ELSE y.NamaKategori END NamaKategori FROM ( SELECT 
 						id,KodeItem,0 kategoriID,judul,description,releasedate,
 						releaseperiod,picture,harga,ppn,otherprice,epub,
 						avgrate,status_publikasi
@@ -39,7 +40,9 @@ class API_Buku extends CI_Controller {
 						id,KodeItem,kategoriID,judul,description,releasedate,
 						releaseperiod,picture,harga,ppn,otherprice,epub,
 						avgrate,status_publikasi
-					FROM tbuku)x WHERE 1 = 1 ";
+					FROM tbuku)x 
+					LEFT JOIN tkategori y on x.kategoriID = y.id
+					WHERE 1 = 1 ";
 
 			if ($publikasi == "1" ) {
 				$SQL .= " AND status_publikasi = ".$publikasi." ";
@@ -60,12 +63,17 @@ class API_Buku extends CI_Controller {
 				$SQL .= " AND harga = 0 ";
 			}
 
+			if ($kriteria != "") {
+				$SQL .= " AND CONCAT(x.judul,' ', y.NamaKategori) LIKE '%".$kriteria."%'";
+			}
+
 			if ($ordering == '') {
 				$SQL .= " ORDER BY releasedate DESC ";
 			}
 			else{
 				$SQL .= " ORDER BY ".$ordering;
 			}
+
 
 			$SQL .= "LIMIT ".$page.",".$maxperpage.";";
 			// var_dump($SQL);
