@@ -25,7 +25,7 @@ class API_Buku extends CI_Controller {
 		$page 			= $this->input->post('page');
 		$kriteria 		= $this->input->post('kriteria');
 
-		$maxperpage 	= 10;
+		$maxperpage 	= 4;
 
 		$SQL = "";
 		if ($token != '') {
@@ -75,7 +75,7 @@ class API_Buku extends CI_Controller {
 			}
 
 
-			$SQL .= "LIMIT ".$page.",".$maxperpage.";";
+			$SQL .= "LIMIT ".$page * $maxperpage.",".$maxperpage.";";
 			// var_dump($SQL);
 			$rs = $this->db->query($SQL);
 			if ($rs) {
