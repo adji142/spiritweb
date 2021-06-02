@@ -68,6 +68,13 @@ $route['user'] = 'Home/user';
 $route['kategori'] = 'Home/kategori';
 $route['buku'] = 'Home/buku';
 
+// Pembayaran
+$route['metodepembayaran'] = 'Home/metodepembayaran';
+
+
+
+
+// ======================================== API ========================================
 // API Kategori
 
 $route['APIkategori'] = 'API/API_Kategori/GetKategori';
@@ -76,3 +83,23 @@ $route['APIkategori'] = 'API/API_Kategori/GetKategori';
 // API Buku
 
 $route['APIbuku'] = 'API/API_Buku/GetBuku';
+
+
+// API Payment
+
+$route['APIToken'] = 'API/API_Payment/MakePayment';
+$route['APIPaymentResult'] = 'API/API_Payment/CheckTransaction';
+$route['APINotif'] = 'API/API_Payment/GetNotif';
+$route['APIMetodeBayar'] = 'API/API_Payment/getMetodePembayaran';
+$route['APIAddTransaksi'] = 'API/API_Payment/RecordPayment';
+$route['APIHistory'] = 'API/API_Payment/getPaymentHistory';
+
+// API Auth
+$route['APIAUTHUname'] = 'API/API_auth/FindUserName';
+$route['APIAUTHEmail'] = 'API/API_auth/FindEmail';
+$route['APIAUTHReg'] = 'API/API_auth/RegisterUser';
+$route['APIAUTHLogin'] = 'API/API_auth/Log_Pro';
+$route['APIAUTHChangePass'] = 'API/API_auth/ChangePassword';
+$route['APIAUTHChangeImage'] = 'API/API_auth/ChangeImage';
+$route['APIAUTHUserInfo'] = 'API/API_auth/GetUserInfo';
+$route['APIAUTHUserInformation'] = 'API/API_auth/send_email';

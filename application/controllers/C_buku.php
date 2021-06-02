@@ -97,7 +97,7 @@ class C_Buku extends CI_Controller {
 		$otherprice = $this->input->post('otherprice');
 		// $epub = $this->input->post('epub');
 		// $epub_base64 = $this->input->post('epub_base64');
-		$epub_base64 = '';
+		// $Attachment_epub_full = $this->input->post('Attachment_epub_full');
 		$avgrate = 0;
 		// $avgrate = $this->input->post('avgrate');
 		$status_publikasi = $this->input->post('status_publikasi');
@@ -142,7 +142,7 @@ class C_Buku extends CI_Controller {
 			goto jumpx;
 		}
 
-		// Epub
+		// Epub sample
 
 		try {
 			unset($config); 
@@ -177,6 +177,41 @@ class C_Buku extends CI_Controller {
 			goto jumpx;
 		}
 
+		// Epub full
+
+		try {
+			unset($config); 
+			$date = date("ymd");
+	        $config['upload_path'] = './localData/epub';
+	        $config['max_size'] = '60000';
+	        $config['allowed_types'] = 'epub';
+	        $config['overwrite'] = TRUE;
+	        $config['remove_spaces'] = TRUE;
+	        $config['file_name'] = str_replace(' ', '', $KodeItem.'_pub');
+
+	        $this->load->library('upload', $config);
+	        $this->upload->initialize($config);
+
+	        if(!$this->upload->do_upload('Attachment_epub_full')) {
+	        	if ($formtype == 'edit' || $formtype == 'delete' || $formtype == 'Publish') {
+	        		$x='';
+	        	}
+	        	else{
+	        		$x = $this->upload->data();
+		        	// var_dump($x);
+		        	$data['success'] = false;
+		            $data['message'] = $this->upload->display_errors();
+		            goto jumpx;
+	        	}
+	        }else{
+	            $videoDetails = $this->upload->data();
+	        }	
+		} catch (Exception $e) {
+			$data['success'] = false;
+			$data['message'] = $e->getMessage();
+			goto jumpx;
+		}
+
 		$param = array(
 			'KodeItem' => $KodeItem,
 			'kategoriID' => $kategoriID,
@@ -190,12 +225,13 @@ class C_Buku extends CI_Controller {
 			'ppn' => str_replace(',', '', $ppn),
 			'otherprice' => str_replace('', '', $otherprice),
 			'epub' => base_url().'localData/epub/'.str_replace(' ', '', $KodeItem).'.epub',
-			'epub_base64' => $epub_base64,
+			'epub_full' => base_url().'localData/epub/'.str_replace(' ', '', $KodeItem.'_pub').'.epub',
 			'avgrate' => $avgrate,
 			'status_publikasi' => $status_publikasi,
 			'createdby' => $this->session->userdata('username'),
 			'createdon' => date("Y-m-d h:i:sa")
 		);
+		
 		if ($formtype == 'add') {
 			$this->db->trans_begin();
 			try {

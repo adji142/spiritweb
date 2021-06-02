@@ -132,10 +132,19 @@
                   </div>
 
                   <div class="item form-group">
-                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">File E-pub <span class="required">*</span>
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">File E-pub Sample <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
                       <input type="file" id="Attachment_epub" name="Attachment_epub" accept=".epub" />
+                      <!-- <textarea id="epub_base64" name="epub_base64"></textarea> -->
+                    </div>
+                  </div>
+
+                  <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">File E-pub Full <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                      <input type="file" id="Attachment_epub_full" name="Attachment_epub_full" accept=".epub" />
                       <!-- <textarea id="epub_base64" name="epub_base64"></textarea> -->
                     </div>
                   </div>
@@ -226,7 +235,7 @@
       var ppn = $('#ppn').val().replace(',','');
       var otherprice = $('#otherprice').val().replace(',','');
       var epub = $('#Attachment_epub').prop('files')[0];
-      var epub_base64 = '';
+      var Attachment_epub_full = $('#Attachment_epub_full').prop('files')[0];;
       var avgrate = 0;
       var status_publikasi = $('#status_publikasi').val();
       var formtype = $('#formtype').val();

@@ -17,6 +17,7 @@ class API_Kategori extends CI_Controller {
 		$token = $this->input->post('token');
 
 		$page = $this->input->post('page');
+		$kriteria = $this->input->post('kriteria');
 		$maxperpage = 2;
 
 		if ($token != '') {
@@ -31,7 +32,7 @@ class API_Kategori extends CI_Controller {
 							where status_publikasi = 1
 							group by a.kategoriID
 						) y on x.id = y.kategoriID
-					" ;
+					WHERE x.NamaKategori like '%".$kriteria."%' " ;
 			// LIMIT ".$page.",".$maxperpage.";
 			// var_dump($SQL);
 			$rs = $this->db->query($SQL);

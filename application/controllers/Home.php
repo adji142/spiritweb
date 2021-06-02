@@ -104,4 +104,16 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_Content/buku');
 	}
+
+	// API Content
+	public function goPayment(){
+		$data['token'] = $this->input->get('token');
+		$this->load->view('V_API/paymentsnap',$data);
+	}
+
+	// Transaksi
+
+	public function metodepembayaran(){
+		$this->load->view('V_Payment/paymentmethod');
+	}
 }
