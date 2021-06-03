@@ -35,6 +35,7 @@ class API_Payment extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array(), 'token'=>'');
 
 		$amt = $this->input->post('amt');
+		$Adminfee = $this->input->post('Adminfee');
 		$first_name = $this->input->post('first_name');
 		$email = $this->input->post('email');
 		$token = $this->input->post('token');
@@ -52,7 +53,7 @@ class API_Payment extends CI_Controller {
 		$params = array(
 		    'transaction_details' => array(
 		        'order_id' => $order_id,
-		        'gross_amount' => $amt,
+		        'gross_amount' => $amt + $Adminfee,
 		    ),
 		    'customer_details' => array(
 		        'first_name' => $first_name,
@@ -67,7 +68,9 @@ class API_Payment extends CI_Controller {
 					'NoTransaksi' => $order_id,
 					'TglTransaksi' => date("Y/m/d hh:mm:ss"),
 					'TokenMidtrans' => $snapToken,
-					'userid' 		=> $first_name
+					'userid' 		=> $first_name,
+					'GrossAmt'		=> $amt,
+					'Adminfee'		=> $Adminfee
 				);
 
 				$this->ModelsExecuteMaster->ExecInsert($param,'thistoryrequest');
@@ -196,6 +199,110 @@ class API_Payment extends CI_Controller {
 		else{
 			$data['success'] = false;
 		}
+		echo json_encode($data);
+	}
+
+	public function cekPaymentStatus(){
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		\Midtrans\Config::$serverKey = 'SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1';
+		\Midtrans\Config::$isProduction = false;
+		\Midtrans\Config::$isSanitized = true;
+		\Midtrans\Config::$is3ds = true;
+
+		$userid = $this->input->post('userid');
+
+		$SQL = "SELECT a.NoTransaksi, a.userid, b.Mid_TransactionStatus FROM thistoryrequest a
+				INNER JOIN topuppayment b on a.NoTransaksi = b.NoTransaksi
+				WHERE b.Mid_TransactionStatus != 'settlement' AND a.userid = '".$userid."'";
+
+		try {
+			$rs = $this->db->query($SQL);
+
+			if ($rs) {
+				$datatable = $rs->result();
+				foreach ($datatable as $key) {
+					// Get Transaction Status in Midtrans
+					$status = \Midtrans\Transaction::status($key->NoTransaksi);
+
+					// var_dump(count($status));
+					if (count($status) > 0) {
+						// var_dump($status);
+						$param = array(
+							'TglPencatatan' => date("Y-m-d h:i:sa"),
+							'Mid_TransactionStatus' => $status->transaction_status
+						);
+
+						$updateStatus = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
+						if ($updateStatus) {
+							$data['success'] = true;
+						}
+					}
+					
+					// $param = array(
+					// 	'TglPencatatan' => date("Y-m-d h:i:sa"),
+					// 	''
+					// );
+				}
+			}
+		} catch (Exception $e) {
+			$data['success'] = true;
+			$data['message'] = $e->getMessage();
+		}
+		echo json_encode($data);
+	}
+
+	public function getTransactionHistory(){
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$userid = $this->input->post('userid');
+		$tglawal = $this->input->post('tglawal');
+		$tglakhir = $this->input->post('tglakhir');
+
+		$SQL = "SELECT * FROM (
+				SELECT 
+					'0' Transaksi, a.NoTransaksi,b.TglTransaksi, COALESCE(B.GrossAmt,0) - COALESCE(a.Adminfee,0) Nominal,
+					B.MetodePembayaran, a.userid, B.Mid_TransactionStatus,'Top Up Spirit Pay' Keterangan
+				FROM thistoryrequest a
+				INNER JOIN topuppayment B ON a.NoTransaksi = B.NoTransaksi
+				WHERE DATE(B.TglTransaksi) BETWEEN '$tglawal' AND '$tglakhir' AND userid = '$userid'
+
+				UNION ALL
+				-- 1: Berhasil, 2 : Pending, 3: Gagal, 4:Return
+				SELECT 
+					a.StatusTransaksi, a.NoTransaksi, a.TglTransaksi, COALESCE(a.Qty ,0) * COALESCE(a.harga,0),
+					CONCAT('Pembelian Buku ', b.judul) 'Keterangan', a.userid,
+					CASE WHEN a.StatusTransaksi = 1 THEN 'Berhasil' ELSE 
+						CASE WHEN a.StatusTransaksi = 2 THEN 'Pending' ELSE 
+							CASE WHEN a.StatusTransaksi = 3 THEN 'Gagagl' ELSE 
+								CASE WHEN a.StatusTransaksi = 4 THEN 'Return' ELSE 'Undefind Transaction' END
+							END 
+						END 
+					END TransStatus,
+					'Pembelian Buku '
+				FROM transaksi a
+				LEFT JOIN tbuku b on a.KodeItem = b.KodeItem
+				WHERE DATE(TglTransaksi) BETWEEN '$tglawal' AND '$tglakhir' AND userid = '$userid'
+			)trx
+			ORDER BY TglTransaksi DESC 
+		";
+
+		try{
+			$rs = $this->db->query($SQL);
+			if ($rs) {
+				$data['success'] = true;
+				$data['data'] = $rs->result();
+			}
+			else{
+				$data['success'] = false;
+				$undone = $this->db->error();
+				$data['message'] = 'Gagal Melakukan Pemrosesan data : ' . $undone['message'];
+			}
+		}catch (Exception $e) {
+			$data['success'] = true;
+			$data['message'] = $e->getMessage();
+		}
+
 		echo json_encode($data);
 	}
 }

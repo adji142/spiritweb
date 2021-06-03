@@ -93,6 +93,7 @@ $route['APINotif'] = 'API/API_Payment/GetNotif';
 $route['APIMetodeBayar'] = 'API/API_Payment/getMetodePembayaran';
 $route['APIAddTransaksi'] = 'API/API_Payment/RecordPayment';
 $route['APIHistory'] = 'API/API_Payment/getPaymentHistory';
+$route['APIPaymentStatus'] = 'API/API_Payment/cekPaymentStatus';
 
 // API Auth
 $route['APIAUTHUname'] = 'API/API_auth/FindUserName';
@@ -103,3 +104,7 @@ $route['APIAUTHChangePass'] = 'API/API_auth/ChangePassword';
 $route['APIAUTHChangeImage'] = 'API/API_auth/ChangeImage';
 $route['APIAUTHUserInfo'] = 'API/API_auth/GetUserInfo';
 $route['APIAUTHUserInformation'] = 'API/API_auth/send_email';
+$route['APIAUTHSaldoAkun'] = 'API/API_auth/SaldoAccount';
+
+// API Transaction
+$route['APITrxHistory'] = 'API/API_Payment/getTransactionHistory';

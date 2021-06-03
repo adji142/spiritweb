@@ -325,4 +325,54 @@ class API_auth extends CI_Controller {
 
 	    return $token;
 	}
+	public function SaldoAccount(){
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$KodeUser = $this->input->post('username');
+		$token = $this->input->post('token');
+
+		if ($token != "") {
+			$SQL = "";
+
+			$SQL = "SELECT 
+						u.username, u.email, COALESCE(d.TopUp,0) TopUp, COALESCE(d.PembelianBuku,0) PembelianBuku,
+						COALESCE(d.TopUp,0) - COALESCE(d.PembelianBuku,0) Saldo
+					FROM users u
+					LEFT JOIN (
+						SELECT 
+							b.userid,
+							SUM(COALESCE(a.GrossAmt,0) - COALESCE(b.Adminfee,0)) TopUp,
+							COALESCE(c.Pembelian,0) PembelianBuku
+						FROM topuppayment a
+						INNER JOIN thistoryrequest b on a.NoTransaksi = b.NoTransaksi AND a.Mid_TransactionStatus = 'settlement'
+						LEFT JOIN(
+							SELECT x.UserID, SUM(COALESCE(x.Qty,0) * COALESCE(x.Harga,0)) Pembelian FROM transaksi x
+						) c on c.UserID = b.userid
+						GROUP BY b.userid
+					) d on u.username = d.userid 
+					WHERE u.username = '".$KodeUser."'
+					";
+
+			try {
+				$rs = $this->db->query($SQL);
+				if ($rs) {
+					$data['success'] = true;
+					$data['data'] = $rs->result();
+				}
+				else{
+					$data['success'] = false;
+					$undone = $this->db->error();
+					$data['message'] = 'Gagal Melakukan Pemrosesan data : ' . $undone['message'];
+				}
+			} catch (Exception $e) {
+				$data['success'] = false;
+				$data['message'] = $e->getMessage();
+			}
+		}
+		else{
+			$data['success'] = false;
+			$data['message'] = "Invalid Token";
+		}
+		echo json_encode($data);
+	}
 }
