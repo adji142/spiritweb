@@ -108,3 +108,5 @@ $route['APIAUTHSaldoAkun'] = 'API/API_auth/SaldoAccount';
 
 // API Transaction
 $route['APITrxHistory'] = 'API/API_Payment/getTransactionHistory';
+$route['APITrxCekBooks'] = 'API/API_Transaksi/cekBooksTransaction';
+$route['APITrxAddTrx'] = 'API/API_Transaksi/addTransaction';
