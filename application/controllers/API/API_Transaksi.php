@@ -124,4 +124,53 @@ class API_Transaksi extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+	public function getUserBooks(){
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$userid = $this->input->post('userid');
+
+		$SQL = "";
+
+		$SQL .= "SELECT 
+					b.KodeItem,b.judul,a.TglTransaksi, b.picture,
+					a.NoTransaksi
+				FROM transaksi a
+				LEFT JOIN tbuku b on a.KodeItem = b.KodeItem
+				WHERE a.UserID = '".$userid."'
+				AND a.StatusTransaksi = 1
+				";
+		$rs = $this->db->query($SQL);
+
+		if ($rs) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		else{
+			$data['success'] = false;
+			$undone = $this->db->error();
+			$data['message'] = 'Gagal Melakukan Pemrosesan data : ' . $undone['message'];
+		}
+		echo json_encode($data);
+	}
+	public function deleteBooks(){
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$NoTransaksi= $this->input->post('NoTransaksi');
+
+		try {
+			$rs = $this->ModelsExecuteMaster->ExecUpdate(array('StatusTransaksi'=>'99'), array('NoTransaksi'=>$NoTransaksi),'transaksi');
+			if ($rs) {
+				$data['success'] = true;
+			}
+			else{
+				$data['success'] = false;
+				$undone = $this->db->error();
+				$data['message'] = 'Gagal Melakukan Pemrosesan data : ' . $undone['message'];
+			}
+		} catch (Exception $e) {
+			$data['success'] = false;
+			$data['message'] = 'Gagal Melakukan Pemrosesan data : ' . $e->getMessage();
+		}
+		echo json_encode($data);
+	}
 }

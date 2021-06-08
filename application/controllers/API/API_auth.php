@@ -111,7 +111,7 @@ class API_auth extends CI_Controller {
 	}
 	function Log_Pro()
 	{
-		$data = array('success' => false ,'message'=>array(),'username'=>array(),'unique_id'=>array(),'email' => array());
+		$data = array('success' => false ,'message'=>array(),'username'=>array(),'unique_id'=>array(),'email' => array(),'role'=>'');
         $usr = $this->input->post('username');
 		$pwd =$this->input->post('pass');
 		// var_dump($usr.' '.$pwd);
@@ -125,6 +125,14 @@ class API_auth extends CI_Controller {
 				$data['username'] = $Validate_username->row()->username;
 				$data['unique_id'] = $Validate_username->row()->id;
 				$data['email'] = $Validate_username->row()->email;
+				// get role
+				$datarole = $this->ModelsExecuteMaster->FindData(array('userid'=>$userid),'userrole');
+				if ($datarole) {
+					$data['role'] = $datarole->row()->roleid;
+				}
+				else{
+					$data['role'] = '';
+				}
 			}
 			else{
 				$data['success'] = false;
@@ -347,6 +355,7 @@ class API_auth extends CI_Controller {
 						INNER JOIN thistoryrequest b on a.NoTransaksi = b.NoTransaksi AND a.Mid_TransactionStatus = 'settlement'
 						LEFT JOIN(
 							SELECT x.UserID, SUM(COALESCE(x.Qty,0) * COALESCE(x.Harga,0)) Pembelian FROM transaksi x
+						where x.StatusTransaksi IN(1,99)
 						) c on c.UserID = b.userid
 						GROUP BY b.userid
 					) d on u.username = d.userid 
