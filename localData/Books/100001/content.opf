@@ -1,23 +1,22 @@
-<?xml version="1.0"  encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="uuid_id">
   <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata">
-    <dc:title>NEXT Juni 2021 PREV</dc:title>
-    <dc:creator opf:role="aut" opf:file-as="Books, Spirit">Spirit Books</dc:creator>
-    <dc:contributor opf:role="bkp">calibre (5.10.1) [https://calibre-ebook.com]</dc:contributor>
-    <dc:identifier id="uuid_id" opf:scheme="uuid">63b28c16-07b9-4852-8315-08e75d3f8269</dc:identifier>
-    <dc:publisher>Spirit Bookfield</dc:publisher>
-    <dc:date>0101-01-01T00:00:00+00:00</dc:date>
-    <dc:subject>Spirit Next</dc:subject>
     <dc:language>id</dc:language>
-    <dc:identifier opf:scheme="calibre">63b28c16-07b9-4852-8315-08e75d3f8269</dc:identifier>
-    <meta name="calibre:timestamp" content="2021-05-28T03:23:17.686625+00:00"/>
+    <dc:title>NEXT Juni 2021 PREV</dc:title>
     <meta name="calibre:title_sort" content="NEXT Juni 2021 PREV"/>
+    <dc:creator opf:file-as="Books, Spirit" opf:role="aut">Spirit Books</dc:creator>
+    <dc:contributor opf:role="bkp">calibre (5.10.1) [https://calibre-ebook.com]</dc:contributor>
+    <dc:publisher>Spirit Bookfield</dc:publisher>
     <meta name="calibre:series" content="Juni 2021"/>
-    <meta name="calibre:series_index" content="1.0"/>
-    <meta name="calibre:cover" content="cover"/>
-    <meta name="calibre:author_link_map" content="{&quot;Spirit Books&quot;: &quot;&quot;}"/>
+    <meta name="calibre:series_index" content="1"/>
+    <dc:subject>Spirit Next</dc:subject>
+    <dc:date>0101-01-01T00:00:00+00:00</dc:date>
+    <meta name="calibre:timestamp" content="2021-05-28T03:23:17.686625+00:00"/>
+    <dc:identifier id="uuid_id" opf:scheme="uuid">d3d0133a-cf51-46ca-a0c1-9638253ac01f</dc:identifier>
+    <meta name="cover" content="cover"/>
   </metadata>
   <manifest>
+    <item id="cover" href="cover.jpeg" media-type="image/jpeg"/>
     <item id="titlepage" href="titlepage.xhtml" media-type="application/xhtml+xml"/>
     <item id="id26" href="index_split_000.html" media-type="application/xhtml+xml"/>
     <item id="id25" href="index_split_001.html" media-type="application/xhtml+xml"/>
@@ -30,16 +29,17 @@
     <item id="id2" href="2.html" media-type="application/xhtml+xml"/>
     <item id="id9" href="3.html" media-type="application/xhtml+xml"/>
     <item id="id10" href="4.html" media-type="application/xhtml+xml"/>
-    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
-    <item id="page_css" href="page_styles.css" media-type="text/css"/>
-    <item id="css" href="stylesheet.css" media-type="text/css"/>
-    <item id="cover" href="cover.jpeg" media-type="image/jpeg"/>
     <item id="id3" href="images/1-1.jpeg" media-type="image/jpeg"/>
     <item id="id4" href="images/1-2.jpeg" media-type="image/jpeg"/>
     <item id="id5" href="images/1-3.jpeg" media-type="image/jpeg"/>
     <item id="id6" href="images/1-4.jpeg" media-type="image/jpeg"/>
     <item id="id7" href="images/1.jpeg" media-type="image/jpeg"/>
     <item id="id8" href="images/image.jpeg" media-type="image/jpeg"/>
+    <item id="page_css" href="page_styles.css" media-type="text/css"/>
+    <item id="page_css1" href="page_styles1.css" media-type="text/css"/>
+    <item id="page_css2" href="page_styles2.css" media-type="text/css"/>
+    <item id="css" href="stylesheet.css" media-type="text/css"/>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
   </manifest>
   <spine toc="ncx">
     <itemref idref="titlepage"/>
@@ -57,5 +57,6 @@
   </spine>
   <guide>
     <reference type="cover" href="titlepage.xhtml" title="Cover"/>
+    <reference type="other.titlepage" href="titlepage.xhtml" title="Title Page"/>
   </guide>
 </package>

@@ -1,4 +1,5 @@
 <?php
+
 	// Get Epub File Name -> Generate by GET Req from Front End
 	header('Content-Type: text/html; charset=utf-8');
 	$folderName = $_GET['folder'];
@@ -345,92 +346,35 @@
 	}
 	// End Scaning Extraction Directory
 
-	// $images_dir = '../localData/epub/'.$folderName.'/';
-	// //this folder must be writeable by the server
 	
-	// $zip_file = '../localData/epub/'.$folderName.'_2.epub';
-
-	// if ($handle = opendir($images_dir))  
-	// {
-	//     $zip = new ZipArchive();
-
-	//     if ($zip->open($zip_file, ZipArchive::CREATE)!==TRUE) 
-	//     {
-	//         exit("cannot open <$zip_file>\n");
-	//     }
-
-	//     while (false !== ($file = readdir($handle))) 
-	//     {
-	//         $zip->addFile($images_dir.'/'.$file);
-	//         echo "$file\n";
-	//     }
-	//     closedir($handle);
-	//     echo "numfiles: " . $zip->numFiles . "\n";
-	//     echo "status:" . $zip->status . "\n";
-	//     $zip->close();
-	//     echo 'Zip File:'.$zip_file . "\n";
-	// }
-
 	// Packing to Epub File
-	// $epubCreator = new TPEpubCreator();
+	$rootPath = realpath('../localData/Books/'.$folderName);
 
-	// $epubCreator->temp_folder = 'temp/';
-	// $epubCreator->epub_file = '../localData/epub/'.$folderName.'_1.epub';
-	
-	// $epubCreator->title = $epub->Subjects()[0];
-	// foreach($epub->Authors() as $as => $name){
-	// 	$epubCreator->creator = $name;
-	// }
-	// $epubCreator->language = $epub->Language();
-	// $epubCreator->rights = $epub->Copyright();
-	// $epubCreator->publisher = $epub->Publisher();
+	// Initialize archive object
+	$zip->open($fullFolderName.'.epub', ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-	// foreach ($driveResult as $key) {
-	// 	$ext = pathinfo($fullFolderName.$key, PATHINFO_EXTENSION);
-	// 	if ($key != '.' && $key !='..' && $key !='images' && $key != 'META-INF') {
-	// 		if ($ext == 'css') {
-	// 			$epubCreator->css = file_get_contents($fullFolderName.'/'.$key);
-	// 			echo $fullFolderName.'/'.$key.'<br>';
-	// 		}
-	// 		elseif ($ext == 'jpg' || $ext =='jpeg' || $ext =='png' || $ext =='gif') {
-	// 			$epubCreator->AddImage($fullFolderName.'/'.$key, false, true );
-	// 			// var_dump($fullFolderName.'/'.$key);
-	// 			echo $fullFolderName.'/'.$key.'<br>';
-	// 		}
-	// 		else{
-	// 			$epubCreator->AddPage( false, $fullFolderName.'/'.$key, 'Título (check accent)' );
-	// 			echo $fullFolderName.'/'.$key.'<br>';
-	// 		}
-	// 		// get image
-	// 		$imagefile = scandir($fullFolderName.'/images');
-	// 		foreach ($imagefile as $pic) {
-	// 			// var_dump($pic);
-	// 			if ($pic !='.' && $pic != '..') {
-	// 				$ext_img = pathinfo($fullFolderName.'/images/'.$pic, PATHINFO_EXTENSION);
-	// 				if ($ext_img == 'jpg' || $ext_img =='jpeg' || $ext_img =='png' || $ext_img =='gif') {
-	// 					$epubCreator->AddImage( $fullFolderName.'/images/'.$pic, false, true );
-						
-	// 					echo $fullFolderName.'/images/'.$pic.'<br>';
-	// 				}
-	// 			}
-	// 			else{
-	// 				echo 'image exit';
-	// 			}
-	// 		}
-	// 	}
-	// 	else{
-	// 		echo 'Exit ';
-	// 	}
-	// }
-	// if ( ! $epubCreator->error ) {
-	//     $epubCreator->CreateEPUB();
-	    
-	//     if ( ! $epubCreator->error ) {
-	//         echo 'Success: Download your book <a href="' . $epubCreator->epub_file . '">here</a>.';
-	//     }
-	    
-	// } else {
-	//     echo $epubCreator->error;
-	// }
+	// Create recursive directory iterator
+	/** @var SplFileInfo[] $files */
+	$files = new RecursiveIteratorIterator(
+	    new RecursiveDirectoryIterator($rootPath),
+	    RecursiveIteratorIterator::LEAVES_ONLY
+	);
+
+	foreach ($files as $name => $file)
+	{
+	    // Skip directories (they would be added automatically)
+	    if (!$file->isDir())
+	    {
+	        // Get real and relative path for current file
+	        $filePath = $file->getRealPath();
+	        $relativePath = substr($filePath, strlen($rootPath) + 1);
+
+	        // Add current file to archive
+	        $zip->addFile($filePath, $relativePath);
+	    }
+	}
+
+	// Zip archive will be created only after closing object
+	$zip->close();
 	// End Packing to Epub File
 ?>
