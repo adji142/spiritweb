@@ -114,34 +114,62 @@ class API_auth extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'username'=>array(),'unique_id'=>array(),'email' => array(),'role'=>'');
         $usr = $this->input->post('username');
 		$pwd =$this->input->post('pass');
+		$androidid = $this->input->post('androidid');
+		$device = $this->input->post('device');
 		// var_dump($usr.' '.$pwd);
-		$Validate_username = $this->LoginMod->Validate_username($usr);
-		if($Validate_username->num_rows()>0){
-			$userid = $Validate_username->row()->id;
-			$pwd_decript =$Validate_username->row()->password;
-			$pass_valid = $this->encryption->decrypt($Validate_username->row()->password);
-			if($pass_valid == $pwd){
-				$data['success'] = true;
-				$data['username'] = $Validate_username->row()->username;
-				$data['unique_id'] = $Validate_username->row()->id;
-				$data['email'] = $Validate_username->row()->email;
-				// get role
-				$datarole = $this->ModelsExecuteMaster->FindData(array('userid'=>$userid),'userrole');
-				if ($datarole) {
-					$data['role'] = $datarole->row()->roleid;
+		$SQL = "
+			SELECT * FROM users where username = '".$usr."';
+		";
+		$cekExist = $this->db->query($SQL);
+
+		if ($cekExist->row()->HardwareID =='') {
+
+			$Validate_username = $this->LoginMod->Validate_username($usr);
+			if($Validate_username->num_rows()>0){
+				$userid = $Validate_username->row()->id;
+				$pwd_decript =$Validate_username->row()->password;
+				$pass_valid = $this->encryption->decrypt($Validate_username->row()->password);
+				if($pass_valid == $pwd){
+
+					$paramUpdate = array(
+						'browser'	=> $device,
+						'HardwareID'=> $androidid
+					);
+
+					$updateState = $this->ModelsExecuteMaster->ExecUpdate($paramUpdate,array('username'=> $usr),'users');
+
+					if ($updateState) {
+						$data['success'] = true;
+						$data['username'] = $Validate_username->row()->username;
+						$data['unique_id'] = $Validate_username->row()->id;
+						$data['email'] = $Validate_username->row()->email;
+						// get role
+						$datarole = $this->ModelsExecuteMaster->FindData(array('userid'=>$userid),'userrole');
+						if ($datarole) {
+							$data['role'] = $datarole->row()->roleid;
+						}
+						else{
+							$data['role'] = '';
+						}
+					}
+					else{
+						$undone = $this->db->error();
+						$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+					}
 				}
 				else{
-					$data['role'] = '';
+					$data['success'] = false;
+					$data['message'] = 'User atau Password tidak valid'; // User password doesn't match
 				}
 			}
 			else{
 				$data['success'] = false;
-				$data['message'] = 'User atau Password tidak valid'; // User password doesn't match
+				$data['message'] = 'Username Tidak ditemukan'; // Username not found
 			}
 		}
 		else{
 			$data['success'] = false;
-			$data['message'] = 'Username Tidak ditemukan'; // Username not found
+			$data['message'] = 'User sudah login di device '.$cekExist->row()->browser;
 		}
 		// var_dump($data);
 		echo json_encode($data);
@@ -260,9 +288,9 @@ class API_auth extends CI_Controller {
 
         	$config = array(
 			    'protocol' => 'smtp', // 'mail', 'sendmail', or 'smtp'
-			    'smtp_host' => 'mail.aistrick.com', 
+			    'smtp_host' => 'mail.aiscoder.com', 
 			    'smtp_port' => 465,
-			    'smtp_user' => 'noreply@aistrick.com',
+			    'smtp_user' => 'noreply@aiscoder.com',
 			    'smtp_pass' => 'lagis3nt0s4',
 			    'smtp_crypto' => 'ssl', //can be 'ssl' or 'tls' for example
 			    'mailtype' => 'html', //plaintext 'text' mails or 'html'
@@ -272,13 +300,13 @@ class API_auth extends CI_Controller {
 			);
 	        $this->email->initialize($config);
 
-	        $from = 'noreply@aistrick.com';
+	        $from = 'noreply@aiscoder.com';
 	        $to = $param;
 	        $subject = '[No-Replay]Rahasia !!! Reset password Cerminjiwa Apps[No-Replay]';
 	        $message = '
 	        	<h3><center><b>CerminJiwa</b></center></h3><br>
 	            <p>
-	            Berikut detaik akun anda di <a href="cerminjiwa.com">cerminjiwa.com</a><br>
+	            Berikut detaik akun anda di <a href="https://renungan-spirit.com/">renungan-spirit.com</a><br>
 	            <b>Jangan berikan email ini ke siapapun termasuk staff dari pengelola aplikasi</b>
 	            <br>
 	            </p>
@@ -289,7 +317,7 @@ class API_auth extends CI_Controller {
 	            <p>
 	            <br>
 	            Best Regards<br><br>
-	            <a href="cerminjiwa.com">cerminjiwa.com</a>
+	            <a href="renungan-spirit.com">renungan-spirit.com</a>
 	            </p>
 	        ';
 

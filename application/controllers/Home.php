@@ -110,7 +110,10 @@ class home extends CI_Controller {
 		$data['token'] = $this->input->get('token');
 		$this->load->view('V_API/paymentsnap',$data);
 	}
-
+	public function goPaymentQR(){
+		$data['url'] = $this->input->get('url');
+		$this->load->view('V_API/paymentqrcode',$data);
+	}
 	// Transaksi
 
 	public function metodepembayaran(){

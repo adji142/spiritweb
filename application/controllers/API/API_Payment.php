@@ -262,7 +262,8 @@ class API_Payment extends CI_Controller {
 		$SQL = "SELECT * FROM (
 				SELECT 
 					'0' Transaksi, a.NoTransaksi,b.TglTransaksi, COALESCE(B.GrossAmt,0) - COALESCE(a.Adminfee,0) Nominal,
-					B.MetodePembayaran, a.userid, B.Mid_TransactionStatus,'Top Up Spirit Pay' Keterangan
+					B.MetodePembayaran, a.userid, B.Mid_TransactionStatus,'Top Up Spirit Pay' Keterangan,
+					COALESCE(B.Mid_Bank,'') Bank, COALESCE(B.Mid_VANumber,'') VA_Numb,COALESCE(B.Mid_PaymentType,'') Mid_PaymentType
 				FROM thistoryrequest a
 				INNER JOIN topuppayment B ON a.NoTransaksi = B.NoTransaksi
 				WHERE DATE(B.TglTransaksi) BETWEEN '$tglawal' AND '$tglakhir' AND userid = '$userid'
@@ -279,7 +280,8 @@ class API_Payment extends CI_Controller {
 							END 
 						END 
 					END TransStatus,
-					'Pembelian Buku '
+					'Pembelian Buku ',
+					'' Bank, '' VA_Numb,'' Mid_PaymentType
 				FROM transaksi a
 				LEFT JOIN tbuku b on a.KodeItem = b.KodeItem
 				WHERE DATE(TglTransaksi) BETWEEN '$tglawal' AND '$tglakhir' AND userid = '$userid'
@@ -303,6 +305,88 @@ class API_Payment extends CI_Controller {
 			$data['message'] = $e->getMessage();
 		}
 
+		echo json_encode($data);
+	}
+	public function chargeGopay(){
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+		$amt = $this->input->post('amt');
+		$Adminfee = $this->input->post('Adminfee');
+		$first_name = $this->input->post('first_name');
+		$email = $this->input->post('email');
+		$token = $this->input->post('token');
+		$Periode = strval(date("Y")).strval(date("m"));
+		// Set your Merchant Server Key
+		\Midtrans\Config::$serverKey = 'SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1';
+		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+		\Midtrans\Config::$isProduction = false;
+		// Set sanitization on (default)
+		\Midtrans\Config::$isSanitized = true;
+		// Set 3DS transaction for credit card to true
+		\Midtrans\Config::$is3ds = true;
+		
+		$order_id = $Periode.strval(rand());
+		$params = array(
+		    'transaction_details' => array(
+		        'order_id' => $order_id,
+		        'gross_amount' => $amt + $Adminfee,
+		    ),
+		    'payment_type' => 'gopay',
+		    'customer_details' => array(
+		        'first_name' => $first_name,
+		        'email' => $email
+		    ),
+		);
+		 
+		$response = \Midtrans\CoreApi::charge($params);
+
+		$NoTransaksi = $response->order_id;
+		$TglTransaksi = $response->transaction_time;
+		$TglPencatatan = date("Y/m/d hh:mm:ss");
+		$MetodePembayaran = $response->payment_type;
+		$GrossAmt = $response->gross_amount;
+		$AdminFee = $Adminfee;
+		$Mid_PaymentType = $response->payment_type;
+		$Mid_TransactionID = $response->transaction_id;
+		$Mid_MechantID = $response->merchant_id;
+		$Mid_Bank = "";
+		$Mid_VANumber = "";
+		$Mid_SignatureKey = "";
+		$Mid_TransactionStatus = $response->transaction_status;
+		$Mid_FraudStatus = $response->fraud_status;
+
+		$param = array(
+			'NoTransaksi' => $NoTransaksi,
+			'TglTransaksi' => $TglTransaksi,
+			'TglPencatatan' => $TglPencatatan,
+			'MetodePembayaran' => $MetodePembayaran,
+			'GrossAmt' => $GrossAmt,
+			'AdminFee' => $AdminFee,
+			'Mid_PaymentType' => $Mid_PaymentType,
+			'Mid_TransactionID' => $Mid_TransactionID,
+			'Mid_MechantID' => $Mid_MechantID,
+			'Mid_Bank' => $Mid_Bank,
+			'Mid_VANumber' => $Mid_VANumber,
+			'Mid_SignatureKey' => $Mid_SignatureKey,
+			'Mid_TransactionStatus' => $Mid_TransactionStatus,
+			'Mid_FraudStatus' => $Mid_FraudStatus,
+		);
+
+		try {
+			$exist = $this->ModelsExecuteMaster->FindData(array('NoTransaksi'=>$NoTransaksi),'topuppayment');
+			if ($exist->num_rows() > 0) {
+				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$NoTransaksi),'topuppayment');
+			}
+			else{
+				$rs = $this->ModelsExecuteMaster->ExecInsert($param,'topuppayment');
+			}
+			if ($rs) {
+				$data['success'] = true;
+			}	
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+			$data['success'] = false;
+		}
+		$data['data'] = $response;
 		echo json_encode($data);
 	}
 }

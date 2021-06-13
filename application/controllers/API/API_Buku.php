@@ -44,7 +44,7 @@ class API_Buku extends CI_Controller {
 					LEFT JOIN tkategori y on x.kategoriID = y.id
 					WHERE 1 = 1 ";
 
-			if ($publikasi == "1" ) {
+			if ($publikasi != "" ) {
 				$SQL .= " AND status_publikasi = ".$publikasi." ";
 			}
 			if ($KodeKategori != '') {
@@ -93,5 +93,26 @@ class API_Buku extends CI_Controller {
 		}
 
 		echo json_encode($rs->result());
+	}
+	public function publish(){
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$KodeItem= $this->input->post('KodeItem');
+
+		try {
+			$rs = $this->ModelsExecuteMaster->ExecUpdate(array('status_publikasi'=>1), array('KodeItem'=>$KodeItem),'tbuku');
+			if ($rs) {
+				$data['success'] = true;
+			}
+			else{
+				$undone = $this->db->error();
+				$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+			}
+
+		} catch (Exception $e) {
+			$data['success'] = false;
+			$data['message'] = "Gagal memproses data ". $e->getMessage();
+		}
+		echo json_encode($data);
 	}
 }

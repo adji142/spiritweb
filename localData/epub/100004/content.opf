@@ -1,0 +1,69 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="uuid_id">
+  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata">
+    <dc:title>SPIRIT Juni 21 PREV</dc:title>
+    <dc:creator opf:role="aut" opf:file-as="Books, Spirit">Spirit Books</dc:creator>
+    <dc:contributor opf:role="bkp">calibre (5.10.1) [https://calibre-ebook.com]</dc:contributor>
+    <dc:identifier id="uuid_id" opf:scheme="uuid">e4f94e96-3f6f-4bef-8830-645b1700c8cb</dc:identifier>
+    <dc:publisher>Spirit Bookfield</dc:publisher>
+    <dc:date>0101-01-01T00:00:00+00:00</dc:date>
+    <dc:subject>Spirit</dc:subject>
+    <dc:language>id</dc:language>
+    <dc:identifier opf:scheme="calibre">e4f94e96-3f6f-4bef-8830-645b1700c8cb</dc:identifier>
+    <meta name="calibre:timestamp" content="2021-05-21T10:16:24.860480+00:00"/>
+    <meta name="calibre:title_sort" content="SPIRIT Juni 21 PREV"/>
+    <meta name="calibre:series" content="Juni 2021"/>
+    <meta name="calibre:series_index" content="1.0"/>
+    <meta name="cover" content="cover"/>
+    <meta name="calibre:author_link_map" content="{&quot;Spirit Books&quot;: &quot;&quot;}"/>
+  </metadata>
+  <manifest>
+    <item id="titlepage" href="titlepage.xhtml" media-type="application/xhtml+xml"/>
+    <item id="id26" href="index_split_000.html" media-type="application/xhtml+xml"/>
+    <item id="id25" href="index_split_001.html" media-type="application/xhtml+xml"/>
+    <item id="id24" href="index_split_002.html" media-type="application/xhtml+xml"/>
+    <item id="id23" href="index_split_003.html" media-type="application/xhtml+xml"/>
+    <item id="id22" href="index_split_004.html" media-type="application/xhtml+xml"/>
+    <item id="id21" href="index_split_005.html" media-type="application/xhtml+xml"/>
+    <item id="id" href="0.html" media-type="application/xhtml+xml"/>
+    <item id="id1" href="0a.html" media-type="application/xhtml+xml"/>
+    <item id="id2" href="1.html" media-type="application/xhtml+xml"/>
+    <item id="id9" href="1a.html" media-type="application/xhtml+xml"/>
+    <item id="id10" href="2.html" media-type="application/xhtml+xml"/>
+    <item id="id11" href="2a.html" media-type="application/xhtml+xml"/>
+    <item id="id12" href="3.html" media-type="application/xhtml+xml"/>
+    <item id="id13" href="3a.html" media-type="application/xhtml+xml"/>
+    <item id="id14" href="4.html" media-type="application/xhtml+xml"/>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <item id="page_css" href="page_styles.css" media-type="text/css"/>
+    <item id="css" href="stylesheet.css" media-type="text/css"/>
+    <item id="cover" href="cover.jpeg" media-type="image/jpeg"/>
+    <item id="id3" href="images/02.jpeg" media-type="image/jpeg"/>
+    <item id="id4" href="images/1-1.jpeg" media-type="image/jpeg"/>
+    <item id="id5" href="images/1-2.jpeg" media-type="image/jpeg"/>
+    <item id="id6" href="images/1-3.jpeg" media-type="image/jpeg"/>
+    <item id="id7" href="images/1.jpeg" media-type="image/jpeg"/>
+    <item id="id8" href="images/image.jpeg" media-type="image/jpeg"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="titlepage"/>
+    <itemref idref="id26"/>
+    <itemref idref="id25"/>
+    <itemref idref="id24"/>
+    <itemref idref="id23"/>
+    <itemref idref="id22"/>
+    <itemref idref="id21"/>
+    <itemref idref="id"/>
+    <itemref idref="id1"/>
+    <itemref idref="id2"/>
+    <itemref idref="id9"/>
+    <itemref idref="id10"/>
+    <itemref idref="id11"/>
+    <itemref idref="id12"/>
+    <itemref idref="id13"/>
+    <itemref idref="id14"/>
+  </spine>
+  <guide>
+    <reference type="cover" href="titlepage.xhtml" title="Cover"/>
+  </guide>
+</package>

@@ -83,6 +83,7 @@ $route['APIkategori'] = 'API/API_Kategori/GetKategori';
 // API Buku
 
 $route['APIbuku'] = 'API/API_Buku/GetBuku';
+$route['APIpublish'] = 'API/API_Buku/publish';
 
 
 // API Payment
@@ -94,6 +95,7 @@ $route['APIMetodeBayar'] = 'API/API_Payment/getMetodePembayaran';
 $route['APIAddTransaksi'] = 'API/API_Payment/RecordPayment';
 $route['APIHistory'] = 'API/API_Payment/getPaymentHistory';
 $route['APIPaymentStatus'] = 'API/API_Payment/cekPaymentStatus';
+$route['APIPaymentGenerateQR'] = 'API/API_Payment/chargeGopay';
 
 // API Auth
 $route['APIAUTHUname'] = 'API/API_auth/FindUserName';
@@ -112,3 +114,9 @@ $route['APITrxCekBooks'] = 'API/API_Transaksi/cekBooksTransaction';
 $route['APITrxAddTrx'] = 'API/API_Transaksi/addTransaction';
 $route['APIMyBooks'] = 'API/API_Transaksi/getUserBooks';
 $route['APIDeleteMyBooks'] = 'API/API_Transaksi/deleteBooks';
+
+// API Message
+$route['APIMessageInbox'] = 'API/API_Message/SendInbox';
+$route['APIShowMessage'] = 'API/API_Message/ReadMessage';
+$route['APICountMesssage'] = 'API/API_Message/ReadCountMessage';
+$route['APIUpdateFlag'] = 'API/API_Message/UpdateFlagread';

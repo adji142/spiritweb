@@ -11,7 +11,7 @@
  Target Server Version : 100406
  File Encoding         : 65001
 
- Date: 08/06/2021 23:30:39
+ Date: 13/06/2021 10:52:53
 */
 
 SET NAMES utf8mb4;
@@ -163,7 +163,7 @@ CREATE TABLE `thistoryrequest`  (
   `GrossAmt` double(16, 2) NOT NULL,
   `Adminfee` double(16, 2) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of thistoryrequest
@@ -172,6 +172,12 @@ INSERT INTO `thistoryrequest` VALUES (1, '2021062050414650', '2021-06-02 23:22:0
 INSERT INTO `thistoryrequest` VALUES (2, '20210629391424', '0000-00-00 00:00:00', '6f948629-a92b-4a58-ae61-f3a1bbf9c920', 'aistest', 100000.00, 4000.00);
 INSERT INTO `thistoryrequest` VALUES (3, '202106974387085', '0000-00-00 00:00:00', 'c0b3952e-3071-446e-aae4-aab1d214996e', 'aistest', 100000.00, 4000.00);
 INSERT INTO `thistoryrequest` VALUES (4, '202106346587052', '0000-00-00 00:00:00', '3ee5f925-2f7d-4291-ba34-2999d53dd0a9', 'aistest', 100000.00, 4000.00);
+INSERT INTO `thistoryrequest` VALUES (5, '2021061041787586', '0000-00-00 00:00:00', '04db6b44-71d4-4569-a9c1-da978df2a6b0', 'aistest', 10000.00, 75.00);
+INSERT INTO `thistoryrequest` VALUES (6, '202106950594399', '0000-00-00 00:00:00', '6fc7f189-2e3e-4f19-870e-3846f9627ef3', 'aistest', 10000.00, 75.00);
+INSERT INTO `thistoryrequest` VALUES (7, '2021061240503969', '0000-00-00 00:00:00', '5c80a03c-12d2-49a2-823f-f56469e8a3b4', 'aistest', 10000.00, 150.00);
+INSERT INTO `thistoryrequest` VALUES (8, '2021062008809732', '0000-00-00 00:00:00', 'e17e769d-e92d-4ae1-ab58-121d66a8f287', 'aistest', 10000.00, 75.00);
+INSERT INTO `thistoryrequest` VALUES (9, '202106841127725', '0000-00-00 00:00:00', '5ca5622b-1dab-4c0e-8290-a6fe265417ab', 'aistest', 10000.00, 75.00);
+INSERT INTO `thistoryrequest` VALUES (10, '202106637127095', '0000-00-00 00:00:00', '5a2a2bd7-a009-4a2d-8a47-3ff300961522', 'aistest', 10000.00, 75.00);
 
 -- ----------------------------
 -- Table structure for tkategori
@@ -218,7 +224,10 @@ CREATE TABLE `topuppayment`  (
 -- ----------------------------
 -- Records of topuppayment
 -- ----------------------------
+INSERT INTO `topuppayment` VALUES ('2021061694233347', '2021-06-10 16:20:43.000000', '0000-00-00 00:00:00.000000', 'gopay', 10075.00, 75.00, 'gopay', '4c0193a3-abe3-4564-971b-6b9908758e5d', 'G799701428', '', '', '', 'pending', 'accept', 0);
+INSERT INTO `topuppayment` VALUES ('2021062021851592', '2021-06-10 16:19:20.000000', '0000-00-00 00:00:00.000000', 'gopay', 10075.00, 75.00, 'gopay', '9cf1f145-b703-4eba-b771-ad62d9c89de9', 'G799701428', '', '', '', 'pending', 'accept', 0);
 INSERT INTO `topuppayment` VALUES ('2021062050414650', '2021-06-02 22:35:27.000000', '0000-00-00 00:00:00.000000', 'bank_transfer', 79000.00, 0.00, 'bank_transfer', 'fae7836b-b2dc-478c-b395-0d6f4f74d336', 'G799701428', 'bca', '01428107638', '58b31a2c5074c6aae32724a079400d47c92b9fabbf9bedc31a4f74c6b1fc0336ba0562af87b448d60a89a922440aaaca71af9855569221b92762d7fa45815820', 'settlement', 'accept', 0);
+INSERT INTO `topuppayment` VALUES ('202106246256523', '2021-06-10 16:13:49.000000', '0000-00-00 00:00:00.000000', 'gopay', 10075.00, 75.00, 'gopay', '883f2338-8bce-49c4-88c6-46c10b5322ce', 'G799701428', '', '', '', 'pending', 'accept', 0);
 INSERT INTO `topuppayment` VALUES ('202106346587052', '2021-06-03 20:13:35.000000', '2021-06-03 08:14:13.000000', 'bank_transfer', 104000.00, 0.00, 'bank_transfer', '84d22872-e0bb-4fd0-b353-df3ab07e939b', 'G799701428', 'bca', '01428622671', '964a949f8d630b84f9a3f9e89cbe0f0080cc3633a20efbfc11d073d448637c777fb4f01e03fb4e8bec0394e285365d7413ba1f630a41e81c19d54f90d927fb0d', 'settlement', 'accept', 0);
 INSERT INTO `topuppayment` VALUES ('202106974387085', '2021-06-03 18:58:16.000000', '2021-06-03 08:11:14.000000', 'bank_transfer', 104000.00, 0.00, 'bank_transfer', 'e5086040-62b0-4451-9197-7f2dd80f713e', 'G799701428', 'bca', '01428102000', '47bbbb207d23ffc00004cca726b69fb119d9a9432dc0a884c3d057459f3f8c4a659abea978645f452024a96b9fd7933579dae24f614b72314664d66f667fe1a8', 'settlement', 'accept', 0);
 
@@ -244,7 +253,7 @@ CREATE TABLE `tpaymentmethod`  (
 INSERT INTO `tpaymentmethod` VALUES (1, 'Manual Transfer', 1.00, 1, 'MANUAL', '12345', '12345', 0.00);
 INSERT INTO `tpaymentmethod` VALUES (2, 'Transfer verifikasi Otomatis', 4000.00, 1, 'AUTO', '-', '-', 0.00);
 INSERT INTO `tpaymentmethod` VALUES (3, 'GoPay', 0.00, 1, 'AUTO', '-', '-', 1.50);
-INSERT INTO `tpaymentmethod` VALUES (4, 'QRIS', 0.00, 1, 'AUTO', '-', '-', 0.75);
+INSERT INTO `tpaymentmethod` VALUES (4, 'QRIS', 0.00, 1, 'QRCODE', '-', '-', 0.75);
 
 -- ----------------------------
 -- Table structure for transaksi
@@ -325,8 +334,8 @@ CREATE TABLE `users`  (
 -- ----------------------------
 INSERT INTO `users` VALUES (14, 'admin', 'admin', 'a9bdd47d7321d4089b3b00561c9c621848bd6f6e2f745a53d54913d613789c23945b66de6ded1eb336a7d526f9349a9d964d6f6c3a40e2ac90b4b16c0121f7895Xg53McbkyQ/NmW60Sf4cu3wJsi/8cyZXxeXV7g6b04=', 'mnl', '0000-00-00 00:00:00', 1, '', b'1', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', '', NULL);
 INSERT INTO `users` VALUES (43, 'operator', 'Operator', '216a8e9520609ef5d94daf2f606bd425ff68ba564f9340e3ced8216c114825998bca4566e0e26d21553848b0641d5f954932cf105c8b253c7f7260a53610e6b4AMc30ZoMECNLImxck8z7ONNigRNBdVWsWU+/Bv03HLY=', '', '2020-04-26 10:11:27', 0, '', b'0', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', '', NULL);
-INSERT INTO `users` VALUES (44, 'adji142', '', '1691476a18aa7f470a9f8fc3eeb677c45b548b4b9d0cac12bc2d77c3ea6c8f4190f0a3cff8fc6b96dbd8e50dfaab57e7dd2a6806832bd1488b4cf5438d49fa92oi0g8vZcx31EfvWDBAe/7O6sGYV95W2jxbnwsDzFCzc=', '', '2020-05-07 10:07:59', 0, '', b'0', '', '', 'prasetyoajiw@gmail.com', '081325058258', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'http://apps.siapaisa.com/storeimage/scaled_e43d864a-1024-4066-9ec8-d2c952a9f4fe5452118784484563293.jpg');
+INSERT INTO `users` VALUES (44, 'adji142', '', '8bc7969d9c13ca93ef45618237907117993f4c9da409edb6bb9fb60a3e13d593791527528fc7999fb0f46f40e1b61592499582f74c4f069f7130361a21a8836bhiejAAVac2SnNsa6TZ09lnvl5jSZmZTRFjfO8F/0z0w=', '', '2020-05-07 10:07:59', 0, '', b'0', '', '', 'adjia7x@gmail.com', '081325058258', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'http://apps.siapaisa.com/storeimage/scaled_e43d864a-1024-4066-9ec8-d2c952a9f4fe5452118784484563293.jpg');
 INSERT INTO `users` VALUES (45, 'bayu04', '', 'b8508f774492123c1401169515544a1affabb249b4b327bbf519c3db50e3026a3af97609b35b2df909e9ba6483706c1148d0eefc7634662eed220f83b43a207doXTp1Fc6pK7+SQEh703yCVjFfhJIdIlhM69Ug55EXw0=', '', '2020-06-02 05:08:44', 0, '', b'0', '', '', 'bayuchris@yahoo.com', '', 0, '', '', '', '', '', '', '', '', '', '', '', '', NULL);
-INSERT INTO `users` VALUES (46, 'aistest', '', 'b9e351a0fc528ca21754c8f2d0a35f954477e9a5d4579b87a057f8ee2d15c63891011d7d7d0e21680b113ed0169d44530b8f8cabafa39e712f405e3b2bcbe559oiEdVW5HEDi2DOekxsFVJPUCo301zf7I8z3Mve8317k=', '', '2021-05-31 11:05:16', 0, '', b'0', '', '', 'prasetyoajiw@gmai.com', '08132508258', 0, '', '', '', '', '', '', '', '', '', '', '', '', NULL);
+INSERT INTO `users` VALUES (46, 'aistest', '', 'b9e351a0fc528ca21754c8f2d0a35f954477e9a5d4579b87a057f8ee2d15c63891011d7d7d0e21680b113ed0169d44530b8f8cabafa39e712f405e3b2bcbe559oiEdVW5HEDi2DOekxsFVJPUCo301zf7I8z3Mve8317k=', '', '2021-05-31 11:05:16', 0, '', b'0', '', 'RMX1941RMX1941', 'prasetyoajiw@gmai.com', '08132508258', 0, '', '', '', '', '', '', '', '', '', '', '', 'a8ffa6cf6ab75aab', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

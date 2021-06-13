@@ -41,6 +41,7 @@
               <h1>Login Form</h1>
               <div>
                 <input type="text" class="form-control" placeholder="Username" required="" id="username" name="username"/>
+                <input type="hidden" name="androidid" id="androidid" value="admin">
               </div>
               <div>
                 <input type="password" class="form-control" placeholder="Password" required="" id="password" name="password"/>
