@@ -32,7 +32,7 @@ class API_Payment extends CI_Controller {
 	}
 	public function MakePayment()
 	{
-		$data = array('success' => false ,'message'=>array(),'data' => array(), 'token'=>'');
+		$data = array('success' => false ,'message'=>array(),'data' => array(), 'token'=>'','NoTransaksi'=>'');
 
 		$amt = $this->input->post('amt');
 		$Adminfee = $this->input->post('Adminfee');
@@ -76,6 +76,7 @@ class API_Payment extends CI_Controller {
 				$this->ModelsExecuteMaster->ExecInsert($param,'thistoryrequest');
 
 				$data['token'] = $snapToken;
+				$data['NoTransaksi'] = $order_id;
 				$data['success'] = true;
 			} catch (Exception $e) {
 				$data['message'] = $e->getMessage();
@@ -387,6 +388,59 @@ class API_Payment extends CI_Controller {
 			$data['success'] = false;
 		}
 		$data['data'] = $response;
+		echo json_encode($data);
+	}
+
+	public function testCharge(){
+		\Midtrans\Config::$serverKey = 'SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1';
+		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+		\Midtrans\Config::$isProduction = false;
+		// Set sanitization on (default)
+		\Midtrans\Config::$isSanitized = true;
+		// Set 3DS transaction for credit card to true
+		\Midtrans\Config::$is3ds = true;
+		
+		// $order_id = $Periode.strval(rand());
+		$params = array(
+		    'transaction_details' => array(
+		        'order_id' => rand(),
+		        'gross_amount' => 10000,
+		    ),
+		    'payment_type' => 'gopay',
+		    'customer_details' => array(
+		        'first_name' => 'tampan',
+		        'email' => 'tampan@tampan.com'
+		    ),
+		);
+		 
+		$response = \Midtrans\CoreApi::charge($params);
+		var_dump($response);
+	}
+	public function konfirmasiPayment(){
+		$data = array('success' => false ,'message'=>array(),'imageurl'=>array());
+		$NoTransaksi = $this->input->post('NoTransaksi');
+		$image = $this->input->post('baseimage');
+		$imagename = $this->input->post('imagename');
+
+		// var_dump($image.' ; '.$imagename);
+		$temp = base64_decode($image);
+		$link = 'localData/confirmation/'.$imagename;
+		try {
+			file_put_contents($link, $temp);	
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		$fulllink = base_url().$link;
+
+		$rs = $this->ModelsExecuteMaster->ExecUpdate(array('Attachment'=>$fulllink),array('NoTransaksi'=> $NoTransaksi),'topuppayment');
+		if ($rs) {
+			$data['success'] = true;
+			$data['imageurl'] = $fulllink;
+		}
+		else{
+			$data['message'] = 'Gagal Update Password';
+		}
 		echo json_encode($data);
 	}
 }

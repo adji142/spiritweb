@@ -81,7 +81,7 @@ class C_Buku extends CI_Controller {
 		ini_set('upload_max_filesize', '1000M');
 		ini_set('post_max_size', '1000M');
 
-		$data = array('success' => false ,'message'=>array());
+		$data = array('success' => false ,'message'=>array(),'KodeItem' => '');
 
 		$id = $this->input->post('id');
 		$KodeItem = $this->input->post('KodeItem');
@@ -108,6 +108,26 @@ class C_Buku extends CI_Controller {
 
 		$picture_ext = '';
 		// picture
+
+
+		// Generate New KodeITem
+
+		$Kolom = 'KodeItem';
+		$Table = 'tbuku';
+		$Prefix = '1';
+
+		$SQL = "SELECT RIGHT(MAX(".$Kolom."),5)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
+
+		// var_dump($SQL);
+		$rs = $this->db->query($SQL);
+
+		$temp = $rs->row()->Total + 1;
+
+		$nomor = $Prefix.str_pad($temp, 5,"0",STR_PAD_LEFT);
+		if ($nomor != '') {
+			$KodeItem = $nomor;
+		}
+
 		try {
 			unset($config); 
 			$date = date("ymd");
@@ -303,6 +323,7 @@ class C_Buku extends CI_Controller {
 			$data['success'] = false;
 			$data['message'] = "Invalid Form Type";
 		}
+		$data['KodeItem'] = $KodeItem;
 		jumpx:
 		echo json_encode($data);
 	}

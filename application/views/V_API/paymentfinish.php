@@ -31,7 +31,7 @@
             var NoTransaksi = $('#NoTransaksi').val();;
             var TglTransaksi = response.data.transaction_time;
             var TglPencatatan = Date.now();
-            var MetodePembayaran = response.data.payment_type;
+            var MetodePembayaran = 'AUTO'; //response.data.payment_type
             var GrossAmt = response.data.gross_amount;
             var AdminFee = 0;
             var Mid_PaymentType = response.data.payment_type;

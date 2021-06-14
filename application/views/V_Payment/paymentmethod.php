@@ -68,6 +68,7 @@
                       <select class="form-control" id="JenisVerifikasi" name="JenisVerifikasi" required="">
                         <option value="AUTO">AUTO</option>
                         <option value="MANUAL">MANUAL</option>
+                        <option value="QRCODE">QRCODE</option>
                       </select>
                     </div>
                   </div>

@@ -390,6 +390,7 @@ class API_auth extends CI_Controller {
 					WHERE u.username = '".$KodeUser."'
 					";
 
+			$SQL = "CALL getSaldoUser('".$KodeUser."')";
 			try {
 				$rs = $this->db->query($SQL);
 				if ($rs) {

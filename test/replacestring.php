@@ -1,4 +1,5 @@
 <?php
+	$data = array('success' => false ,'message'=>array(),'data' => array());
 
 	// Get Epub File Name -> Generate by GET Req from Front End
 	header('Content-Type: text/html; charset=utf-8');
@@ -13,24 +14,24 @@
 	require('epub.php');
 	require 'TPEpubCreator.php';
 
-	try{
-        // $book = $_REQUEST['book'];
-        // $book = str_replace('..','',$book); // no upper dirs, lowers might be supported later
-        $epub = new EPub($fullFolderName.'.epub');
-        var_dump($epub->Authors())."<br>";
-        var_dump($epub->Cover());
-        var_dump($epub->Subjects()[0]);
-        // echo $epub->Authors()."<br>";
-        // echo $epub->Cover()."<br>";
-        echo $epub->Description()."<br>";
-        // echo $epub->Subjects()."<br>";
-        echo $epub->Publisher()."<br>";
-        echo $epub->Copyright()."<br>";
-        echo $epub->Language()."<br>";
-        echo $epub->ISBN()."<br>";
-    }catch (Exception $e){
-        $error = $e->getMessage();
-    }
+	// try{
+ //        // $book = $_REQUEST['book'];
+ //        // $book = str_replace('..','',$book); // no upper dirs, lowers might be supported later
+ //        $epub = new EPub($fullFolderName.'.epub');
+ //        var_dump($epub->Authors())."<br>";
+ //        var_dump($epub->Cover());
+ //        var_dump($epub->Subjects()[0]);
+ //        // echo $epub->Authors()."<br>";
+ //        // echo $epub->Cover()."<br>";
+ //        echo $epub->Description()."<br>";
+ //        // echo $epub->Subjects()."<br>";
+ //        echo $epub->Publisher()."<br>";
+ //        echo $epub->Copyright()."<br>";
+ //        echo $epub->Language()."<br>";
+ //        echo $epub->ISBN()."<br>";
+ //    }catch (Exception $e){
+ //        $error = $e->getMessage();
+ //    }
 
 
 	// Extract Epub File
@@ -41,9 +42,11 @@
 	// End Extract File// Unzip Path
 	    $zip->extractTo($unzipDestination);
 	    $zip->close();
-	    echo 'Unzipped Process Successful!';
+	    // echo 'Unzipped Process Successful!';
 	} else {
-	    echo 'Unzipped Process failed';
+	    // echo 'Unzipped Process failed';
+	    $data['success'] = false;
+	    $data['message'] = 'Unzipped Process failed';
 	}
 
 	// Scaning Extraction Directory
@@ -171,7 +174,6 @@
 				file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
 				// End Manipulate Epub File
 			}
-			echo "rubah ayat <br>";
 		}
 	}
 
@@ -377,4 +379,22 @@
 	// Zip archive will be created only after closing object
 	$zip->close();
 	// End Packing to Epub File
+
+	$pathx = "../localData/Books/".$folderName;
+	removeDirectory($pathx);
+
+	function removeDirectory($path) {
+
+		$files = glob($path . '/*');
+		foreach ($files as $file) {
+			is_dir($file) ? removeDirectory($file) : unlink($file);
+		}
+		rmdir($path);
+
+		return;
+	}
+
+	$data['success'] = true;
+
+	echo json_encode($data);
 ?>

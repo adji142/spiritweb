@@ -71,7 +71,8 @@ $route['buku'] = 'Home/buku';
 // Pembayaran
 $route['metodepembayaran'] = 'Home/metodepembayaran';
 
-
+// Transaksi
+$route['pembayaran'] = 'Home/pembayaran';
 
 
 // ======================================== API ========================================
@@ -96,6 +97,10 @@ $route['APIAddTransaksi'] = 'API/API_Payment/RecordPayment';
 $route['APIHistory'] = 'API/API_Payment/getPaymentHistory';
 $route['APIPaymentStatus'] = 'API/API_Payment/cekPaymentStatus';
 $route['APIPaymentGenerateQR'] = 'API/API_Payment/chargeGopay';
+$route['APIPaymentKonfirmasi'] = 'API/API_Payment/konfirmasiPayment';
+
+// Test Paymant
+$route['APIPaymenttest'] = 'API/API_Payment/testCharge';
 
 // API Auth
 $route['APIAUTHUname'] = 'API/API_auth/FindUserName';

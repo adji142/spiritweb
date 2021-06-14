@@ -119,4 +119,11 @@ class home extends CI_Controller {
 	public function metodepembayaran(){
 		$this->load->view('V_Payment/paymentmethod');
 	}
+	public function pembayaran(){
+		$this->load->view('V_Trx/V_DaftarPembayaranTopUp');
+	}
+	public function saldoperaccount($value='')
+	{
+		$this->load->view('V_Trx/saldoPerAccount');
+	}
 }
