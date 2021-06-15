@@ -11,7 +11,7 @@
  Target Server Version : 100406
  File Encoding         : 65001
 
- Date: 15/06/2021 23:38:32
+ Date: 15/06/2021 23:50:01
 */
 
 SET NAMES utf8mb4;
@@ -487,7 +487,7 @@ BEGIN
 				0 AdjMin
 			FROM topuppayment a
 			INNER JOIN thistoryrequest b on a.NoTransaksi = b.NoTransaksi
-			GROUP BY B.userid
+			GROUP BY b.userid
 
 			UNION ALL
 			SELECT 
@@ -509,8 +509,8 @@ BEGIN
 			FROM adjustmenthistory y
 			GROUP BY y.KodeUser
 		) Sld
-		GROUP BY sld.userid
-	) B ON A.username = b.userid
+		GROUP BY Sld.userid
+	) B ON A.username = B.userid
 	WHERE (A.username = UserID OR UserID = '');
 END
 ;;
