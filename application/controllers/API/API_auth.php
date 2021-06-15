@@ -413,4 +413,25 @@ class API_auth extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+	public function logout()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+		$KodeUser = $this->input->post('username');
+		$token = $this->input->post('token');
+		try {
+			$rs = $this->ModelsExecuteMaster->ExecUpdate(array('browser'=>'','HardwareID'=>''), array('username'=>$KodeUser),'users');
+			if ($rs) {
+				$data['success'] = true;
+			}
+			else{
+				$data['success'] = false;
+				$undone = $this->db->error();
+				$data['message'] = 'Gagal Melakukan Pemrosesan data : ' . $undone['message'];
+			}
+		} catch (Exception $e) {
+			$data['success'] = false;
+			$data['message'] = $e->getMessage();
+		}
+		echo json_encode($data);
+	}
 }

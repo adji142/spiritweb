@@ -304,6 +304,7 @@ class C_Buku extends CI_Controller {
 			}
 		}
 		elseif ($formtype == 'Publish') {
+			$KodeItem = $this->input->post('KodeItem');
 			try {
 				$SQL = "UPDATE ".'tbuku'." SET status_publikasi = 1 WHERE KodeItem = '".$KodeItem."'";
 				$rs = $this->db->query($SQL);

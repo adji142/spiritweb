@@ -115,4 +115,51 @@ class API_Buku extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+	public function TopSeller()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$SQL = 'CALL getTopSeller()';
+
+		try {
+			$rs = $this->db->query($SQL);
+			if ($rs) {
+				$data['success'] = true;
+				$data['data'] = $rs->result();
+			}
+			else{
+				$undone = $this->db->error();
+				$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+			}
+		} catch (Exception $e) {
+			$data['success'] = false;
+			$data['message'] = "Gagal memproses data ". $e->getMessage();
+		}
+
+		echo json_encode($data);
+	}
+
+	public function NewRelease()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$SQL = 'CALL getNewRelease()';
+
+		try {
+			$rs = $this->db->query($SQL);
+			if ($rs) {
+				$data['success'] = true;
+				$data['data'] = $rs->result();
+			}
+			else{
+				$undone = $this->db->error();
+				$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+			}
+		} catch (Exception $e) {
+			$data['success'] = false;
+			$data['message'] = "Gagal memproses data ". $e->getMessage();
+		}
+
+		echo json_encode($data);
+	}
 }

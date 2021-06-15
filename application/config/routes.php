@@ -85,6 +85,8 @@ $route['APIkategori'] = 'API/API_Kategori/GetKategori';
 
 $route['APIbuku'] = 'API/API_Buku/GetBuku';
 $route['APIpublish'] = 'API/API_Buku/publish';
+$route['APItopSell'] = 'API/API_Buku/TopSeller';
+$route['APInewRelease'] = 'API/API_Buku/NewRelease';
 
 
 // API Payment
@@ -112,6 +114,7 @@ $route['APIAUTHChangeImage'] = 'API/API_auth/ChangeImage';
 $route['APIAUTHUserInfo'] = 'API/API_auth/GetUserInfo';
 $route['APIAUTHUserInformation'] = 'API/API_auth/send_email';
 $route['APIAUTHSaldoAkun'] = 'API/API_auth/SaldoAccount';
+$route['APIAUTHlogout'] = 'API/API_auth/logout';
 
 // API Transaction
 $route['APITrxHistory'] = 'API/API_Payment/getTransactionHistory';

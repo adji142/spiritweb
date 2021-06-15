@@ -122,8 +122,18 @@ class home extends CI_Controller {
 	public function pembayaran(){
 		$this->load->view('V_Trx/V_DaftarPembayaranTopUp');
 	}
-	public function saldoperaccount($value='')
+	public function saldoperaccount()
 	{
 		$this->load->view('V_Trx/saldoPerAccount');
+	}
+	public function daftartransaksi()
+	{
+		$this->load->view('V_Trx/transaksipenjualan');
+	}
+
+	// Chat
+	public function chat()
+	{
+		$this->load->view('V_Other/chat');
 	}
 }

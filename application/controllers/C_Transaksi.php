@@ -150,26 +150,52 @@ class C_Transaksi extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
-	public function Read()
+	public function ReadTransaksi()
 	{
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 
-		$id = $this->input->post('id');
+		$tglAwal = $this->input->post('Tglawal');
+		$tglAkhir= $this->input->post('TglAkhir');
 
-		if ($id == '') {
-			$rs = $this->ModelsExecuteMaster->GetData('tkategori');
+		$SQL = "CALL getTransaksi('".$tglAwal."','".$tglAkhir."')";
+
+		try {
+			$rs = $this->db->query($SQL);
+			if ($rs) {
+				$data['success'] = true;
+				$data['data'] = $rs->result();
+			}
+			else{
+				$undone = $this->db->error();
+				$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+			}
+		} catch (Exception $e) {
+			$data['success'] = false;
+			$data['message'] = "Gagal memproses data ". $e->getMessage();
 		}
-		else{
-			$rs = $this->ModelsExecuteMaster->FindData(array('id'=>$id),'tkategori');
+		echo json_encode($data);
+	}
+	public function removeAccess()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$NoTransaksi = $this->input->post('NoTransaksi');
+
+		try {
+			$rs = $this->ModelsExecuteMaster->ExecUpdate(array('StatusTransaksi'=>'99'),array('NoTransaksi'=>$NoTransaksi),'transaksi');
+			if ($rs) {
+				$data['success'] = true;
+				$data['data'] = $rs->result();
+			}
+			else{
+				$undone = $this->db->error();
+				$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+			}
+		} catch (Exception $e) {
+			$data['success'] = false;
+			$data['message'] = "Gagal memproses data ". $e->getMessage();
 		}
 
-		if ($rs->num_rows()>0) {
-			$data['success'] = true;
-			$data['data'] = $rs->result();
-		}
-		else{
-			$data['message'] = 'No Record Found';
-		}
 		echo json_encode($data);
 	}
 }

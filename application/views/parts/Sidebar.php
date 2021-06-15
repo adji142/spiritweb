@@ -18,7 +18,12 @@
 
               if ($key->multilevel == "0") {
                 if($key->separator == "0"){
-                  echo "<li><a href='".base_url().$key->link."'><i class='fa ".$key->ico." nav_icon'></i> ".$key->permissionname."<span class='label label-success pull-right'></span></a> </li>";
+                  if ($key->link == "Home/chat") {
+                    echo "<li><a href='".base_url().$key->link."' target='_blank'><i class='fa ".$key->ico." nav_icon'></i> ".$key->permissionname."<span class='label label-success pull-right'></span></a> </li>";
+                  }
+                  else{
+                    echo "<li><a href='".base_url().$key->link."'><i class='fa ".$key->ico." nav_icon'></i> ".$key->permissionname."<span class='label label-success pull-right'></span></a> </li>";
+                  }
                 }
                 else{
                   echo "<li class ='content'><center><span class ='separator-custom'> ".$key->permissionname."</span></center></li>";  
