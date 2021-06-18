@@ -53,12 +53,15 @@ class C_Kategori extends CI_Controller {
 		$data = array('success' => false ,'message'=>array());
 		$id 			= $this->input->post('id');
 		$NamaKategori 	= $this->input->post('NamaKategori');
+		$ShowHomePagex 	= $this->input->post('ShowHomePage');
+
 		$ArticleTable 	= 'tkategori';
 		// $exploder = explode("|",$ItemGroup[0]);
 		$formtype = $this->input->post('formtype');
 
 		$param = array(
-			'NamaKategori' 	=> $NamaKategori
+			'NamaKategori' 	=> $NamaKategori,
+			'ShowHomePage'	=> $ShowHomePagex
 		);
 		if ($formtype == 'add') {
 			$this->db->trans_begin();

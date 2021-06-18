@@ -95,7 +95,7 @@
                     <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Cover <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
-                      <input type="file" id="Attachment" name="Attachment" accept=".png" />
+                      <input type="file" id="Attachment" name="Attachment" accept=".png,.jpg" />
                       <img src="" id="profile-img-tag" width="200" />
                       <!-- <textarea id="picture_base64" name="picture_base64"></textarea> -->
                       <textarea id="picture_base64" name="picture_base64" style="display: none;"></textarea>

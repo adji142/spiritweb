@@ -51,6 +51,13 @@
                       <input type="hidden" name="formtype" id="formtype" value="add">
                     </div>
                   </div>
+                  <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Tampilkan di Halaman awal ? <span class="required">*</span>
+                    </label>
+                    <div class="col-md-5 col-sm-5 ">
+                      <input type="checkbox" name="ShowHomePagex" id="ShowHomePagex" class="form-control" value="0">
+                    </div>
+                  </div>
                   <div class="item" form-group>
                     <button class="btn btn-primary" id="btn_Save">Save</button>
                   </div>
@@ -84,6 +91,16 @@
         }
       });
     });
+    $('#ShowHomePagex').click(function () {
+      if ($("#ShowHomePagex").prop("checked") == true) {
+        $('#ShowHomePagex').val("1");
+      }
+      else{
+        $('#ShowHomePagex').val("0"); 
+      }
+      console.log($('#ShowHomePagex').val());
+    });
+
     $('#post_').submit(function (e) {
       $('#btn_Save').text('Tunggu Sebentar.....');
       $('#btn_Save').attr('disabled',true);
@@ -94,7 +111,7 @@
       $.ajax({
             type    :'post',
             url     : '<?=base_url()?>C_Kategori/CRUD',
-            data    : me.serialize(),
+            data    : {'id':$('#id').val(),'NamaKategori':$('#NamaKategori').val(),'ShowHomePage':$('#ShowHomePagex').val(),'formtype':$('#formtype').val()},
             dataType: 'json',
             success : function (response) {
               if(response.success == true){
@@ -143,7 +160,12 @@
                 $('#id').val(v.id);
                 $('#NamaKategori').val(v.NamaKategori);
                 // $('#Nilai').val(v.Nilai);
-
+                if (v.ShowHomePage == "0") {
+                  $("#ShowHomePagex").prop('checked', false);
+                }
+                else{
+                  $("#ShowHomePagex").prop('checked', true);
+                }
                 $('#formtype').val("edit");
 
                 $('#modal_').modal('show');

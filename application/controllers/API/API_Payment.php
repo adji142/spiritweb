@@ -226,8 +226,8 @@ class API_Payment extends CI_Controller {
 					// Get Transaction Status in Midtrans
 					$status = \Midtrans\Transaction::status($key->NoTransaksi);
 
-					// var_dump(count($status));
-					if (count($status) > 0) {
+					// var_dump($status);
+					if ($status) {
 						// var_dump($status);
 						$param = array(
 							'TglPencatatan' => date("Y-m-d h:i:sa"),
@@ -262,7 +262,7 @@ class API_Payment extends CI_Controller {
 
 		$SQL = "SELECT * FROM (
 				SELECT 
-					'0' Transaksi, a.NoTransaksi,b.TglTransaksi, COALESCE(B.GrossAmt,0) - COALESCE(a.Adminfee,0) Nominal,
+					'0' Transaksi, a.NoTransaksi,B.TglTransaksi, COALESCE(B.GrossAmt,0) - COALESCE(a.Adminfee,0) Nominal,
 					B.MetodePembayaran, a.userid, B.Mid_TransactionStatus,'Top Up Spirit Pay' Keterangan,
 					COALESCE(B.Mid_Bank,'') Bank, COALESCE(B.Mid_VANumber,'') VA_Numb,COALESCE(B.Mid_PaymentType,'') Mid_PaymentType
 				FROM thistoryrequest a

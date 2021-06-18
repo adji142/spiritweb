@@ -87,6 +87,8 @@ $route['APIbuku'] = 'API/API_Buku/GetBuku';
 $route['APIpublish'] = 'API/API_Buku/publish';
 $route['APItopSell'] = 'API/API_Buku/TopSeller';
 $route['APInewRelease'] = 'API/API_Buku/NewRelease';
+$route['APIgetLocation'] = 'API/API_Buku/getLastLocation';
+$route['APIsetLocation'] = 'API/API_Buku/SetLastLocation';
 
 
 // API Payment

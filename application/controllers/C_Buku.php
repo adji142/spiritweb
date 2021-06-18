@@ -124,7 +124,7 @@ class C_Buku extends CI_Controller {
 		$temp = $rs->row()->Total + 1;
 
 		$nomor = $Prefix.str_pad($temp, 5,"0",STR_PAD_LEFT);
-		if ($nomor != '') {
+		if ($nomor != '' && $KodeItem == '') {
 			$KodeItem = $nomor;
 		}
 
@@ -133,10 +133,11 @@ class C_Buku extends CI_Controller {
 			$date = date("ymd");
 	        $config['upload_path'] = './localData/image';
 	        $config['max_size'] = '60000';
-	        $config['allowed_types'] = 'png';
+	        $config['allowed_types'] = 'png|jpg|jpeg|gif';
 	        $config['overwrite'] = TRUE;
 	        $config['remove_spaces'] = TRUE;
-	        $config['file_name'] = str_replace(' ', '', $KodeItem);
+	        $config['file_ext_tolower'] = TRUE;
+	        $config['file_name'] = strtolower(str_replace(' ', '', $KodeItem));
 
 	        $this->load->library('upload', $config);
 	        $this->upload->initialize($config);
@@ -232,27 +233,33 @@ class C_Buku extends CI_Controller {
 			goto jumpx;
 		}
 
-		$param = array(
-			'KodeItem' => $KodeItem,
-			'kategoriID' => $kategoriID,
-			'judul' => $judul,
-			'description' => $description,
-			'releasedate' => $releasedate,
-			'releaseperiod' => $releaseperiod,
-			'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).'.PNG',
-			'picture_base64' => $picture_base64,
-			'harga' => str_replace(',', '', $harga),
-			'ppn' => str_replace(',', '', $ppn),
-			'otherprice' => str_replace('', '', $otherprice),
-			'epub' => base_url().'localData/epub/'.str_replace(' ', '', $KodeItem).'.epub',
-			'epub_full' => base_url().'localData/epub/'.str_replace(' ', '', $KodeItem.'_pub').'.epub',
-			'avgrate' => $avgrate,
-			'status_publikasi' => $status_publikasi,
-			'createdby' => $this->session->userdata('username'),
-			'createdon' => date("Y-m-d h:i:sa")
-		);
+		if ($formtype == 'add' || $formtype == 'edit') {
+			$pos  = strpos($picture_base64, ';');
+			$type = explode(':', substr($picture_base64, 0, $pos))[1];
+			$extension = explode('/', $type)[1];
+		}
+		// var_dump($extension);
 		
 		if ($formtype == 'add') {
+			$param = array(
+				'KodeItem' => $KodeItem,
+				'kategoriID' => $kategoriID,
+				'judul' => $judul,
+				'description' => $description,
+				'releasedate' => $releasedate,
+				'releaseperiod' => $releaseperiod,
+				'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).'.'.strtolower($extension),
+				'picture_base64' => $picture_base64,
+				'harga' => str_replace(',', '', $harga),
+				'ppn' => str_replace(',', '', $ppn),
+				'otherprice' => str_replace('', '', $otherprice),
+				'epub' => base_url().'localData/epub/'.str_replace(' ', '', $KodeItem).'.epub',
+				'epub_full' => base_url().'localData/epub/'.str_replace(' ', '', $KodeItem.'_pub').'.epub',
+				'avgrate' => $avgrate,
+				'status_publikasi' => $status_publikasi,
+				'createdby' => $this->session->userdata('username'),
+				'createdon' => date("Y-m-d h:i:sa")
+			);
 			$this->db->trans_begin();
 			try {
 				$call_x = $this->ModelsExecuteMaster->ExecInsert($param,'tbuku');
@@ -273,6 +280,25 @@ class C_Buku extends CI_Controller {
 			}
 		}
 		elseif ($formtype == 'edit') {
+			$param = array(
+				'KodeItem' => $KodeItem,
+				'kategoriID' => $kategoriID,
+				'judul' => $judul,
+				'description' => $description,
+				'releasedate' => $releasedate,
+				'releaseperiod' => $releaseperiod,
+				'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).'.'.strtolower($extension),
+				'picture_base64' => $picture_base64,
+				'harga' => str_replace(',', '', $harga),
+				'ppn' => str_replace(',', '', $ppn),
+				'otherprice' => str_replace('', '', $otherprice),
+				'epub' => base_url().'localData/epub/'.str_replace(' ', '', $KodeItem).'.epub',
+				'epub_full' => base_url().'localData/epub/'.str_replace(' ', '', $KodeItem.'_pub').'.epub',
+				'avgrate' => $avgrate,
+				'status_publikasi' => $status_publikasi,
+				'createdby' => $this->session->userdata('username'),
+				'createdon' => date("Y-m-d h:i:sa")
+			);
 			try {
 				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('KodeItem'=> $KodeItem),'tbuku');
 				if ($rs) {
@@ -290,6 +316,7 @@ class C_Buku extends CI_Controller {
 		elseif ($formtype == 'delete') {
 			try {
 				$SQL = "UPDATE ".'tbuku'." SET status_publikasi = 0 WHERE KodeItem = '".$KodeItem."'";
+				// var_dump($SQL);
 				$rs = $this->db->query($SQL);
 				if ($rs) {
 					$data['success'] = true;

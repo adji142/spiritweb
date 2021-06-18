@@ -57,8 +57,14 @@
 		if ($ext == 'html' || $ext == 'xhtml') {
 			// Manipulate Epub File
 
-			$oldTitle = 'style="max-width:100%" "max-height:100%"';
-			$newTitle = 'style="max-width:100%;max-height:100%"';
+			// $oldTitle = 'style="max-width:100%" "max-height:100%"';
+			// $newTitle = 'style="max-width:100%;max-height:100%"';
+
+			$oldTitle = '<img src="cover.jpeg" alt="cover" style="max-width:100%" "max-height:100%"/>';
+			$newTitle = '';
+
+			$findBody = '<body>';
+			$replaceBody = '<body style="background-image: url(cover.jpeg); height: 100%;background-position: center;background-repeat: no-repeat;background-size: cover;">';
 
 			$oldAyat1 = '<!--';
 			$newAyat1 = '';
@@ -70,6 +76,23 @@
 			$str=str_replace($oldTitle, $newTitle,$str);
 			$str=str_replace($oldAyat1, $newAyat1,$str);
 			$str=str_replace($oldAyat2, $newAyat2,$str);
+			$str=str_replace($findBody, $replaceBody,$str);
+			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
+			// End Manipulate Epub File
+		}
+	}
+
+
+	foreach ($driveResult as $key) {
+		$ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
+		if ($ext == 'html' || $ext == 'xhtml') {
+			// Manipulate Epub File
+
+			$oldTitle = "background-image: url(cover.jpeg)";
+			$newTitle = "background-image: url('cover.jpeg')";
+
+			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=str_replace($oldTitle, $newTitle,$str);
 			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
 			// End Manipulate Epub File
 		}
@@ -339,6 +362,44 @@
 
 			$oldTitle = ']]>]]>';
 			$newTitle = ']]>';
+
+			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=str_replace($oldTitle, $newTitle,$str);
+			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
+			// End Manipulate Epub File
+		}
+	}
+
+	// Step 17
+
+	foreach ($driveResult as $key) {
+		$ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
+		if ($ext == 'html' || $ext == 'xhtml') {
+			// Manipulate Epub File
+
+			$oldTitle = '<p class="block_" lang="en">';
+			$newTitle = '';
+
+			$findTitle = '/></p>';
+			$replaceTitle = '/>';
+
+			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=str_replace($oldTitle, $newTitle,$str);
+			$str=str_replace($findTitle, $replaceTitle,$str);
+			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
+			// End Manipulate Epub File
+		}
+	}
+
+	// Step 18
+
+	foreach ($driveResult as $key) {
+		$ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
+		if ($ext == 'css') {
+			// Manipulate Epub File
+
+			$oldTitle = '.block_2 {';
+			$newTitle = '.block_2 {text-align:justify;';
 
 			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
 			$str=str_replace($oldTitle, $newTitle,$str);

@@ -162,4 +162,62 @@ class API_Buku extends CI_Controller {
 
 		echo json_encode($data);
 	}
+	public function SetLastLocation()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$userid = $this->input->post('userid');
+		$kodebuku = $this->input->post('kodebuku');
+		$lastlocation = $this->input->post('lastlocation');
+
+		$param = array(
+			'userid' => $userid,
+			'kodebuku' => $kodebuku,
+			'lastlocation' => $lastlocation,
+		);
+
+		try {
+			$lastRecord = $this->ModelsExecuteMaster->FindData(array('userid'=>$userid,'kodebuku'=>$kodebuku),'lastlocation');
+			if ($lastRecord->num_rows() > 0) {
+				$SQL = "UPDATE ".'lastlocation'." SET lastlocation = '".$lastlocation."' WHERE userid = '".$userid."' AND kodebuku = '".$kodebuku."'" ;
+				$rs = $this->db->query($SQL);
+				if ($rs) {
+					$data['success'] = true;
+				}
+				else{
+					$data['success'] = false;
+					$undone = $this->db->error();
+					$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+				}
+			}
+			else{
+				$call_x = $this->ModelsExecuteMaster->ExecInsert($param,'lastlocation');
+				if ($call_x) {
+					$data['success'] = true;
+				}
+				else{
+					$undone = $this->db->error();
+					$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+				}
+			}
+		} catch (Exception $e) {
+			$data['success'] = false;
+			$data['message'] = "Gagal memproses data ". $e->getMessage();
+		}
+		echo json_encode($data);
+	}
+
+	public function getLastLocation()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+		$userid = $this->input->post('userid');
+		$kodebuku = $this->input->post('kodebuku');
+
+		$lastRecord = $this->ModelsExecuteMaster->FindData(array('userid'=>$userid,'kodebuku'=>$kodebuku),'lastlocation');
+		if ($lastRecord->num_rows() > 0) {
+			$data['success'] = true;
+			$data['data'] = $lastRecord->result();
+		}
+		echo json_encode($data);
+	}
 }
