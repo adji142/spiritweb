@@ -10,66 +10,68 @@
     <div class="clearfix"></div>
 
     <div class="row">
-      <div class="col-md-6 ">
+      <div class="col-md-12 col-sm-12  ">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Pembayaran Manual</h2>
+            <h2>Daftar Pembayaran</h2>
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
-          	<div class="col-md-4 col-sm-12  form-group">
-				<input type="date" class="form-control" name="tglAwalManual" id="tglAwalManual">
-			</div>
-			<div class="col-md-4 col-sm-12  form-group">
-				<input type="date" class="form-control" name="tglAkhirManual" id="tglAkhirManual">
-			</div>
-			<div class="col-md-4 col-sm-12  form-group">
-				<!-- <input type="date" class="form-control" name="tglAkhirManual" id="tglAkhirManual"> -->
-				<button class="btn btn-success" id="searchManual">Search</button>
-			</div>
-			<div class="col-md-12 col-sm-12  form-group">
-				<div class="dx-viewport demo-container">
-		          <div id="data-grid-demo">
-		            <div id="gridContainerManual">
-		            </div>
-		          </div>
-		        </div>
-			</div>
+
+            <ul class="nav nav-tabs bar_tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Konfirmasi Manual</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Konfirmasi Otomatis</a>
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="col-md-4 col-sm-12  form-group">
+					<input type="date" class="form-control" name="tglAwalManual" id="tglAwalManual" value="<?php echo date("Y-m-01");?>">
+				</div>
+				<div class="col-md-4 col-sm-12  form-group">
+					<input type="date" class="form-control" name="tglAkhirManual" id="tglAkhirManual" value="<?php echo date("Y-m-d");?>">
+				</div>
+				<div class="col-md-4 col-sm-12  form-group">
+					<button class="btn btn-success" id="searchManual">Search</button>
+				</div>
+				<div class="col-md-12 col-sm-12  form-group">
+					<div class="dx-viewport demo-container">
+			          <div id="data-grid-demo">
+			            <div id="gridContainerManual">
+			            </div>
+			          </div>
+			        </div>
+				</div>
+              </div>
+              <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="col-md-4 col-sm-12  form-group">
+					<input type="date" class="form-control" name="tglAwalAuto" id="tglAwalAuto" value="<?php echo date("Y-m-01");?>">
+				</div>
+				<div class="col-md-4 col-sm-12  form-group">
+					<input type="date" class="form-control" name="tglAkhirAuto" id="tglAkhirAuto" value="<?php echo date("Y-m-d");?>">
+				</div>
+				<div class="col-md-4 col-sm-12  form-group">
+					<!-- <input type="date" class="form-control" name="tglAkhirManual" id="tglAkhirManual"> -->
+					<button class="btn btn-success" id="searchAuto">Search</button>
+				</div>
+				<div class="col-md-12 col-sm-12  form-group">
+					<div class="dx-viewport demo-container">
+			          <div id="data-grid-demo">
+			            <div id="gridContainerAuto">
+			            </div>
+			          </div>
+			        </div>
+				</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      
-      <div class="col-md-6 ">
-        <div class="x_panel">
-          <div class="x_title">
-            <h2>Pembayaran Auto</h2>
-            <div class="clearfix"></div>
-          </div>
-          <div class="x_content">
-          	<div class="col-md-4 col-sm-12  form-group">
-				<input type="date" class="form-control" name="tglAwalAuto" id="tglAwalAuto">
-			</div>
-			<div class="col-md-4 col-sm-12  form-group">
-				<input type="date" class="form-control" name="tglAkhirAuto" id="tglAkhirAuto">
-			</div>
-			<div class="col-md-4 col-sm-12  form-group">
-				<!-- <input type="date" class="form-control" name="tglAkhirManual" id="tglAkhirManual"> -->
-				<button class="btn btn-success" id="searchAuto">Search</button>
-			</div>
-			<div class="col-md-12 col-sm-12  form-group">
-				<div class="dx-viewport demo-container">
-		          <div id="data-grid-demo">
-		            <div id="gridContainerAuto">
-		            </div>
-		          </div>
-		        </div>
-			</div>
-          </div>
-        </div>
-      </div>
-
     </div>
+
   </div>
 </div>
 
@@ -123,7 +125,7 @@
 			$.ajax({
 		        type: "post",
 		        url: "<?=base_url()?>C_Transaksi/GetPembayaranList",
-		        data: {'Tglawal':$('#tglAwalManual').val(),'TglAkhir': $('#tglAwalManual').val(), 'Metode' : 'AUTO','NoTransaksi':''},
+		        data: {'Tglawal':$('#tglAwalAuto').val(),'TglAkhir': $('#tglAkhirAuto').val(), 'Metode' : 'AUTO','NoTransaksi':''},
 		        dataType: "json",
 		        success: function (response) {
 		          gridContainerAuto(response.data);
@@ -179,6 +181,21 @@
 	                {
 	                    dataField: "NoTransaksi",
 	                    caption: "No Transaksi",
+	                    allowEditing:false
+	                },
+	                {
+	                    dataField: "userid",
+	                    caption: "Kode User",
+	                    allowEditing:false
+	                },
+	                {
+	                    dataField: "email",
+	                    caption: "Email User",
+	                    allowEditing:false
+	                },
+	                {
+	                    dataField: "phone",
+	                    caption: "No. Tlp User",
 	                    allowEditing:false
 	                },
 	                {
@@ -240,6 +257,21 @@
 	                    allowEditing:false
 	                },
 	                {
+	                    dataField: "userid",
+	                    caption: "Kode User",
+	                    allowEditing:false
+	                },
+	                {
+	                    dataField: "email",
+	                    caption: "Email User",
+	                    allowEditing:false
+	                },
+	                {
+	                    dataField: "phone",
+	                    caption: "No. Tlp User",
+	                    allowEditing:false
+	                },
+	                {
 	                    dataField: "TglTransaksi",
 	                    caption: "TanggalTransaksi",
 	                    allowEditing:false
@@ -252,6 +284,11 @@
 	                {
 	                    dataField: "TotalPembelian",
 	                    caption: "Total Pembelian",
+	                    allowEditing:false
+	                },
+	                {
+	                    dataField: "AdminFee",
+	                    caption: "Biaya admin Mid-Trans",
 	                    allowEditing:false
 	                },
 	                {

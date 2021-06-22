@@ -19,6 +19,7 @@
 
     $(document).ready(function () {
       var NoTransaksi = $('#NoTransaksi').val();
+      console.log(NoTransaksi);
       $.ajax({
         type: "post",
         url: "<?=base_url()?>APIPaymentResult",
@@ -27,6 +28,7 @@
         success: function (response) {
           // bindGrid(response.data);
           if (response.success == true) {
+            console.log(response);
             // console.log($('#NoTransaksi').val());
             var NoTransaksi = $('#NoTransaksi').val();;
             var TglTransaksi = response.data.transaction_time;
@@ -37,7 +39,12 @@
             var Mid_PaymentType = response.data.payment_type;
             var Mid_TransactionID = response.data.transaction_id;
             var Mid_MechantID = response.data.merchant_id;
-            if (response.data.payment_type = "bank_transfer") {
+            // console.log(typeof(response.data.va_numbers));
+            if(typeof(response.data.va_numbers) == "undefined"){
+                console.log("masuk undefinde");
+            }
+            // response.data.payment_type = "bank_transfer"
+            if (typeof(response.data.va_numbers) != "undefined") {
               var Mid_Bank = response.data.va_numbers[0]["bank"];
               var Mid_VANumber = response.data.va_numbers[0]["va_number"];
             }

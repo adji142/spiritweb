@@ -122,55 +122,67 @@ class API_auth extends CI_Controller {
 		";
 		$cekExist = $this->db->query($SQL);
 
-		if ($cekExist->row()->HardwareID =='') {
+		// if ($cekExist->row()->HardwareID =='') {
 
 			$Validate_username = $this->LoginMod->Validate_username($usr);
 			if($Validate_username->num_rows()>0){
-				$userid = $Validate_username->row()->id;
-				$pwd_decript =$Validate_username->row()->password;
-				$pass_valid = $this->encryption->decrypt($Validate_username->row()->password);
-				if($pass_valid == $pwd){
+				$SQL = "
+					SELECT * FROM users where username = '$usr'
+					AND (HardwareID = '$androidid' or COALESCE(HardwareID,'') = '')
+				";
+				$x = $this->db->query($SQL);
 
-					$paramUpdate = array(
-						'browser'	=> $device,
-						'HardwareID'=> $androidid
-					);
+				if ($x->num_rows() > 0) {
+					$userid = $Validate_username->row()->id;
+					$pwd_decript =$Validate_username->row()->password;
+					$pass_valid = $this->encryption->decrypt($Validate_username->row()->password);
+					if($pass_valid == $pwd){
 
-					$updateState = $this->ModelsExecuteMaster->ExecUpdate($paramUpdate,array('username'=> $usr),'users');
+						$paramUpdate = array(
+							'browser'	=> $device,
+							'HardwareID'=> $androidid
+						);
 
-					if ($updateState) {
-						$data['success'] = true;
-						$data['username'] = $Validate_username->row()->username;
-						$data['unique_id'] = $Validate_username->row()->id;
-						$data['email'] = $Validate_username->row()->email;
-						// get role
-						$datarole = $this->ModelsExecuteMaster->FindData(array('userid'=>$userid),'userrole');
-						if ($datarole) {
-							$data['role'] = $datarole->row()->roleid;
+						$updateState = $this->ModelsExecuteMaster->ExecUpdate($paramUpdate,array('username'=> $usr),'users');
+
+						if ($updateState) {
+							$data['success'] = true;
+							$data['username'] = $Validate_username->row()->username;
+							$data['unique_id'] = $Validate_username->row()->id;
+							$data['email'] = $Validate_username->row()->email;
+							// get role
+							$datarole = $this->ModelsExecuteMaster->FindData(array('userid'=>$userid),'userrole');
+							if ($datarole) {
+								$data['role'] = $datarole->row()->roleid;
+							}
+							else{
+								$data['role'] = '';
+							}
 						}
 						else{
-							$data['role'] = '';
+							$undone = $this->db->error();
+							$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
 						}
 					}
 					else{
-						$undone = $this->db->error();
-						$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+						$data['success'] = false;
+						$data['message'] = 'User atau Password tidak valid'; // User password doesn't match
 					}
 				}
 				else{
 					$data['success'] = false;
-					$data['message'] = 'User atau Password tidak valid'; // User password doesn't match
+					$data['message'] = 'User sudah login di device '.$cekExist->row()->browser;
 				}
 			}
 			else{
 				$data['success'] = false;
 				$data['message'] = 'Username Tidak ditemukan'; // Username not found
 			}
-		}
-		else{
-			$data['success'] = false;
-			$data['message'] = 'User sudah login di device '.$cekExist->row()->browser;
-		}
+		// }
+		// else{
+		// 	$data['success'] = false;
+		// 	$data['message'] = 'User sudah login di device '.$cekExist->row()->browser;
+		// }
 		// var_dump($data);
 		echo json_encode($data);
 	}

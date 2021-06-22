@@ -64,7 +64,7 @@
 			$newTitle = '';
 
 			$findBody = '<body>';
-			$replaceBody = '<body style="background-image: url(cover.jpeg); height: 100%;background-position: center;background-repeat: no-repeat;background-size: cover;">';
+			$replaceBody = '<body style= "background-image: url(cover.jpeg);height: 100%;max-width:100%;background-position: center;background-repeat: no-repeat;background-size: 100% 100%;margin:50px;">';
 
 			$oldAyat1 = '<!--';
 			$newAyat1 = '';
@@ -399,6 +399,23 @@
 			// Manipulate Epub File
 
 			$oldTitle = '.block_2 {';
+			$newTitle = '.block_2 {text-align:justify;';
+
+			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=str_replace($oldTitle, $newTitle,$str);
+			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
+			// End Manipulate Epub File
+		}
+	}
+
+	// Step 19
+
+	foreach ($driveResult as $key) {
+		$ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
+		if ($ext == 'css') {
+			// Manipulate Epub File
+
+			$oldTitle = 'class="calibre2"/>';
 			$newTitle = '.block_2 {text-align:justify;';
 
 			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);

@@ -41,7 +41,7 @@ class API_Payment extends CI_Controller {
 		$token = $this->input->post('token');
 		$Periode = strval(date("Y")).strval(date("m"));
 		// Set your Merchant Server Key
-		\Midtrans\Config::$serverKey = 'SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1';
+		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
 		\Midtrans\Config::$isProduction = false;
 		// Set sanitization on (default)
@@ -97,7 +97,7 @@ class API_Payment extends CI_Controller {
 
 		$NoTransaksi = $this->input->post('NoTransaksi');
 		// var_dump($NoTransaksi);
-		\Midtrans\Config::$serverKey = 'SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1';
+		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
 		\Midtrans\Config::$isProduction = false;
 		// Set sanitization on (default)
@@ -206,7 +206,7 @@ class API_Payment extends CI_Controller {
 	public function cekPaymentStatus(){
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 
-		\Midtrans\Config::$serverKey = 'SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1';
+		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		\Midtrans\Config::$isProduction = false;
 		\Midtrans\Config::$isSanitized = true;
 		\Midtrans\Config::$is3ds = true;
@@ -214,42 +214,88 @@ class API_Payment extends CI_Controller {
 		$userid = $this->input->post('userid');
 
 		$SQL = "SELECT a.NoTransaksi, a.userid, b.Mid_TransactionStatus FROM thistoryrequest a
-				INNER JOIN topuppayment b on a.NoTransaksi = b.NoTransaksi
-				WHERE b.Mid_TransactionStatus != 'settlement' AND a.userid = '".$userid."'";
+				LEFT JOIN topuppayment b on a.NoTransaksi = b.NoTransaksi
+				WHERE (COALESCE(b.Mid_TransactionStatus,'') != 'settlement' OR COALESCE(b.Mid_TransactionStatus,'') = '') AND a.userid = '".$userid."'";
 
-		try {
-			$rs = $this->db->query($SQL);
+		$rs = $this->db->query($SQL);
 
-			if ($rs) {
-				$datatable = $rs->result();
-				foreach ($datatable as $key) {
+		if ($rs) {
+			$datatable = $rs->result();
+			foreach ($datatable as $key) {
+				try {
 					// Get Transaction Status in Midtrans
 					$status = \Midtrans\Transaction::status($key->NoTransaksi);
 
 					// var_dump($status);
 					if ($status) {
 						// var_dump($status);
-						$param = array(
-							'TglPencatatan' => date("Y-m-d h:i:sa"),
-							'Mid_TransactionStatus' => $status->transaction_status
-						);
+						$FindData = $this->ModelsExecuteMaster->FindData(array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
 
-						$updateStatus = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
-						if ($updateStatus) {
-							$data['success'] = true;
+						if ($FindData->num_rows() >0) {
+							$param = array(
+								'TglPencatatan' => date("Y-m-d h:i:sa"),
+								'Mid_TransactionStatus' => $status->transaction_status
+							);
+							$updateStatus = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
+							if ($updateStatus) {
+								$data['success'] = true;
+							}
+						}
+						else{
+							if ($status->payment_type == "bank_transfer") {
+								$param = array(
+									'NoTransaksi' => $key->NoTransaksi,
+									'TglTransaksi' => $status->transaction_time,
+									'TglPencatatan' => date("Y-m-d h:i:sa"),
+									'MetodePembayaran' => $status->payment_type,
+									'GrossAmt' => $status->gross_amount,
+									'AdminFee' => 0,
+									'Mid_PaymentType' => $status->payment_type,
+									'Mid_TransactionID' => $status->transaction_id,
+									'Mid_MechantID' => $status->merchant_id,
+									'Mid_Bank' => $status->va_numbers[0]->bank,
+									'Mid_VANumber' => $status->va_numbers[0]->va_number,
+									'Mid_SignatureKey' => $status->signature_key,
+									'Mid_TransactionStatus' => $status->transaction_status,
+									'Mid_FraudStatus' => $status->fraud_status,
+								);
+							}
+							elseif ($status->payment_type == "gopay") {
+								$param = array(
+									'NoTransaksi' => $key->NoTransaksi,
+									'TglTransaksi' => $status->transaction_time,
+									'TglPencatatan' => date("Y-m-d h:i:sa"),
+									'MetodePembayaran' => $status->payment_type,
+									'GrossAmt' => $status->gross_amount,
+									'AdminFee' => 0,
+									'Mid_PaymentType' => $status->payment_type,
+									'Mid_TransactionID' => $status->transaction_id,
+									'Mid_MechantID' => $status->merchant_id,
+									'Mid_Bank' => '',
+									'Mid_VANumber' => '',
+									'Mid_SignatureKey' => $status->signature_key,
+									'Mid_TransactionStatus' => $status->transaction_status,
+									'Mid_FraudStatus' => $status->fraud_status,
+								);
+							}
+							$rs = $this->ModelsExecuteMaster->ExecInsert($param,'topuppayment');
+							if ($rs) {
+								$data['success'] = true;
+							}
 						}
 					}
-					
-					// $param = array(
-					// 	'TglPencatatan' => date("Y-m-d h:i:sa"),
-					// 	''
-					// );
+				} catch (Exception $e) {
+					$data['success'] = true;
+					$data['message'] = $e->getMessage();
 				}
+				
+				// $param = array(
+				// 	'TglPencatatan' => date("Y-m-d h:i:sa"),
+				// 	''
+				// );
 			}
-		} catch (Exception $e) {
-			$data['success'] = true;
-			$data['message'] = $e->getMessage();
 		}
+
 		echo json_encode($data);
 	}
 
@@ -317,7 +363,7 @@ class API_Payment extends CI_Controller {
 		$token = $this->input->post('token');
 		$Periode = strval(date("Y")).strval(date("m"));
 		// Set your Merchant Server Key
-		\Midtrans\Config::$serverKey = 'SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1';
+		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
 		\Midtrans\Config::$isProduction = false;
 		// Set sanitization on (default)
@@ -392,7 +438,7 @@ class API_Payment extends CI_Controller {
 	}
 
 	public function testCharge(){
-		\Midtrans\Config::$serverKey = 'SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1';
+		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
 		\Midtrans\Config::$isProduction = false;
 		// Set sanitization on (default)

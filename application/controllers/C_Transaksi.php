@@ -30,14 +30,20 @@ class C_Transaksi extends CI_Controller {
 	{
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 
-		$TglAwal = $this->input->post('TglAwal');
+		$TglAwal = $this->input->post('Tglawal');
 		$TglAkhir = $this->input->post('TglAkhir');
 		$Metode = $this->input->post('Metode');
 		$NoTransaksi = $this->input->post('NoTransaksi');
 
 		$SQL = "";
 
-		$SQL = "CALL getPaymentDetails('".$TglAwal."','".$TglAkhir."','".$Metode."','".$NoTransaksi."')";
+		if ($Metode == 'MANUAL') {
+			$SQL = "CALL getPaymentDetails('".$TglAwal."','".$TglAkhir."','".$Metode."','".$NoTransaksi."')";
+		}
+		else{
+			$SQL = "CALL getPaymentDetails_Auto('".$TglAwal."','".$TglAkhir."')";
+		}
+		// var_dump($SQL);
 		try {
 			$rs = $this->db->query($SQL);
 			if ($rs) {

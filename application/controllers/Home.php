@@ -136,4 +136,10 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_Other/chat');
 	}
+
+	// Laporan
+	public function rptPenjualan()
+	{
+		$this->load->view('V_Report/rptPenjualan');
+	}
 }

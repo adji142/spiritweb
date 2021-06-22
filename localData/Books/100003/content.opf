@@ -1,0 +1,57 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="uuid_id">
+  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata">
+    <dc:title>PREV JUNIOR JUNI 21</dc:title>
+    <dc:creator opf:role="aut" opf:file-as="Books, Spirit">Spirit Books</dc:creator>
+    <dc:contributor opf:role="bkp">calibre (5.10.1) [https://calibre-ebook.com]</dc:contributor>
+    <dc:identifier id="uuid_id" opf:scheme="uuid">19e89f16-c469-445a-9a1e-c761c943913e</dc:identifier>
+    <dc:publisher>Spirit Bookfield</dc:publisher>
+    <dc:date>0101-01-01T00:00:00+00:00</dc:date>
+    <dc:subject>Spirit Junior</dc:subject>
+    <dc:language>en</dc:language>
+    <dc:identifier opf:scheme="calibre">19e89f16-c469-445a-9a1e-c761c943913e</dc:identifier>
+    <meta name="calibre:timestamp" content="2021-05-24T06:42:46.759337+00:00"/>
+    <meta name="calibre:title_sort" content="PREV JUNIOR JUNI 21"/>
+    <meta name="calibre:series" content="Juni 2021"/>
+    <meta name="calibre:series_index" content="1.0"/>
+    <meta name="cover" content="cover"/>
+    <meta name="calibre:author_link_map" content="{&quot;Spirit Books&quot;: &quot;&quot;}"/>
+  </metadata>
+  <manifest>
+    <item id="titlepage" href="titlepage.xhtml" media-type="application/xhtml+xml"/>
+    <item id="id1" href="page_1.xhtml" media-type="application/xhtml+xml"/>
+    <item id="id2" href="page_2.xhtml" media-type="application/xhtml+xml"/>
+    <item id="id3" href="page_3.xhtml" media-type="application/xhtml+xml"/>
+    <item id="id4" href="page_4.xhtml" media-type="application/xhtml+xml"/>
+    <item id="id5" href="page_5.xhtml" media-type="application/xhtml+xml"/>
+    <item id="id6" href="page_6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="id7" href="page_7.xhtml" media-type="application/xhtml+xml"/>
+    <item id="id8" href="page_8.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <item id="page_css" href="page_styles.css" media-type="text/css"/>
+    <item id="css" href="stylesheet.css" media-type="text/css"/>
+    <item id="id9" href="0 - 0.jpg" media-type="image/jpeg"/>
+    <item id="id10" href="1 - 0a.jpg" media-type="image/jpeg"/>
+    <item id="id11" href="2 - 1.jpg" media-type="image/jpeg"/>
+    <item id="id12" href="3 - 2.jpg" media-type="image/jpeg"/>
+    <item id="id13" href="4 - 3.jpg" media-type="image/jpeg"/>
+    <item id="id14" href="5 - 4.jpg" media-type="image/jpeg"/>
+    <item id="id15" href="6 - 5.jpg" media-type="image/jpeg"/>
+    <item id="id16" href="7 - 6.jpg" media-type="image/jpeg"/>
+    <item id="cover" href="cover.jpeg" media-type="image/jpeg"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="titlepage"/>
+    <itemref idref="id1"/>
+    <itemref idref="id2"/>
+    <itemref idref="id3"/>
+    <itemref idref="id4"/>
+    <itemref idref="id5"/>
+    <itemref idref="id6"/>
+    <itemref idref="id7"/>
+    <itemref idref="id8"/>
+  </spine>
+  <guide>
+    <reference type="cover" href="titlepage.xhtml" title="Cover"/>
+  </guide>
+</package>

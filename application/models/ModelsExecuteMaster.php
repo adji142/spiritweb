@@ -70,4 +70,8 @@ class ModelsExecuteMaster extends CI_Model
 		$data = 'CALL '.$namasp.'('.$param1.')';
 		return $this->db->query($data);
 	}
+	public function midTransServerKey()
+	{
+		return "SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1";
+	}
 }

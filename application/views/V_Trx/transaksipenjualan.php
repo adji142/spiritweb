@@ -18,10 +18,10 @@
           </div>
           <div class="x_content">
             <div class="col-md-4 col-sm-12  form-group">
-              <input type="date" class="form-control" name="tglAwalManual" id="tglAwalManual">
+              <input type="date" class="form-control" name="tglAwalManual" id="tglAwalManual" value="<?php echo date("Y-m-01");?>">
             </div>
             <div class="col-md-4 col-sm-12  form-group">
-              <input type="date" class="form-control" name="tglAkhirManual" id="tglAkhirManual">
+              <input type="date" class="form-control" name="tglAkhirManual" id="tglAkhirManual" value="<?php echo date("Y-m-d");?>">
             </div>
             <div class="col-md-4 col-sm-12  form-group">
               <!-- <input type="date" class="form-control" name="tglAkhirManual" id="tglAkhirManual"> -->
@@ -101,6 +101,21 @@
                 {
                     dataField: "TglTransaksi",
                     caption: "Tgl Transaksi",
+                    allowEditing:false
+                },
+                {
+                    dataField: "UserID",
+                    caption: "UserID",
+                    allowEditing:false
+                },
+                {
+                    dataField: "email",
+                    caption: "Email",
+                    allowEditing:false
+                },
+                {
+                    dataField: "phone",
+                    caption: "Phone",
                     allowEditing:false
                 },
                 {
