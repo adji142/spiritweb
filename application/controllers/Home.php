@@ -1,5 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class home extends CI_Controller {
 
@@ -25,6 +27,9 @@ class home extends CI_Controller {
 		$this->load->model('GlobalVar');
 		$this->load->model('Apps_mod');
 		$this->load->model('LoginMod');
+		require APPPATH.'libraries/phpmailer/src/Exception.php';
+        require APPPATH.'libraries/phpmailer/src/PHPMailer.php';
+        require APPPATH.'libraries/phpmailer/src/SMTP.php';
 	}
 	public function Test()
 	{
@@ -142,4 +147,53 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_Report/rptPenjualan');
 	}
+
+	// Tools
+
+	public function testEmail()
+	{
+		$this->load->view('V_Tools/testSendEmail');
+	}
+
+	// Sending Email
+
+	Public function sendMessage() {
+		$response = false;
+		$mail = new PHPMailer();
+
+		// SMTP configuration
+        $mail->isSMTP();
+        $mail->Host     = 'mail.aiscoder.com'; //sesuaikan sesuai nama domain hosting/server yang digunakan
+        $mail->SMTPAuth = true;
+        $mail->Username = 'noreply@aiscoder.com'; // user email
+        $mail->Password = 'lagis3nt0s4'; // password email
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port     = 465;
+
+        $mail->setFrom('noreply@aiscoder.com', ''); // user email
+        $mail->addReplyTo('noreply@aiscoder.com', ''); //user email
+
+        // Add a recipient
+        $mail->addAddress('prasetyoajiw@gmail.com'); //email tujuan pengiriman email
+
+        // Email subject
+        $mail->Subject = 'SMTP Codeigniter'; //subject email
+
+        // Set email format to HTML
+        $mail->isHTML(true);
+
+        // Email body content
+        $mailContent = "<h1>SMTP Codeigniterr</h1>
+            <p>Laporan email SMTP Codeigniter.</p>"; // isi email
+        $mail->Body = $mailContent;
+
+        // Send email
+        if(!$mail->send()){
+            echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+        }else{
+            echo 'Message has been sent';
+        }
+	}
+
 }

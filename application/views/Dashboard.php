@@ -4,61 +4,85 @@
     $active = 'dashboard';
 ?>
 <!-- page content -->
-        <div class="right_col" role="main">
-          <!-- <div class="">
-            <div class="page-title">
-              <div class="title_left">
-                <h3>Plain Page</h3>
-              </div>
+<div class="right_col" role="main">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="">
+        <div class="x_content">
+          <div class="row">
 
-              <div class="title_right">
-                <div class="col-md-5 col-sm-5   form-group pull-right top_search">
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
-                  </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
+              <div class="tile-stats">
+                <div class="icon"><i class="fa fa-caret-square-o-right"></i>
                 </div>
+                <div class="count">179</div>
+
+                <h3>Manual Payment</h3>
+                <p>Payment Not Yet Confirmed.</p>
               </div>
             </div>
 
-            <div class="clearfix"></div>
-
-            <div class="row">
-              <div class="col-md-12 col-sm-12  ">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Plain Page</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Settings 1</a>
-                            <a class="dropdown-item" href="#">Settings 2</a>
-                          </div>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-                      <p>Progress Done :</p>
-                      <ul>
-                        <li>Master User -> All Sub Menu</li>
-                        <li>Master Article -> All Sub Menu</li>
-                        <li>Inventory -> Master Item</li>
-                      </ul>
-                  </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
+              <div class="tile-stats">
+                <div class="icon"><i class="fa fa-caret-square-o-right"></i>
                 </div>
+                <div class="count">179</div>
+
+                <h3>Auto Payment</h3>
+                <p>Incoming Auto Payment.</p>
               </div>
             </div>
-          </div> -->
+
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
+              <div class="tile-stats">
+                <div class="icon"><i class="fa fa-caret-square-o-right"></i>
+                </div>
+                <div class="count">179</div>
+
+                <h3>New Message</h3>
+                <p>New Message From User.</p>
+              </div>
+            </div>
+
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
+              <div class="tile-stats">
+                <div class="icon"><i class="fa fa-caret-square-o-right"></i>
+                </div>
+                <div class="count">179</div>
+
+                <h3>New Transaction</h3>
+                <p>New Transaction Today.</p>
+              </div>
+            </div>
+
+          </div>
         </div>
-        <!-- /page content -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /page content -->
 <?php
   require_once(APPPATH."views/parts/Footer.php");
 ?>
+
+<!-- <script type="text/javascript">
+  $(function () {
+    $(document).ready(function () {
+      setInterval(function () {
+        $.ajax({
+          type: "post",
+          url: "<?=base_url()?>C_Transaksi/getSaldoPerAccount",
+          data: {'UserID':''},
+          dataType: "json",
+          xhrFields: {
+            onprogress: function(e){
+              var response = e.currentTarget.response;
+              console.log(response);
+            }
+          }
+        });
+      },10000);
+    });
+  });
+</script> -->

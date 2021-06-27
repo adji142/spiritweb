@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 class API_auth extends CI_Controller {
 
 	/**
@@ -25,6 +26,10 @@ class API_auth extends CI_Controller {
 		$this->load->model('GlobalVar');
 		$this->load->model('Apps_mod');
 		$this->load->model('LoginMod');
+
+		require APPPATH.'libraries/phpmailer/src/Exception.php';
+        require APPPATH.'libraries/phpmailer/src/PHPMailer.php';
+        require APPPATH.'libraries/phpmailer/src/SMTP.php';
 	}
 	public function FindUserName()
 	{
@@ -282,7 +287,7 @@ class API_auth extends CI_Controller {
 	    }
 
         if ($Cek_Already->num_rows() > 0) {
-        	$this->load->library('encrypt');
+        	$this->load->library('encryption');
         	$username = $Cek_Already->row()->username;
         	$password = $token;
 
@@ -297,22 +302,23 @@ class API_auth extends CI_Controller {
 				}
         	}
 
+        	// $xdata = $this->ModelsExecuteMaster->FindData(array('id'=>1),'temailsetting');
+        	// var_dump($xdata->row()->smtp_host);	
+        	$response = false;
+			$mail = new PHPMailer();
 
-        	$config = array(
-			    'protocol' => 'smtp', // 'mail', 'sendmail', or 'smtp'
-			    'smtp_host' => 'mail.aiscoder.com', 
-			    'smtp_port' => 465,
-			    'smtp_user' => 'noreply@aiscoder.com',
-			    'smtp_pass' => 'lagis3nt0s4',
-			    'smtp_crypto' => 'ssl', //can be 'ssl' or 'tls' for example
-			    'mailtype' => 'html', //plaintext 'text' mails or 'html'
-			    'smtp_timeout' => '4', //in seconds
-			    'charset' => 'iso-8859-1',
-			    'wordwrap' => TRUE
-			);
-	        $this->email->initialize($config);
+			// SMTP configuration
+	        $mail->isSMTP();
+	        $mail->Host     = 'mail.aiscoder.com'; //sesuaikan sesuai nama domain hosting/server yang digunakan
+	        $mail->SMTPAuth = true;
+	        $mail->Username = 'noreply@aiscoder.com'; // user email
+	        $mail->Password = 'lagis3nt0s4'; // password email
+	        $mail->SMTPSecure = 'ssl';
+	        $mail->Port     = 465;
 
-	        $from = 'noreply@aiscoder.com';
+	        $mail->setFrom('noreply@aiscoder.com', ''); // user email
+	        $mail->addReplyTo('noreply@aiscoder.com', ''); //user email//user email
+
 	        $to = $param;
 	        $subject = '[No-Replay]Rahasia !!! Reset password Cerminjiwa Apps[No-Replay]';
 	        $message = '
@@ -333,17 +339,21 @@ class API_auth extends CI_Controller {
 	            </p>
 	        ';
 
-	        $this->email->set_newline("\r\n");
-	        $this->email->from($from);
-	        $this->email->to($to);
-	        $this->email->subject($subject);
-	        $this->email->message($message);
+	        // Add a recipient
+	        $mail->addAddress($param); //email tujuan pengiriman email
 
-	        if($this->email->send()){
+	        // Email subject
+	        $mail->Subject = $subject; //subject email
+
+	        // Set email format to HTML
+	        $mail->isHTML(true);
+
+	        $mail->Body = $message;
+	        if($mail->send()){
 	            $data['success']=true;
 	        }
 	        else{
-	            $data['message']=show_error($this->email->print_debugger());
+	            $data['message']=$mail->ErrorInfo;
 	        }
         }
         else{

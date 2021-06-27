@@ -68,7 +68,7 @@
                   Swal.fire({
                     type: 'success',
                     title: 'Horay..',
-                    text: 'Transaksi Kamu Berhasil silahkan melakukan Pembayaran!',
+                    text: 'Transaksi Kamu Berhasil silahkan melakukan Pembayaran! Untuk Informasi detail silahkan menuju menu Riwayat Transaksi. ',
                     // footer: '<a href>Why do I have this issue?</a>'
                   }).then((result)=>{
                     window.close();

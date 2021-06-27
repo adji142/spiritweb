@@ -424,6 +424,56 @@
 			// End Manipulate Epub File
 		}
 	}
+
+	// Step 20 -- Remove Index
+	foreach ($driveResult as $key) {
+        $ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
+        if ($ext == 'ncx') {
+        	$oldTitle = '<navMap>';
+			$newTitle = '<!--<navMap>';
+
+			$oldTitle1 = '</navMap>';
+			$newTitle1 = '</navMap>-->';
+
+			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=str_replace($oldTitle, $newTitle,$str);
+			$str=str_replace($oldTitle1, $newTitle1,$str);
+			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
+        }
+        // if (substr($key, 0,11) == 'index_split' ) {
+        //     array_push($data, $key);
+        // }
+    }
+
+    // Step 21 -- Add index
+    $oldText = '</ncx>';
+    $newText = '<navMap>';
+
+    $dataIndex=[];
+    foreach ($driveResult as $key) {
+    	$ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
+        if (substr($key, 0,11) == 'index_split' ) {
+            array_push($dataIndex, $key);
+        }
+    }
+
+    $index =1;
+    foreach ($dataIndex as $key) {
+    	$newText .= '<navPoint id="num_'.$index.'" playOrder="'.$index.'">';
+    	$newText .= '<navLabel><text>Baca: Tanggal '.$index.'</text></navLabel>';
+    	$newText .= '<content src="'.$key.'"/></navPoint>';
+    	$index += 1;
+    }
+    $newText .= "</navMap></ncx>";
+    // var_dump($newText);
+    foreach ($driveResult as $key) {
+    	$ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
+        if ($ext == 'ncx') {
+     		$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=str_replace($oldText, $newText,$str);
+			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);       
+        }
+    }
 	// End Scaning Extraction Directory
 
 	
