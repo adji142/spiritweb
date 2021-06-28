@@ -49,7 +49,8 @@ class API_Payment extends CI_Controller {
 		// Set 3DS transaction for credit card to true
 		\Midtrans\Config::$is3ds = true;
 		
-		$order_id = $Periode.strval(rand());
+		$md5dong = md5($email.rand());
+		$order_id = $Periode.strval(rand()).substr($md5dong, 0,8);
 		$params = array(
 		    'transaction_details' => array(
 		        'order_id' => $order_id,
@@ -74,6 +75,15 @@ class API_Payment extends CI_Controller {
 				);
 
 				$this->ModelsExecuteMaster->ExecInsert($param,'thistoryrequest');
+
+				$getEmail = "
+						SELECT b.username,b.email FROM thistoryrequest a
+						LEFT JOIN users b on a.userid = b.username
+						WHERE a.NoTransaksi = '".$order_id."'
+					";
+				$email = $this->db->query($getEmail)->row()->email;
+				$this->ModelsExecuteMaster->PushEmail('payment',$order_id,$email);
+				$this->ModelsExecuteMaster->PushEmail('notification',$order_id,'');
 
 				$data['token'] = $snapToken;
 				$data['NoTransaksi'] = $order_id;
@@ -124,6 +134,14 @@ class API_Payment extends CI_Controller {
 		$data['status_code'] 			= $status_code;
 		$data['transaction_status'] 	= $transaction_status;
 		// var_dump($data);
+		// $getEmail = "
+		// 				SELECT b.username,b.email FROM thistoryrequest a
+		// 				LEFT JOIN users b on a.userid = b.username
+		// 				WHERE a.NoTransaksi = '".$order_id."'
+		// 			";
+		// $email = $this->db->query($getEmail)->row()->email;
+		// $this->ModelsExecuteMaster->PushEmail('payment',$order_id,$email);
+
 		$this->load->view('V_API/paymentfinish',$data);
 	}
 
@@ -131,25 +149,6 @@ class API_Payment extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 
 		$NoTransaksi = $this->input->post('NoTransaksi');
-
-		$getemail = "
-			SELECT b.email FROM thistoryrequest a 
-			INNER JOIN users b on a.userid = b.username
-			WHERE a.NoTransaksi = '".$NoTransaksi."'
-		";
-
-		$email = $this->db->query($getemail)->row()->email;
-		$notif = array(
-			'reqTime' => date("Y-m-d h:i:sa"),
-			'NotificationType' =>'payment',
-			'BaseRef' =>$NoTransaksi,
-			'ReceipedEmail' => $email,
-			'CreatedOn' => date("Y-m-d h:i:sa"),
-			'Status' => 0,
-		);
-
-		$this->ModelsExecuteMaster->ExecInsert($notif,'tpushemail');
-
 		$TglTransaksi = $this->input->post('TglTransaksi');
 		$TglPencatatan = $this->input->post('TglPencatatan');
 		$MetodePembayaran = $this->input->post('MetodePembayaran');
@@ -257,25 +256,6 @@ class API_Payment extends CI_Controller {
 							);
 							$updateStatus = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
 
-							// Notification
-							$getemail = "
-								SELECT b.email FROM thistoryrequest a 
-								INNER JOIN users b on a.userid = b.username
-								WHERE a.NoTransaksi = '".$key->NoTransaksi."'
-							";
-
-							$email = $this->db->query($getemail)->row()->email;
-							$notif = array(
-								'reqTime' => date("Y-m-d h:i:sa"),
-								'NotificationType' =>'payment_done',
-								'BaseRef' =>$key->NoTransaksi,
-								'ReceipedEmail' => $email,
-								'CreatedOn' => date("Y-m-d h:i:sa"),
-								'Status' => 0,
-							);
-
-							$this->ModelsExecuteMaster->ExecInsert($notif,'tpushemail');
-
 							if ($updateStatus) {
 								$data['success'] = true;
 							}
@@ -321,6 +301,19 @@ class API_Payment extends CI_Controller {
 							if ($rs) {
 								$data['success'] = true;
 							}
+						}
+						// Notifikasi
+						$FindDataPushNotif = $this->ModelsExecuteMaster->FindData(array('BaseRef'=>$key->NoTransaksi),'tpushemail');
+
+						if ($FindDataPushNotif->num_rows() == 0 && $status->transaction_status == "settlement" ) {
+
+							$getEmail = "
+								SELECT b.username,b.email FROM thistoryrequest a
+								LEFT JOIN users b on a.userid = b.username
+								WHERE a.NoTransaksi = '".$key->NoTransaksi."'
+							";
+							$email = $this->db->query($getEmail)->row()->email;
+							$this->ModelsExecuteMaster->PushEmail('payment_done',$key->NoTransaksi,$email);
 						}
 					}
 				} catch (Exception $e) {

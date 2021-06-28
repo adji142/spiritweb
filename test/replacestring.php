@@ -401,8 +401,24 @@
 			$oldTitle = '.block_2 {';
 			$newTitle = '.block_2 {text-align:justify;';
 
+			$oldTitle1 = '.block_1 {';
+			$newTitle1 = '.block_1 {text-align:justify;';
+
+			$oldTitle2 = '.block_3 {';
+			$newTitle2 = '.block_3 {text-align:justify;';
+
+			$oldTitle3 = '.block_4 {';
+			$newTitle3 = '.block_4 {text-align:justify;';
+
+			$oldTitle4 = '.block_5 {';
+			$newTitle4 = '.block_5 {text-align:justify;';
+
 			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
 			$str=str_replace($oldTitle, $newTitle,$str);
+			$str=str_replace($oldTitle1, $newTitle1,$str);
+			$str=str_replace($oldTitle2, $newTitle2,$str);
+			$str=str_replace($oldTitle3, $newTitle3,$str);
+			$str=str_replace($oldTitle4, $newTitle4,$str);
 			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
 			// End Manipulate Epub File
 		}

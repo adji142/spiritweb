@@ -46,7 +46,8 @@ class C_Buku extends CI_Controller {
 								CASE WHEN a.status_publikasi = 0 THEN 'Pasive' ELSE '' END
 							END 
 						END 
-					END Status_
+					END Status_,
+					UPPER(DATE_FORMAT(a.releasedate,'%M% %Y')) Periode
 				FROM tbuku a
 				LEFT JOIN tkategori b on a.kategoriID = b.id
 			";
@@ -156,6 +157,9 @@ class C_Buku extends CI_Controller {
 	        }else{
 	            $dataDetails = $this->upload->data();
 	            $picture_ext = $dataDetails['file_ext'];
+	            if ($picture_base64 == 'jpeg') {
+	            	$picture_base64 = '.jpg';
+	            }
 	        }	
 		} catch (Exception $e) {
 			$data['success'] = false;
@@ -248,7 +252,7 @@ class C_Buku extends CI_Controller {
 				'description' => $description,
 				'releasedate' => $releasedate,
 				'releaseperiod' => $releaseperiod,
-				'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).'.'.strtolower($extension),
+				'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).''.strtolower($picture_ext),
 				'picture_base64' => $picture_base64,
 				'harga' => str_replace(',', '', $harga),
 				'ppn' => str_replace(',', '', $ppn),
@@ -287,7 +291,7 @@ class C_Buku extends CI_Controller {
 				'description' => $description,
 				'releasedate' => $releasedate,
 				'releaseperiod' => $releaseperiod,
-				'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).'.'.strtolower($extension),
+				'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).''.strtolower($picture_ext),
 				'picture_base64' => $picture_base64,
 				'harga' => str_replace(',', '', $harga),
 				'ppn' => str_replace(',', '', $ppn),

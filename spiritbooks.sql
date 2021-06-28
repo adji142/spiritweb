@@ -11,7 +11,7 @@
  Target Server Version : 100406
  File Encoding         : 65001
 
- Date: 27/06/2021 21:20:18
+ Date: 28/06/2021 16:15:08
 */
 
 SET NAMES utf8mb4;
@@ -260,12 +260,13 @@ CREATE TABLE `temailsetting`  (
   `emailAdminReciept` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `AliasName` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of temailsetting
 -- ----------------------------
 INSERT INTO `temailsetting` VALUES (1, 'smtp', 'mail.aiscoder.com', '465', 'noreply@aiscoder.com', 'lagis3nt0s4', 'ssl', 'html', '4', 'iso-8859-1', 'TRUE', 'adjia7x@gmail.com', 'Spirit Booksfield');
+INSERT INTO `temailsetting` VALUES (2, 'smtp', 'smtp.gmail.com', '465', 'aissystemsolo@gmail.com', 'eijugplezooyxzeo', 'ssl', 'html', '4', 'iso-8859-1', 'TRUE', 'adjia7x@gmail.com', 'Spirit Booksfield');
 
 -- ----------------------------
 -- Table structure for thistoryrequest
@@ -280,7 +281,7 @@ CREATE TABLE `thistoryrequest`  (
   `GrossAmt` double(16, 2) NOT NULL,
   `Adminfee` double(16, 2) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of thistoryrequest
@@ -291,6 +292,11 @@ INSERT INTO `thistoryrequest` VALUES (3, '2021061586671609', '0000-00-00 00:00:0
 INSERT INTO `thistoryrequest` VALUES (4, '20210648361522', '0000-00-00 00:00:00', '0c7cadda-84a2-40c3-b3df-9872a60712d9', 'aistest', 100000.00, 1500.00);
 INSERT INTO `thistoryrequest` VALUES (5, '202106695202066', '0000-00-00 00:00:00', '86a17cc2-d0d8-4ee3-a404-84a362634e26', 'aistest', 100000.00, 0.00);
 INSERT INTO `thistoryrequest` VALUES (6, '202106385458984', '0000-00-00 00:00:00', '7a4572eb-bf07-4b39-b11c-ab19e6f08ed8', 'aistest', 100000.00, 4000.00);
+INSERT INTO `thistoryrequest` VALUES (7, '20210693052556', '0000-00-00 00:00:00', 'bcbc5004-51df-4d3a-a079-9ca8dc7e2262', 'aistest', 25000.00, 4000.00);
+INSERT INTO `thistoryrequest` VALUES (8, '2021061469580635', '0000-00-00 00:00:00', '3f95c505-ce19-413a-8a22-d3bfbdcc0bb1', 'aistest', 100000.00, 4000.00);
+INSERT INTO `thistoryrequest` VALUES (9, '202106784951354', '0000-00-00 00:00:00', '6a2020de-8eee-4506-8351-4f33c62e744a', 'aistest', 100000.00, 1500.00);
+INSERT INTO `thistoryrequest` VALUES (10, '2021061757582294', '0000-00-00 00:00:00', '126f48ed-4afb-4ffd-a887-1ed6c52e8d31', 'aistest', 100000.00, 4000.00);
+INSERT INTO `thistoryrequest` VALUES (11, '20210646521773', '0000-00-00 00:00:00', '3ac7cd80-4d5b-4210-86e0-6501f01abfe0', 'aistest', 100000.00, 4000.00);
 
 -- ----------------------------
 -- Table structure for tkategori
@@ -341,10 +347,15 @@ CREATE TABLE `topuppayment`  (
 -- ----------------------------
 -- Records of topuppayment
 -- ----------------------------
+INSERT INTO `topuppayment` VALUES ('2021061469580635', '2021-06-28 15:33:42.000000', '2021-06-28 03:43:44.000000', 'AUTO', 104000.00, 0.00, 'bank_transfer', 'f1f31cec-bd1f-455a-b9e0-08d7c8529d24', 'G799701428', 'bca', '01428504852', '486ddc7bf11ea56fb640e1387d3b365b9423782dc1965cb930e2256bd718a867e35439463359598f5a5b82cbe953d81760bd62426088f7958a652b0f05ca0422', 'pending', 'accept', 0, NULL);
 INSERT INTO `topuppayment` VALUES ('2021061586671609', '2021-06-22 13:37:20.000000', '2021-06-22 01:38:20.000000', 'AUTO', 104000.00, 0.00, 'bank_transfer', 'be0a34d1-9a65-43d0-a450-49c3f0dc132a', 'G799701428', 'bca', '01428674928', '38e470f6a069756acd3f8bebd68095d4d1456484e5b31e32161c4f71f8b6c889cfab18eb00134f01b255c4638dc06361c4c9e73d629db7dcc0f6e267bf3e6a3e', 'settlement', 'accept', 0, NULL);
 INSERT INTO `topuppayment` VALUES ('2021061656920205', '2021-06-22 13:35:51.022189', '2021-06-22 13:35:51.022207', 'MANUAL', 100000.00, 38.00, '', '', '', '', '', '', 'settlement', '', 0, NULL);
-INSERT INTO `topuppayment` VALUES ('202106385458984', '2021-06-27 21:16:09.000000', '2021-06-27 09:16:35.000000', 'bank_transfer', 104000.00, 0.00, 'bank_transfer', '4cdca9da-1b1e-427d-8a11-bad5876eb697', 'G799701428', 'bca', '01428451195', '629a187a5fb31ff12aaa03e1685ee5cb9f1b6d990205bdf92e5d72e45cc7a39e7dc2164332b9193ca4a104263fd3a7f22ef33a9a67648ee2d518adfb50e74d67', 'pending', 'accept', 0, NULL);
+INSERT INTO `topuppayment` VALUES ('2021061757582294', '2021-06-28 15:39:52.000000', '2021-06-28 03:43:45.000000', 'bank_transfer', 104000.00, 0.00, 'bank_transfer', '5bc00d21-3777-4285-a8a1-c34afc154f57', 'G799701428', 'bca', '01428336563', '11fa634f24b16dd726ffc0519c872994f0421e9723e177d00313ed35ef6fb5e5747191a34f309087f4aaf464db5451afcb6e872c9f0159db249f3ab1669f818e', 'pending', 'accept', 0, NULL);
+INSERT INTO `topuppayment` VALUES ('202106385458984', '2021-06-27 21:16:09.000000', '2021-06-28 03:43:44.000000', 'bank_transfer', 104000.00, 0.00, 'bank_transfer', '4cdca9da-1b1e-427d-8a11-bad5876eb697', 'G799701428', 'bca', '01428451195', '629a187a5fb31ff12aaa03e1685ee5cb9f1b6d990205bdf92e5d72e45cc7a39e7dc2164332b9193ca4a104263fd3a7f22ef33a9a67648ee2d518adfb50e74d67', 'pending', 'accept', 0, NULL);
+INSERT INTO `topuppayment` VALUES ('20210646521773', '2021-06-28 15:42:04.000000', '2021-06-28 03:43:45.000000', 'AUTO', 104000.00, 0.00, 'bank_transfer', '1c1b5a38-9a4d-44a8-ae36-c46e0dc4aae0', 'G799701428', 'bca', '01428762046', '716b0eca8f5443469e206fbd3924e842bcec5412afe559ac87fd8fe0a6e522f6501df71edba929f6284e49d2a3faaff7a4e844cea17c9f6f800cc9dcce4e8e03', 'pending', 'accept', 0, NULL);
 INSERT INTO `topuppayment` VALUES ('20210648361522', '2021-06-22 13:39:04.000000', '2021-06-22 01:39:09.000000', 'gopay', 101500.00, 0.00, 'gopay', 'd6a4b07a-28a9-48be-ad5a-f24f8e189802', 'G799701428', '', '', '17ce46c5912a709cfd60ed1ceb7878ba0ccb91220e958c3ca7c899cae64c8d67f16a21fd939f566ca282d907f3fac588fad964dcd4235000743129f09683e635', 'settlement', 'accept', 0, NULL);
+INSERT INTO `topuppayment` VALUES ('20210693052556', '2021-06-28 15:19:27.000000', '2021-06-28 03:43:44.000000', 'bank_transfer', 29000.00, 0.00, 'bank_transfer', '12f0fd9c-d563-4d8b-8d57-cda5f94ed472', 'G799701428', 'bca', '01428923576', 'edc11ce6e5e095efeb1860807765fd6ae667da78be8d7551075aa35a62dad1007f375c084d983b1153efed46d544f41dd7ac852ef2c92e43daa8bd1a03ab0975', 'pending', 'accept', 0, NULL);
+INSERT INTO `topuppayment` VALUES ('21212121JunJun174502457', '2021-06-02 15:46:58.000000', '0000-00-00 00:00:00.000000', 'AUTO', 79000.00, 0.00, 'bank_transfer', '4d2ef18f-a255-49fb-9739-1370378a2343', 'G799701428', 'bca', '01428361856', '4a481fffe2309d523c1746217708d49c3c669b41f91b5ce52ae5e9be4829e8db179d025d8f893ff016f6bf9b13599f04963dc6495201b5e1095fb672f83fdcc6', 'cancel', 'accept', 0, NULL);
 
 -- ----------------------------
 -- Table structure for tpaymentmethod
@@ -383,22 +394,13 @@ CREATE TABLE `tpushemail`  (
   `CreatedOn` datetime(6) NOT NULL,
   `Status` int(1) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tpushemail
 -- ----------------------------
-INSERT INTO `tpushemail` VALUES (1, '2021-06-27 19:59:44.000000', 'payment', '2021061656920205', 'prasetyoajiw@gmail.com', '2021-06-27 19:59:56.000000', 0);
-INSERT INTO `tpushemail` VALUES (2, '2021-06-27 09:16:13.000000', 'payment_done', '202106385458984', 'prasetyoajiw@gmai.com', '2021-06-27 09:16:13.000000', 0);
-INSERT INTO `tpushemail` VALUES (3, '2021-06-27 09:16:15.000000', 'payment_done', '202106385458984', 'prasetyoajiw@gmai.com', '2021-06-27 09:16:15.000000', 0);
-INSERT INTO `tpushemail` VALUES (4, '2021-06-27 09:16:17.000000', 'payment_done', '202106385458984', 'prasetyoajiw@gmai.com', '2021-06-27 09:16:17.000000', 0);
-INSERT INTO `tpushemail` VALUES (5, '2021-06-27 09:16:20.000000', 'payment_done', '202106385458984', 'prasetyoajiw@gmai.com', '2021-06-27 09:16:20.000000', 0);
-INSERT INTO `tpushemail` VALUES (6, '2021-06-27 09:16:22.000000', 'payment_done', '202106385458984', 'prasetyoajiw@gmai.com', '2021-06-27 09:16:22.000000', 0);
-INSERT INTO `tpushemail` VALUES (7, '2021-06-27 09:16:25.000000', 'payment_done', '202106385458984', 'prasetyoajiw@gmai.com', '2021-06-27 09:16:25.000000', 0);
-INSERT INTO `tpushemail` VALUES (8, '2021-06-27 09:16:27.000000', 'payment_done', '202106385458984', 'prasetyoajiw@gmai.com', '2021-06-27 09:16:27.000000', 0);
-INSERT INTO `tpushemail` VALUES (9, '2021-06-27 09:16:29.000000', 'payment_done', '202106385458984', 'prasetyoajiw@gmai.com', '2021-06-27 09:16:29.000000', 0);
-INSERT INTO `tpushemail` VALUES (10, '2021-06-27 09:16:32.000000', 'payment_done', '202106385458984', 'prasetyoajiw@gmai.com', '2021-06-27 09:16:32.000000', 0);
-INSERT INTO `tpushemail` VALUES (11, '2021-06-27 09:16:35.000000', 'payment_done', '202106385458984', 'prasetyoajiw@gmai.com', '2021-06-27 09:16:35.000000', 0);
+INSERT INTO `tpushemail` VALUES (1, '2021-06-28 03:38:50.000000', 'notification', '2021061469580635', 'prasetyoajiw@gmail.com', '2021-06-28 03:38:50.000000', 1);
+INSERT INTO `tpushemail` VALUES (2, '2021-06-28 03:42:05.000000', 'notification', '20210646521773', 'prasetyoajiw@gmail.com', '2021-06-28 03:42:05.000000', 1);
 
 -- ----------------------------
 -- Table structure for transaksi

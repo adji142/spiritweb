@@ -422,6 +422,11 @@
                     allowEditing:false
                 },
                 {
+                    dataField: "Periode",
+                    caption: "Edisi",
+                    allowEditing:false
+                },
+                {
                     dataField: "harga",
                     caption: "Harga",
                     allowEditing:false

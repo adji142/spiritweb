@@ -116,4 +116,17 @@ class ModelsExecuteMaster extends CI_Model
         }
         return $data;
 	}
+	public function PushEmail($NotificationType,$BaseRef,$ReceipedEmail)
+	{
+		$param = array(
+			'id' =>0,
+			'reqTime' =>date("Y-m-d h:i:sa"),
+			'NotificationType' => $NotificationType,
+			'BaseRef' =>$BaseRef,
+			'ReceipedEmail' =>$ReceipedEmail,
+			'CreatedOn' =>date("Y-m-d h:i:sa"),
+			'Status' =>0
+		);
+		return $this->db->insert('tpushemail',$param);
+	}
 }

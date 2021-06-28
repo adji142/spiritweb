@@ -309,15 +309,15 @@ class API_auth extends CI_Controller {
 
 			// SMTP configuration
 	        $mail->isSMTP();
-	        $mail->Host     = 'mail.aiscoder.com'; //sesuaikan sesuai nama domain hosting/server yang digunakan
+	        $mail->Host     = 'smtp.gmail.com'; //sesuaikan sesuai nama domain hosting/server yang digunakan
 	        $mail->SMTPAuth = true;
-	        $mail->Username = 'noreply@aiscoder.com'; // user email
-	        $mail->Password = 'lagis3nt0s4'; // password email
+	        $mail->Username = 'aissystemsolo@gmail.com'; // user email
+	        $mail->Password = 'eijugplezooyxzeo'; // password email
 	        $mail->SMTPSecure = 'ssl';
 	        $mail->Port     = 465;
 
-	        $mail->setFrom('noreply@aiscoder.com', ''); // user email
-	        $mail->addReplyTo('noreply@aiscoder.com', ''); //user email//user email
+	        $mail->setFrom('aissystemsolo@gmail.com', ''); // user email
+	        $mail->addReplyTo('aissystemsolo@gmail.com', ''); //user email//user email
 
 	        $to = $param;
 	        $subject = '[No-Replay]Rahasia !!! Reset password Cerminjiwa Apps[No-Replay]';

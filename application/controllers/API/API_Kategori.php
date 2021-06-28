@@ -19,7 +19,7 @@ class API_Kategori extends CI_Controller {
 		$page = $this->input->post('page');
 		$kriteria = $this->input->post('kriteria');
 		$maxperpage = 2;
-
+		$rs;
 		if ($token != '') {
 			$SQL = "SELECT x.id,x.NamaKategori, CASE WHEN x.id = 0 THEN 0 ELSE COALESCE(y.jml,0) END jml FROM (SELECT 0 id,'GRATIS !!' NamaKategori, 1 ShowHomePage FROM DUAL UNION ALL ";
 			$SQL .= "SELECT * FROM tkategori) x ";

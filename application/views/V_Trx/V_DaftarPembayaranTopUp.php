@@ -168,12 +168,13 @@
 		                allowEditing : false,
 		                cellTemplate: function(cellElement, cellInfo) {
 		                	var html = "";
-		                	html += "<button class='btn btn-round btn-sm btn-success' onClick = 'btAction("+cellInfo.data.NoTransaksi+",1)'>View</button>";
+		                	console.log(cellInfo.data.NoTransaksi);
+		                	html += "<button class='btn btn-round btn-sm btn-success' onClick = 'btAction("+'"'+cellInfo.data.NoTransaksi+'"'+",1)'>View</button>";
 		                	if (cellInfo.data.Mid_TransactionStatus == 'settlement') {
-		                		html += "<button class='btn btn-round btn-sm btn-danger' disabled onClick = 'btAction("+cellInfo.data.NoTransaksi+",2)'>Konfirmasi</button>"; 
+		                		html += "<button class='btn btn-round btn-sm btn-danger' disabled onClick = 'btAction("+'"'+cellInfo.data.NoTransaksi+'"'+",2)'>Konfirmasi</button>"; 
 		                	}
 		                	else{
-		                		html += "<button class='btn btn-round btn-sm btn-danger' onClick = 'btAction("+cellInfo.data.NoTransaksi+",2)'>Konfirmasi</button>"; 
+		                		html += "<button class='btn btn-round btn-sm btn-danger' onClick = 'btAction("+'"'+cellInfo.data.NoTransaksi+'"'+",2)'>Konfirmasi</button>"; 
 		                	}
                       		cellElement.append(html);
 		                }
@@ -314,7 +315,6 @@
 	function btAction(id, action) {
 		// 1 view
 		// 2 Konfirmasi
-
 		switch(action){
 			case 1:
 	        $.ajax({
@@ -339,7 +339,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, Approve it!'
               }).then((result) => {
                 if (result.value) {
                   $.ajax({
@@ -351,7 +351,7 @@
                         if(response.success == true){
                           Swal.fire(
 	                        'Deleted!',
-	                        'Your file has been deleted.',
+	                        'Your file has been Approved.',
 	                        'success'
 	                      ).then((result)=>{
                             // location.reload();
