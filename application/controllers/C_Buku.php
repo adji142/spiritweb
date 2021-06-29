@@ -157,8 +157,8 @@ class C_Buku extends CI_Controller {
 	        }else{
 	            $dataDetails = $this->upload->data();
 	            $picture_ext = $dataDetails['file_ext'];
-	            if ($picture_base64 == 'jpeg') {
-	            	$picture_base64 = '.jpg';
+	            if ($picture_ext == '.jpeg') {
+	            	$picture_ext = '.jpg';
 	            }
 	        }	
 		} catch (Exception $e) {
@@ -241,6 +241,9 @@ class C_Buku extends CI_Controller {
 			$pos  = strpos($picture_base64, ';');
 			$type = explode(':', substr($picture_base64, 0, $pos))[1];
 			$extension = explode('/', $type)[1];
+		}
+		if ($extension == 'jpeg') {
+			$picture_ext = '.jpg';
 		}
 		// var_dump($extension);
 		

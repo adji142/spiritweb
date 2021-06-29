@@ -734,8 +734,8 @@
                 success : function (response) {
                   if(response.success == true){
                     Swal.fire(
-                  'Deleted!',
-                  'Your file has been deleted.',
+                  'Success!',
+                  'Books Have been published.',
                   'success'
                 ).then((result)=>{
                       location.reload();

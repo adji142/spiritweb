@@ -250,7 +250,7 @@
                 // logEvent(e);
             },
             onRowRemoving: function(e) {
-              id = e.data.ArticleCode;
+              id = e.data.id;
               Swal.fire({
                 title: 'Apakah anda yakin?',
                 text: "anda akan menghapus data di baris ini !",

@@ -64,7 +64,7 @@
 			$newTitle = '';
 
 			$findBody = '<body>';
-			$replaceBody = '<body style= "background-image: url(cover.jpeg);height: 100%;max-width:100%;background-position: center;background-repeat: no-repeat;background-size: 100% 100%;margin:50px;">';
+			$replaceBody = '<body style= "background-image: url(cover.jpeg);max-height: 100%;max-width:100%;background-position: center;background-repeat: no-repeat;background-size:contain;margin:50px;">';
 
 			$oldAyat1 = '<!--';
 			$newAyat1 = '';
@@ -490,6 +490,129 @@
 			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);       
         }
     }
+
+    // Step 22
+
+    foreach ($driveResult as $key) {
+		$ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
+		if ($ext == 'html' || $ext == 'xhtml') {
+			// Manipulate Epub File
+
+			$oldTitle = '<p class="block_8" lang="en"><img';
+			$newTitle = '<img';
+
+			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=str_replace($oldTitle, $newTitle,$str);
+			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
+			// End Manipulate Epub File
+		}
+	}
+
+	// Step 23
+
+	$dataIndex=[];
+    $extension = '';
+    foreach ($driveResult as $key) {
+        if (substr($key, 0,11) == 'index_split' ) {
+            $ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
+            $extension = $ext;
+            array_push($dataIndex, $key);
+        }
+    }
+    // var_dump($dataIndex);
+    $index = 1;
+    $html = '
+        <?xml version="1.0" encoding="utf-8"?>
+        <html xmlns="http://www.w3.org/1999/xhtml" lang="id" xml:lang="id">
+            <head>
+                <title>Unknown</title>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+            </head>
+            <body style= "background-image: url(images/image.jpeg);max-height: 100%;max-width:100%;background-position: center;background-repeat: no-repeat;background-size:contain;margin:50px;">
+
+            </body>
+        </html>
+    ';
+
+    $xhtml = str_replace("url(images/image.jpeg)", "url('images/image.jpeg')", $html);
+    foreach ($dataIndex as $key) {
+        if (count($dataIndex) == $index) {
+            // echo $key;
+            // file_put_contents($key.'.'.$extension, "");
+            file_put_contents('../localData/Books/'.$folderName.'/'.$key,$xhtml);
+        }
+        $index += 1;
+    }
+
+    // Step 24
+
+    $dataIndex=array();
+    $dataImage=array();
+    $extension = '';
+    foreach ($driveResult as $key) {
+        $ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
+        if (substr($key, 0,4) == 'page') {
+            $extension = $ext;
+            if ($ext == 'xhtml') {
+                $split = explode('_', $key);
+                $split2 = explode('.', $split[1]);
+                // var_dump($split2);
+                // $dataIndex['FileName'] = $key;
+                // $dataIndex['index'] = $split2[0];
+                $xdata = array(
+                    'FileName' => $key,
+                    'index'    => (int)$split2[0]
+                );
+                array_push($dataIndex, $xdata);
+            }
+        }
+        if (($ext == 'jpg' || $ext =='jpeg' || $ext == 'png') && ($key != 'cover.jpeg' && $key != 'cover.jpg' && $key != 'cover.png')) {
+            $splitimage = explode('-', $key);
+            $ximage = array(
+                'FileName' => $key,
+                'index'    => (int)$splitimage[0]
+            );
+            array_push($dataImage, $ximage);
+        }
+    }
+    // array_sort_by_column($dataIndex[1],SORT_ASC,$dataIndex);
+    // var_dump($dataIndex);
+    // var_dump($dataImage);
+    // array_multisort($dataIndex,SORT_ASC,$dataIndex);
+    usort($dataIndex, function($a, $b) {
+        return $a['index'] <=> $b['index'];
+    });
+    usort($dataImage, function($a, $b) {
+        return $a['index'] <=> $b['index'];
+    });
+    // echo json_encode($dataIndex);
+    // echo '<br><br>';
+    // echo json_encode($dataImage);
+
+    // var_dump($dataIndex);
+    $index = 0;
+    
+    foreach ($dataIndex as $key) {
+        // var_dump($dataImage[$index]['FileName']);
+        
+        $html = '
+            <html xmlns="http://www.w3.org/1999/xhtml" lang="id" xml:lang="id">
+                <head>
+                    <title>Unknown</title>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+                </head>
+                <body style= "background-image: url('.$dataImage[$index]['FileName'].');max-height: 100%;max-width:100%;background-position: center;background-repeat: no-repeat;background-size:contain;margin:50px;">
+
+                </body>
+            </html>
+        ';
+
+        $xhtml = str_replace("url(".$dataImage[$index]['FileName'].")", "url('".$dataImage[$index]['FileName']."')", $html);
+        file_put_contents('../localData/Books/'.$folderName.'/'.$key["FileName"],$xhtml);
+    
+        $index += 1;
+    }
+    
 	// End Scaning Extraction Directory
 
 	

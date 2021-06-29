@@ -100,7 +100,7 @@ class C_Kategori extends CI_Controller {
 		}
 		elseif ($formtype == 'delete') {
 			try {
-				$SQL = "UPDATE ".$ArticleTable." SET isActive = 0 WHERE id = '".$id."'";
+				$SQL = "DELETE FROM ".$ArticleTable." WHERE id = '".$id."'";
 				$rs = $this->db->query($SQL);
 				if ($rs) {
 					$data['success'] = true;
