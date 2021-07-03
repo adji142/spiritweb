@@ -466,20 +466,51 @@
     $newText = '<navMap>';
 
     $dataIndex=[];
+    $dataIndex2 = array();
     foreach ($driveResult as $key) {
     	$ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
         if (substr($key, 0,11) == 'index_split' ) {
             array_push($dataIndex, $key);
         }
+        if (substr($key, 0,4) == 'page' ) {
+        	$extension = $ext;
+            if ($ext == 'xhtml') {
+                $split = explode('_', $key);
+                $split2 = explode('.', $split[1]);
+                // var_dump($split2);
+                // $dataIndex['FileName'] = $key;
+                // $dataIndex['index'] = $split2[0];
+                $xdata = array(
+                    'FileName' => $key,
+                    'index'    => (int)$split2[0]
+                );
+                array_push($dataIndex2, $xdata);
+            }
+        }
     }
 
-    $index =1;
-    foreach ($dataIndex as $key) {
-    	$newText .= '<navPoint id="num_'.$index.'" playOrder="'.$index.'">';
-    	$newText .= '<navLabel><text>Baca: Tanggal '.$index.'</text></navLabel>';
-    	$newText .= '<content src="'.$key.'"/></navPoint>';
-    	$index += 1;
+    if (count($dataIndex2) > 0) {
+    	usort($dataIndex2, function($a, $b) {
+	        return $a['index'] <=> $b['index'];
+	    });
+    	$index =1;
+	    foreach ($dataIndex2 as $key) {
+	    	$newText .= '<navPoint id="num_'.$index.'" playOrder="'.$index.'">';
+	    	$newText .= '<navLabel><text>Baca: Tanggal '.$index.'</text></navLabel>';
+	    	$newText .= '<content src="'.$key['FileName'].'"/></navPoint>';
+	    	$index += 1;
+	    }
     }
+    else{
+    	$index =1;
+	    foreach ($dataIndex as $key) {
+	    	$newText .= '<navPoint id="num_'.$index.'" playOrder="'.$index.'">';
+	    	$newText .= '<navLabel><text>Baca: Tanggal '.$index.'</text></navLabel>';
+	    	$newText .= '<content src="'.$key.'"/></navPoint>';
+	    	$index += 1;
+	    }
+    }
+    
     $newText .= "</navMap></ncx>";
     // var_dump($newText);
     foreach ($driveResult as $key) {
