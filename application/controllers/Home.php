@@ -155,6 +155,10 @@ class home extends CI_Controller {
 		$this->load->view('V_Tools/testSendEmail');
 	}
 
+	public function banner()
+	{
+		$this->load->view('V_Banner/banner');
+	}
 	// Sending Email
 
 	Public function sendMessage() {

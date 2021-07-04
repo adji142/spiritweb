@@ -53,15 +53,70 @@ class C_Kategori extends CI_Controller {
 		$data = array('success' => false ,'message'=>array());
 		$id 			= $this->input->post('id');
 		$NamaKategori 	= $this->input->post('NamaKategori');
-		$ShowHomePagex 	= $this->input->post('ShowHomePage');
+		$ShowHomePagex 	= $this->input->post('ShowHomePagex');
+		$ImageLink 	= $this->input->post('ImageLink');
+		$ImageBase64 	= $this->input->post('picture_base64');
 
 		$ArticleTable 	= 'tkategori';
 		// $exploder = explode("|",$ItemGroup[0]);
 		$formtype = $this->input->post('formtype');
 
+		$picture_ext = '';
+		// Upload Image
+		try {
+			unset($config); 
+			$date = date("ymd");
+	        $config['upload_path'] = './localData/KategoriImage';
+	        $config['max_size'] = '60000';
+	        $config['allowed_types'] = 'png|jpg|jpeg|gif';
+	        $config['overwrite'] = TRUE;
+	        $config['remove_spaces'] = TRUE;
+	        $config['file_ext_tolower'] = TRUE;
+	        $config['file_name'] = strtolower(str_replace(' ', '', $NamaKategori));
+
+	        $this->load->library('upload', $config);
+	        $this->upload->initialize($config);
+
+	        if(!$this->upload->do_upload('Attachment')) {
+	        	if ($formtype == 'edit' || $formtype == 'delete' || $formtype == 'Publish') {
+	        		$x='';
+	        	}
+	        	else{
+	        		$x = $this->upload->data();
+		        	// var_dump($x);
+		        	$data['success'] = false;
+		            $data['message'] = $this->upload->display_errors();
+		            goto jumpx;
+	        	}
+	        }else{
+	            $dataDetails = $this->upload->data();
+	            $picture_ext = $dataDetails['file_ext'];
+	            if ($picture_ext == '.jpeg') {
+	            	$picture_ext = '.jpg';
+	            }
+	        }	
+		} catch (Exception $e) {
+			$data['success'] = false;
+			$data['message'] = $e->getMessage();
+			goto jumpx;
+		}
+
+		if ($ImageBase64 != '') {
+			if ($formtype == 'add' || $formtype == 'edit') {
+				$pos  = strpos($ImageBase64, ';');
+				$type = explode(':', substr($ImageBase64, 0, $pos))[1];
+				$extension = explode('/', $type)[1];
+			}
+			if ($extension == 'jpeg') {
+				$picture_ext = '.jpg';
+			}
+		}
+
 		$param = array(
 			'NamaKategori' 	=> $NamaKategori,
-			'ShowHomePage'	=> $ShowHomePagex
+			'ShowHomePage'	=> $ShowHomePagex,
+			'ImageLink'		=> base_url().'localData/KategoriImage/'.strtolower(str_replace(' ', '', $NamaKategori)).''.strtolower($picture_ext),
+			'ImageBase64'	=> $ImageBase64
 		);
 		if ($formtype == 'add') {
 			$this->db->trans_begin();
@@ -118,6 +173,7 @@ class C_Kategori extends CI_Controller {
 			$data['success'] = false;
 			$data['message'] = "Invalid Form Type";
 		}
+		jumpx:
 		echo json_encode($data);
 	}
 	public function Getindex()

@@ -68,7 +68,7 @@ class API_auth extends CI_Controller {
 		}
 		else if ($rs->num_rows() > 0) {
 			$data['success'] = true;
-			$data['message'] = "Username ".$username." sudah ada.";
+			$data['message'] = "Username ".$email." sudah ada.";
 		}
 		echo json_encode($data);
 	}
@@ -88,6 +88,7 @@ class API_auth extends CI_Controller {
 		// 
 		$insert = array(
 			'username' 	=> $username,
+			'nama'		=> $username,
 			'email'		=> $email,
 			'password'	=> $md_pass,
 			'phone'		=> $phone,
@@ -123,16 +124,16 @@ class API_auth extends CI_Controller {
 		$device = $this->input->post('device');
 		// var_dump($usr.' '.$pwd);
 		$SQL = "
-			SELECT * FROM users where username = '".$usr."';
+			SELECT * FROM users where email = '".$usr."';
 		";
 		$cekExist = $this->db->query($SQL);
 
 		// if ($cekExist->row()->HardwareID =='') {
 
-			$Validate_username = $this->LoginMod->Validate_username($usr);
+			$Validate_username = $this->LoginMod->Validate_email($usr);
 			if($Validate_username->num_rows()>0){
 				$SQL = "
-					SELECT * FROM users where username = '$usr'
+					SELECT * FROM users where email = '$usr'
 					AND (HardwareID = '$androidid' or COALESCE(HardwareID,'') = '')
 				";
 				$x = $this->db->query($SQL);
@@ -148,7 +149,7 @@ class API_auth extends CI_Controller {
 							'HardwareID'=> $androidid
 						);
 
-						$updateState = $this->ModelsExecuteMaster->ExecUpdate($paramUpdate,array('username'=> $usr),'users');
+						$updateState = $this->ModelsExecuteMaster->ExecUpdate($paramUpdate,array('email'=> $usr),'users');
 
 						if ($updateState) {
 							$data['success'] = true;

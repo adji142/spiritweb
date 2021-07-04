@@ -21,8 +21,8 @@ class API_Kategori extends CI_Controller {
 		$maxperpage = 2;
 		$rs;
 		if ($token != '') {
-			$SQL = "SELECT x.id,x.NamaKategori, CASE WHEN x.id = 0 THEN 0 ELSE COALESCE(y.jml,0) END jml FROM (SELECT 0 id,'GRATIS !!' NamaKategori, 1 ShowHomePage FROM DUAL UNION ALL ";
-			$SQL .= "SELECT * FROM tkategori) x ";
+			$SQL = "SELECT x.id,x.NamaKategori, CASE WHEN x.id = 0 THEN 0 ELSE COALESCE(y.jml,0) END jml,ImageLink FROM (SELECT 0 id,'GRATIS !!' NamaKategori, 1 ShowHomePage,'' ImageLink FROM DUAL UNION ALL ";
+			$SQL .= "SELECT id,NamaKategori,ShowHomePage,COALESCE(ImageLink,'') ImageLink FROM tkategori) x ";
 
 			$SQL .= " LEFT JOIN (
 							SELECT 

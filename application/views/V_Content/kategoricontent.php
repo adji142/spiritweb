@@ -58,6 +58,16 @@
                       <input type="checkbox" name="ShowHomePagex" id="ShowHomePagex" class="form-control" value="0">
                     </div>
                   </div>
+                  <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Image <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                      <input type="file" id="Attachment" name="Attachment" accept=".png,.jpg" />
+                      <img src="" id="profile-img-tag" width="200" />
+                      <!-- <textarea id="picture_base64" name="picture_base64"></textarea> -->
+                      <textarea id="picture_base64" name="picture_base64" style="display: none;"></textarea>
+                    </div>
+                  </div>
                   <div class="item" form-group>
                     <button class="btn btn-primary" id="btn_Save">Save</button>
                   </div>
@@ -75,6 +85,8 @@
   require_once(APPPATH."views/parts/Footer.php");
 ?>
 <script type="text/javascript">
+  var _URL = window.URL || window.webkitURL;
+    var _URLePub = window.URL || window.webkitURL;
   $(function () {
     $(document).ready(function () {
       var where_field = '';
@@ -105,14 +117,25 @@
       $('#btn_Save').text('Tunggu Sebentar.....');
       $('#btn_Save').attr('disabled',true);
 
-      e.preventDefault();
-      var me = $(this);
+      var id = $('#id').val();
+      var NamaKategori = $('#NamaKategori').val();
+      var ShowHomePage = $('#ShowHomePagex').val();
+      var ImageLink = $('#Attachment').prop('files')[0];
+      var ImageBase64 = $('#picture_base64').val();
+      var formtype = $('#formtype').val();
 
+      e.preventDefault();
+      // var me = $(this);
+
+      var form_data = new FormData(this);
+      // 'id':$('#id').val(),'NamaKategori':$('#NamaKategori').val(),'ShowHomePage':$('#ShowHomePagex').val(),'formtype':$('#formtype').val()
       $.ajax({
             type    :'post',
             url     : '<?=base_url()?>C_Kategori/CRUD',
-            data    : {'id':$('#id').val(),'NamaKategori':$('#NamaKategori').val(),'ShowHomePage':$('#ShowHomePagex').val(),'formtype':$('#formtype').val()},
+            data    : form_data,
             dataType: 'json',
+            processData: false,
+            contentType: false,
             success : function (response) {
               if(response.success == true){
                 $('#modal_').modal('toggle');
@@ -144,6 +167,46 @@
     $('.close').click(function() {
       location.reload();
     });
+
+    $("#Attachment").change(function(){
+      var file = $(this)[0].files[0];
+      img = new Image();
+      img.src = _URL.createObjectURL(file);
+      var imgwidth = 0;
+      var imgheight = 0;
+      img.onload = function () {
+        imgwidth = this.width;
+        imgheight = this.height;
+        $('#width').val(imgwidth);
+        $('#height').val(imgheight);
+      }
+      readURL(this);
+      encodeImagetoBase64(this);
+      // alert("Current width=" + imgwidth + ", " + "Original height=" + imgheight);
+    });
+
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+          
+        reader.onload = function (e) {
+            $('#profile-img-tag').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    function encodeImagetoBase64(element) {
+      $('#picture_base64').val('');
+        var file = element.files[0];
+        var reader = new FileReader();
+        reader.onloadend = function() {
+          // $(".link").attr("href",reader.result);
+          // $(".link").text(reader.result);
+          $('#picture_base64').val(reader.result);
+        }
+        reader.readAsDataURL(file);
+    }
+
     function GetData(id) {
       var where_field = 'id';
       var where_value = id;
@@ -167,6 +230,8 @@
                   $("#ShowHomePagex").prop('checked', true);
                 }
                 $('#formtype').val("edit");
+                $('#profile-img-tag').attr('src', v.ImageLink);
+                $('#picture_base64').val(v.ImageBase64);
 
                 $('#modal_').modal('show');
               });
@@ -306,7 +371,7 @@
           // console.log(e);
         }
         });
-
+    
         // add dx-toolbar-after
         // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
     }

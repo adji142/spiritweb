@@ -130,3 +130,6 @@ $route['APIMessageInbox'] = 'API/API_Message/SendInbox';
 $route['APIShowMessage'] = 'API/API_Message/ReadMessage';
 $route['APICountMesssage'] = 'API/API_Message/ReadCountMessage';
 $route['APIUpdateFlag'] = 'API/API_Message/UpdateFlagread';
+
+// API Promo
+$route['APIPromoGet'] = 'API/API_Promo/getPromo';

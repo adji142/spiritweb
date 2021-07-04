@@ -65,14 +65,28 @@
                 // bindGrid(response.data);
                 console.log(response_add.success);
                 if (response_add.success == true) {
-                  Swal.fire({
-                    type: 'success',
-                    title: 'Horay..',
-                    text: 'Transaksi Kamu Berhasil silahkan melakukan Pembayaran! Untuk Informasi detail silahkan menuju menu Riwayat Transaksi. ',
-                    // footer: '<a href>Why do I have this issue?</a>'
-                  }).then((result)=>{
-                    window.close();
-                  });
+                  if(typeof(response.data.va_numbers) == "undefined"){
+                    Swal.fire({
+                      type: 'success',
+                      title: 'Horay..',
+                      text: 'Transaksi Kamu Berhasil silahkan melakukan Pembayaran! Untuk Informasi detail silahkan menuju menu Riwayat Transaksi. ',
+                      // footer: '<a href>Why do I have this issue?</a>'
+                    }).then((result)=>{
+                      console.log("Done");
+                      window.close();
+                    });
+                  }
+                  else{
+                    Swal.fire({
+                      type: 'success',
+                      title: 'Horay..',
+                      text: 'Transaksi Kamu Berhasil silahkan melakukan Pembayaran! <br> No. Rekening <b>'+Mid_VANumber+'</b> <br> Bank : <b>'+Mid_Bank+'</b><br> Untuk Informasi detail silahkan menuju menu Riwayat Transaksi. ',
+                      // footer: '<a href>Why do I have this issue?</a>'
+                    }).then((result)=>{
+                      console.log("Done");
+                      // window.close();
+                    });
+                  }
                 }
                 else{
                   Swal.fire({
