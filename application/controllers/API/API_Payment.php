@@ -162,6 +162,7 @@ class API_Payment extends CI_Controller {
 		$Mid_SignatureKey = $this->input->post('Mid_SignatureKey');
 		$Mid_TransactionStatus = $this->input->post('Mid_TransactionStatus');
 		$Mid_FraudStatus = $this->input->post('Mid_FraudStatus');
+		$UserID = $this->input->post('UserID');
 
 		$param = array(
 			'NoTransaksi' => $NoTransaksi,
@@ -178,6 +179,7 @@ class API_Payment extends CI_Controller {
 			'Mid_SignatureKey' => $Mid_SignatureKey,
 			'Mid_TransactionStatus' => $Mid_TransactionStatus,
 			'Mid_FraudStatus' => $Mid_FraudStatus,
+			'UserID'		=> $UserID
 		);
 
 		try {
@@ -187,6 +189,23 @@ class API_Payment extends CI_Controller {
 			}
 			else{
 				$rs = $this->ModelsExecuteMaster->ExecInsert($param,'topuppayment');
+
+				// Send Email
+				$rs_user = $this->ModelsExecuteMaster->FindData(array('username'=>$UserID),'users')->row();
+
+				if ($rs_user->email <> '') {
+					$reciept = $rs_user->email;
+					$subject = "Notifikasi Pembayaran";
+					$body = $this->ModelsExecuteMaster->DefaultBody();
+					$body .= $this->ModelsExecuteMaster->Email_payment($NoTransaksi);
+
+					try{
+						$this->ModelsExecuteMaster->SendSpesificEmail($reciept,$subject,$body);
+					}
+					catch (Exception $e) {
+						$data['message'] = $e->getMessage();
+					}
+				}
 			}
 			if ($rs) {
 				$data['success'] = true;
@@ -201,12 +220,12 @@ class API_Payment extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 
 		$userid = $this->input->post('userid');
+		$NoTransaksi = $this->input->post('NoTransaksi');
 
-		$SQL  = "SELECT a.*, b.userid FROM topuppayment a
-				INNER JOIN thistoryrequest b on a.NoTransaksi = b.NoTransaksi 
+		$SQL  = "SELECT * FROM topuppayment a
 				where a.read = 0 ";
 		if ($userid != "") {
-			$SQL .= " AND b.userid = '".$userid."' ";
+			$SQL .= " AND userid = '".$userid."' ";
 		}
 
 		$rs = $this->db->query($SQL);
@@ -222,7 +241,7 @@ class API_Payment extends CI_Controller {
 	}
 
 	public function cekPaymentStatus(){
-		$data = array('success' => false ,'message'=>array(),'data' => array());
+		$data = array('success' => false ,'message'=>array(),'data' => array(),'datagateway'=>array());
 
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		\Midtrans\Config::$isProduction = false;
@@ -230,101 +249,126 @@ class API_Payment extends CI_Controller {
 		\Midtrans\Config::$is3ds = true;
 
 		$userid = $this->input->post('userid');
-
-		$SQL = "SELECT a.NoTransaksi, a.userid, b.Mid_TransactionStatus FROM thistoryrequest a
+		$NoTransaksi = $this->input->post('NoTransaksi');
+		$checktype = $this->input->post('NoTransaksi');
+		// 1 = Check and Append
+		// 0 = Only Status Cek
+		if ($checktype == 1) {
+			$SQL = "SELECT a.NoTransaksi, a.userid, b.Mid_TransactionStatus FROM thistoryrequest a
 				LEFT JOIN topuppayment b on a.NoTransaksi = b.NoTransaksi
 				WHERE (COALESCE(b.Mid_TransactionStatus,'') != 'settlement' OR COALESCE(b.Mid_TransactionStatus,'') = '') AND a.userid = '".$userid."'";
 
-		$rs = $this->db->query($SQL);
+			$SQL = " SELECT NoTransaksi,UserID,Mid_TransactionStatus FROM topuppayment WHERE (COALESCE(Mid_TransactionStatus,'') != 'settlement' OR COALESCE(Mid_TransactionStatus,'') = '') AND UserID = '".$userid."' ";	
+			if ($NoTransaksi != "") {
+				$SQL .= " AND NoTransaksi = '".$NoTransaksi."' ";
+			}
 
-		if ($rs) {
-			$datatable = $rs->result();
-			foreach ($datatable as $key) {
-				try {
-					// Get Transaction Status in Midtrans
-					$status = \Midtrans\Transaction::status($key->NoTransaksi);
+			$rs = $this->db->query($SQL);
 
-					// var_dump($status);
-					if ($status) {
+			if ($rs) {
+				$datatable = $rs->result();
+				// var_dump($datatable);
+				foreach ($datatable as $key) {
+					try {
+						// Get Transaction Status in Midtrans
+						$status = \Midtrans\Transaction::status($key->NoTransaksi);
+						$data['data'] = $status;
 						// var_dump($status);
-						$FindData = $this->ModelsExecuteMaster->FindData(array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
+						if ($status) {
+							// var_dump($status);
+							$FindData = $this->ModelsExecuteMaster->FindData(array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
 
-						if ($FindData->num_rows() >0) {
-							$param = array(
-								'TglPencatatan' => date("Y-m-d h:i:sa"),
-								'Mid_TransactionStatus' => $status->transaction_status
-							);
-							$updateStatus = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
-
-							if ($updateStatus) {
-								$data['success'] = true;
-							}
-						}
-						else{
-							if ($status->payment_type == "bank_transfer") {
+							if ($FindData->num_rows() >0) {
 								$param = array(
-									'NoTransaksi' => $key->NoTransaksi,
-									'TglTransaksi' => $status->transaction_time,
 									'TglPencatatan' => date("Y-m-d h:i:sa"),
-									'MetodePembayaran' => $status->payment_type,
-									'GrossAmt' => $status->gross_amount,
-									'AdminFee' => 0,
-									'Mid_PaymentType' => $status->payment_type,
-									'Mid_TransactionID' => $status->transaction_id,
-									'Mid_MechantID' => $status->merchant_id,
-									'Mid_Bank' => $status->va_numbers[0]->bank,
-									'Mid_VANumber' => $status->va_numbers[0]->va_number,
-									'Mid_SignatureKey' => $status->signature_key,
-									'Mid_TransactionStatus' => $status->transaction_status,
-									'Mid_FraudStatus' => $status->fraud_status,
+									'Mid_TransactionStatus' => $status->transaction_status
 								);
+								$updateStatus = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
+
+								if ($updateStatus) {
+									$data['success'] = true;
+								}
 							}
-							elseif ($status->payment_type == "gopay") {
-								$param = array(
-									'NoTransaksi' => $key->NoTransaksi,
-									'TglTransaksi' => $status->transaction_time,
-									'TglPencatatan' => date("Y-m-d h:i:sa"),
-									'MetodePembayaran' => $status->payment_type,
-									'GrossAmt' => $status->gross_amount,
-									'AdminFee' => 0,
-									'Mid_PaymentType' => $status->payment_type,
-									'Mid_TransactionID' => $status->transaction_id,
-									'Mid_MechantID' => $status->merchant_id,
-									'Mid_Bank' => '',
-									'Mid_VANumber' => '',
-									'Mid_SignatureKey' => $status->signature_key,
-									'Mid_TransactionStatus' => $status->transaction_status,
-									'Mid_FraudStatus' => $status->fraud_status,
-								);
+							else{
+								if ($status->payment_type == "bank_transfer") {
+									$param = array(
+										'NoTransaksi' => $key->NoTransaksi,
+										'TglTransaksi' => $status->transaction_time,
+										'TglPencatatan' => date("Y-m-d h:i:sa"),
+										'MetodePembayaran' => $status->payment_type,
+										'GrossAmt' => $status->gross_amount,
+										'AdminFee' => 0,
+										'Mid_PaymentType' => $status->payment_type,
+										'Mid_TransactionID' => $status->transaction_id,
+										'Mid_MechantID' => $status->merchant_id,
+										'Mid_Bank' => $status->va_numbers[0]->bank,
+										'Mid_VANumber' => $status->va_numbers[0]->va_number,
+										'Mid_SignatureKey' => $status->signature_key,
+										'Mid_TransactionStatus' => $status->transaction_status,
+										'Mid_FraudStatus' => $status->fraud_status,
+									);
+								}
+								elseif ($status->payment_type == "gopay") {
+									$param = array(
+										'NoTransaksi' => $key->NoTransaksi,
+										'TglTransaksi' => $status->transaction_time,
+										'TglPencatatan' => date("Y-m-d h:i:sa"),
+										'MetodePembayaran' => $status->payment_type,
+										'GrossAmt' => $status->gross_amount,
+										'AdminFee' => 0,
+										'Mid_PaymentType' => $status->payment_type,
+										'Mid_TransactionID' => $status->transaction_id,
+										'Mid_MechantID' => $status->merchant_id,
+										'Mid_Bank' => '',
+										'Mid_VANumber' => '',
+										'Mid_SignatureKey' => $status->signature_key,
+										'Mid_TransactionStatus' => $status->transaction_status,
+										'Mid_FraudStatus' => $status->fraud_status,
+									);
+								}
+								$rs = $this->ModelsExecuteMaster->ExecInsert($param,'topuppayment');
+								if ($rs) {
+									$data['success'] = true;
+								}
 							}
-							$rs = $this->ModelsExecuteMaster->ExecInsert($param,'topuppayment');
-							if ($rs) {
-								$data['success'] = true;
+							// Notifikasi
+							$FindDataPushNotif = $this->ModelsExecuteMaster->FindData(array('BaseRef'=>$key->NoTransaksi),'tpushemail');
+
+							if ($FindDataPushNotif->num_rows() == 0 && $status->transaction_status == "settlement" ) {
+
+								$getEmail = "
+									SELECT b.username,b.email FROM thistoryrequest a
+									LEFT JOIN users b on a.userid = b.username
+									WHERE a.NoTransaksi = '".$key->NoTransaksi."'
+								";
+								$email = $this->db->query($getEmail)->row()->email;
+								$this->ModelsExecuteMaster->PushEmail('payment_done',$key->NoTransaksi,$email);
 							}
 						}
-						// Notifikasi
-						$FindDataPushNotif = $this->ModelsExecuteMaster->FindData(array('BaseRef'=>$key->NoTransaksi),'tpushemail');
-
-						if ($FindDataPushNotif->num_rows() == 0 && $status->transaction_status == "settlement" ) {
-
-							$getEmail = "
-								SELECT b.username,b.email FROM thistoryrequest a
-								LEFT JOIN users b on a.userid = b.username
-								WHERE a.NoTransaksi = '".$key->NoTransaksi."'
-							";
-							$email = $this->db->query($getEmail)->row()->email;
-							$this->ModelsExecuteMaster->PushEmail('payment_done',$key->NoTransaksi,$email);
-						}
+					} catch (Exception $e) {
+						$data['success'] = true;
+						$data['message'] = $e->getMessage();
 					}
-				} catch (Exception $e) {
-					$data['success'] = true;
-					$data['message'] = $e->getMessage();
+					
+					// $param = array(
+					// 	'TglPencatatan' => date("Y-m-d h:i:sa"),
+					// 	''
+					// );
 				}
-				
-				// $param = array(
-				// 	'TglPencatatan' => date("Y-m-d h:i:sa"),
-				// 	''
-				// );
+			}
+		}
+		else{
+
+			try{
+				$status = \Midtrans\Transaction::status($NoTransaksi);
+				if ($status) {
+					$data['data'] = $status;
+					$data['success'] = true;
+				}
+			}
+			catch (Exception $e) {
+				$data['success'] = true;
+				$data['message'] = $e->getMessage();
 			}
 		}
 
@@ -340,12 +384,12 @@ class API_Payment extends CI_Controller {
 
 		$SQL = "SELECT * FROM (
 				SELECT 
-					'0' Transaksi, a.NoTransaksi,B.TglTransaksi, COALESCE(B.GrossAmt,0) - COALESCE(a.Adminfee,0) Nominal,
-					B.MetodePembayaran, a.userid, B.Mid_TransactionStatus,'Top Up Spirit Pay' Keterangan,
-					COALESCE(B.Mid_Bank,'') Bank, COALESCE(B.Mid_VANumber,'') VA_Numb,COALESCE(B.Mid_PaymentType,'') Mid_PaymentType
-				FROM thistoryrequest a
-				INNER JOIN topuppayment B ON a.NoTransaksi = B.NoTransaksi
-				WHERE DATE(B.TglTransaksi) BETWEEN '$tglawal' AND '$tglakhir' AND userid = '$userid'
+					'0' Transaksi, B.NoTransaksi,B.TglTransaksi, COALESCE(B.GrossAmt,0) - COALESCE(B.Adminfee,0) Nominal,
+					B.MetodePembayaran, B.userid, B.Mid_TransactionStatus,'Top Up Spirit Pay' Keterangan,
+					COALESCE(B.Mid_Bank,'') Bank, COALESCE(B.Mid_VANumber,'') VA_Numb,COALESCE(B.Mid_PaymentType,'') Mid_PaymentType,COALESCE(B.Attachment,'') Attachment,
+					COALESCE(B.Adminfee,0) Adminfee
+				FROM topuppayment B 
+				WHERE DATE(B.TglTransaksi) BETWEEN '$tglawal' AND '$tglakhir' AND B.userid = '$userid'
 
 				UNION ALL
 				-- 1: Berhasil, 2 : Pending, 3: Gagal, 4:Return
@@ -360,7 +404,7 @@ class API_Payment extends CI_Controller {
 						END 
 					END TransStatus,
 					'Pembelian Buku ',
-					'' Bank, '' VA_Numb,'' Mid_PaymentType
+					'' Bank, '' VA_Numb,'' Mid_PaymentType, '', 0 
 				FROM transaksi a
 				LEFT JOIN tbuku b on a.KodeItem = b.KodeItem
 				WHERE DATE(TglTransaksi) BETWEEN '$tglawal' AND '$tglakhir' AND userid = '$userid'
@@ -521,4 +565,117 @@ class API_Payment extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+
+	public function RequestPayment(){
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$amt = $this->input->post('amt');
+		$Adminfee = $this->input->post('Adminfee');
+		$first_name = $this->input->post('first_name');
+		$email = $this->input->post('email');
+		$Periode = strval(date("Y")).strval(date("m"));
+		$payment_type = $this->input->post('payment_type');
+		$bank = $this->input->post('bank');
+		// Set your Merchant Server Key
+		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
+		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+		\Midtrans\Config::$isProduction = false;
+		// Set sanitization on (default)
+		\Midtrans\Config::$isSanitized = true;
+		// Set 3DS transaction for credit card to true
+		\Midtrans\Config::$is3ds = true;
+		
+		$order_id = $Periode.strval(rand());
+		if ($bank != '') {
+			$params = array(
+			    'transaction_details' => array(
+			        'order_id' => $order_id,
+			        'gross_amount' => $amt + $Adminfee,
+			    ),
+			    'payment_type' => $payment_type,
+			    'customer_details' => array(
+			        'first_name' => $first_name,
+			        'email' => $email
+			    ),
+			    'bank_transfer' => array(
+			    	'bank' => $bank
+			    )
+			);
+		}else{
+			$params = array(
+			    'transaction_details' => array(
+			        'order_id' => $order_id,
+			        'gross_amount' => $amt + $Adminfee,
+			    ),
+			    'payment_type' => $payment_type,
+			    'customer_details' => array(
+			        'first_name' => $first_name,
+			        'email' => $email
+			    ),
+			);
+		}
+		
+		// if ($bank != '') {
+		// 	$bankdetail = array(
+		// 		'bank_transfer' => array(
+		// 			'bank' => $bank
+		// 		)
+		// 	);
+		// 	array_push($params, $bankdetail);
+		// }
+		// var_dump($params);
+		$response = \Midtrans\CoreApi::charge($params);
+
+		$NoTransaksi = $response->order_id;
+		$TglTransaksi = $response->transaction_time;
+		$TglPencatatan = date("Y-m-d h:i:sa");
+		$MetodePembayaran = $response->payment_type;
+		$GrossAmt = $response->gross_amount;
+		$AdminFee = $Adminfee;
+		$Mid_PaymentType = $response->payment_type;
+		$Mid_TransactionID = $response->transaction_id;
+		$Mid_MechantID = $response->merchant_id;
+		$Mid_Bank = $response->va_numbers[0]->bank;
+		$Mid_VANumber = $response->va_numbers[0]->va_number;
+		$Mid_SignatureKey = "";
+		$Mid_TransactionStatus = $response->transaction_status;
+		$Mid_FraudStatus = $response->fraud_status;
+
+		$param = array(
+			'NoTransaksi' => $NoTransaksi,
+			'TglTransaksi' => $TglTransaksi,
+			'TglPencatatan' => $TglPencatatan,
+			'MetodePembayaran' => $MetodePembayaran,
+			'GrossAmt' => $GrossAmt,
+			'AdminFee' => $AdminFee,
+			'Mid_PaymentType' => $Mid_PaymentType,
+			'Mid_TransactionID' => $Mid_TransactionID,
+			'Mid_MechantID' => $Mid_MechantID,
+			'Mid_Bank' => $Mid_Bank,
+			'Mid_VANumber' => $Mid_VANumber,
+			'Mid_SignatureKey' => $Mid_SignatureKey,
+			'Mid_TransactionStatus' => $Mid_TransactionStatus,
+			'Mid_FraudStatus' => $Mid_FraudStatus,
+			'UserID'	=> $first_name
+		);
+
+		try {
+			$exist = $this->ModelsExecuteMaster->FindData(array('NoTransaksi'=>$NoTransaksi),'topuppayment');
+			if ($exist->num_rows() > 0) {
+				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$NoTransaksi),'topuppayment');
+			}
+			else{
+				$rs = $this->ModelsExecuteMaster->ExecInsert($param,'topuppayment');
+			}
+			if ($rs) {
+				$data['success'] = true;
+			}	
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+			$data['success'] = false;
+		}
+		$data['data'] = $response;
+		echo json_encode($data);
+	}
+
 }

@@ -43,11 +43,18 @@
               <div class="modal-body">
                 <form id="post_" data-parsley-validate class="form-horizontal form-label-left">
                   <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kode Metode Pembayaran <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                      <input type="text" name="id" id="id" required="" placeholder="Kode Metode Pembayaran" class="form-control ">
+                    </div>
+                  </div>
+                  <div class="item form-group">
                     <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Nama Metode Pembayaran <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
                       <input type="text" name="NamaMedia" id="NamaMedia" required="" placeholder="Nama Metode Pembayaran" class="form-control ">
-                      <input type="hidden" name="id" id="id" >
+                      <!-- <input type="hidden" name="id" id="id" > -->
                       <input type="hidden" name="formtype" id="formtype" value="add">
                     </div>
                   </div>
@@ -342,7 +349,7 @@
                 // logEvent(e);
             },
             onRowRemoving: function(e) {
-              id = e.data.ArticleCode;
+              id = e.data.id;
               Swal.fire({
                 title: 'Apakah anda yakin?',
                 text: "anda akan menghapus data di baris ini !",

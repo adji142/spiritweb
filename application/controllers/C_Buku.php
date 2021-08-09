@@ -236,7 +236,7 @@ class C_Buku extends CI_Controller {
 			$data['message'] = $e->getMessage();
 			goto jumpx;
 		}
-
+		$extension = '';
 		if ($formtype == 'add' || $formtype == 'edit') {
 			$pos  = strpos($picture_base64, ';');
 			$type = explode(':', substr($picture_base64, 0, $pos))[1];

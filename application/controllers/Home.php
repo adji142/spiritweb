@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+// use PHPMailer\PHPMailer\PHPMailer;
+// use PHPMailer\PHPMailer\Exception;
 
 class home extends CI_Controller {
 
@@ -27,12 +27,21 @@ class home extends CI_Controller {
 		$this->load->model('GlobalVar');
 		$this->load->model('Apps_mod');
 		$this->load->model('LoginMod');
-		require APPPATH.'libraries/phpmailer/src/Exception.php';
-        require APPPATH.'libraries/phpmailer/src/PHPMailer.php';
-        require APPPATH.'libraries/phpmailer/src/SMTP.php';
+		// require APPPATH.'libraries/phpmailer/src/Exception.php';
+  //       require APPPATH.'libraries/phpmailer/src/PHPMailer.php';
+  //       require APPPATH.'libraries/phpmailer/src/SMTP.php';
 	}
 	public function Test()
 	{
+		$reciept = "prasetyoajiw@gmail.com";
+		$subject = "Notifikasi Pembayaran";
+		$body = $this->ModelsExecuteMaster->DefaultBody();
+		$body .= $this->ModelsExecuteMaster->Email_payment('202108705495986');
+		try {
+			$this->ModelsExecuteMaster->SendSpesificEmail($reciept,$subject,$body);
+		} catch (Exception $e) {
+			echo $e->getMessage();
+		}
 		// try {
 		// 	$rs = $this->ModelsExecuteMaster->ExecInsert(array('Nomor'=>'1001'),'ttest');
 		// 	if ($rs) {
@@ -73,6 +82,8 @@ class home extends CI_Controller {
 		// 	$data['nomor'] = $nomor;
 		// }
 		// echo json_encode($data);
+
+		
 	}
 	public function index()
 	{

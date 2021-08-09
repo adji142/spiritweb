@@ -65,6 +65,7 @@ class C_PaymentMethod extends CI_Controller {
 		$formtype = $this->input->post('formtype');
 
 		$param = array(
+			'id'		=> $id,
 			'NamaMedia' => $NamaMedia,
 			'BiayaAdmin' => str_replace(',', '', $BiayaAdmin),
 			'Active' => $Active,
@@ -110,7 +111,8 @@ class C_PaymentMethod extends CI_Controller {
 		}
 		elseif ($formtype == 'delete') {
 			try {
-				$SQL = "UPDATE ".$ArticleTable." SET Active = 0 WHERE id = '".$id."'";
+				// $SQL = "UPDATE ".$ArticleTable." SET Active = 0 WHERE id = '".$id."'";
+				$SQL = "DELETE FROM ".$ArticleTable." where id = '".$id."'";
 				$rs = $this->db->query($SQL);
 				if ($rs) {
 					$data['success'] = true;

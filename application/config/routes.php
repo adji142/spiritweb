@@ -102,6 +102,7 @@ $route['APIHistory'] = 'API/API_Payment/getPaymentHistory';
 $route['APIPaymentStatus'] = 'API/API_Payment/cekPaymentStatus';
 $route['APIPaymentGenerateQR'] = 'API/API_Payment/chargeGopay';
 $route['APIPaymentKonfirmasi'] = 'API/API_Payment/konfirmasiPayment';
+$route['APIPaymentRequest'] = 'API/API_Payment/RequestPayment';
 
 // Test Paymant
 $route['APIPaymenttest'] = 'API/API_Payment/testCharge';

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+// use PHPMailer\PHPMailer\PHPMailer;
+// use PHPMailer\PHPMailer\Exception;
 class API_auth extends CI_Controller {
 
 	/**
@@ -27,9 +27,9 @@ class API_auth extends CI_Controller {
 		$this->load->model('Apps_mod');
 		$this->load->model('LoginMod');
 
-		require APPPATH.'libraries/phpmailer/src/Exception.php';
-        require APPPATH.'libraries/phpmailer/src/PHPMailer.php';
-        require APPPATH.'libraries/phpmailer/src/SMTP.php';
+		// require APPPATH.'libraries/phpmailer/src/Exception.php';
+  //       require APPPATH.'libraries/phpmailer/src/PHPMailer.php';
+  //       require APPPATH.'libraries/phpmailer/src/SMTP.php';
 	}
 	public function FindUserName()
 	{
@@ -122,6 +122,7 @@ class API_auth extends CI_Controller {
 		$pwd =$this->input->post('pass');
 		$androidid = $this->input->post('androidid');
 		$device = $this->input->post('device');
+		$isReset = $this->input->post('isReset');
 		// var_dump($usr.' '.$pwd);
 		$SQL = "
 			SELECT * FROM users where email = '".$usr."';
@@ -134,8 +135,10 @@ class API_auth extends CI_Controller {
 			if($Validate_username->num_rows()>0){
 				$SQL = "
 					SELECT * FROM users where email = '$usr'
-					AND (HardwareID = '$androidid' or COALESCE(HardwareID,'') = '')
 				";
+				if ($isReset == 'false') {
+					$SQL .= " AND (HardwareID = '$androidid' or COALESCE(HardwareID,'') = '')";
+				}
 				$x = $this->db->query($SQL);
 
 				if ($x->num_rows() > 0) {
@@ -172,7 +175,7 @@ class API_auth extends CI_Controller {
 					}
 					else{
 						$data['success'] = false;
-						$data['message'] = 'User atau Password tidak valid'; // User password doesn't match
+						$data['message'] = 'Password tidak valid'; // User password doesn't match
 					}
 				}
 				else{
@@ -305,25 +308,25 @@ class API_auth extends CI_Controller {
 
         	// $xdata = $this->ModelsExecuteMaster->FindData(array('id'=>1),'temailsetting');
         	// var_dump($xdata->row()->smtp_host);	
-        	$response = false;
-			$mail = new PHPMailer();
+   //      	$response = false;
+			// $mail = new PHPMailer();
 
-			// SMTP configuration
-	        $mail->isSMTP();
-	        $mail->Host     = 'smtp.gmail.com'; //sesuaikan sesuai nama domain hosting/server yang digunakan
-	        $mail->SMTPAuth = true;
-	        $mail->Username = 'aissystemsolo@gmail.com'; // user email
-	        $mail->Password = 'eijugplezooyxzeo'; // password email
-	        $mail->SMTPSecure = 'ssl';
-	        $mail->Port     = 465;
+			// // SMTP configuration
+	  //       $mail->isSMTP();
+	  //       $mail->Host     = 'smtp.gmail.com'; //sesuaikan sesuai nama domain hosting/server yang digunakan
+	  //       $mail->SMTPAuth = true;
+	  //       $mail->Username = 'aissystemsolo@gmail.com'; // user email
+	  //       $mail->Password = 'eijugplezooyxzeo'; // password email
+	  //       $mail->SMTPSecure = 'ssl';
+	  //       $mail->Port     = 465;
 
-	        $mail->setFrom('aissystemsolo@gmail.com', ''); // user email
-	        $mail->addReplyTo('aissystemsolo@gmail.com', ''); //user email//user email
+	  //       $mail->setFrom('aissystemsolo@gmail.com', ''); // user email
+	  //       $mail->addReplyTo('aissystemsolo@gmail.com', ''); //user email//user email
 
 	        $to = $param;
-	        $subject = '[No-Replay]Rahasia !!! Reset password Cerminjiwa Apps[No-Replay]';
+	        $subject = '[No-Replay]Rahasia !!! Reset password SpiritBooks Apps[No-Replay]';
 	        $message = '
-	        	<h3><center><b>CerminJiwa</b></center></h3><br>
+	        	<h3><center><b>Spiritbooks</b></center></h3><br>
 	            <p>
 	            Berikut detaik akun anda di <a href="https://renungan-spirit.com/">renungan-spirit.com</a><br>
 	            <b>Jangan berikan email ini ke siapapun termasuk staff dari pengelola aplikasi</b>
@@ -340,22 +343,23 @@ class API_auth extends CI_Controller {
 	            </p>
 	        ';
 
+	        $this->ModelsExecuteMaster->SendSpesificEmail($to,$subject,$message);
 	        // Add a recipient
-	        $mail->addAddress($param); //email tujuan pengiriman email
+	        // $mail->addAddress($param); //email tujuan pengiriman email
 
-	        // Email subject
-	        $mail->Subject = $subject; //subject email
+	        // // Email subject
+	        // $mail->Subject = $subject; //subject email
 
-	        // Set email format to HTML
-	        $mail->isHTML(true);
+	        // // Set email format to HTML
+	        // $mail->isHTML(true);
 
-	        $mail->Body = $message;
-	        if($mail->send()){
-	            $data['success']=true;
-	        }
-	        else{
-	            $data['message']=$mail->ErrorInfo;
-	        }
+	        // $mail->Body = $message;
+	        // if($mail->send()){
+	        //     $data['success']=true;
+	        // }
+	        // else{
+	        //     $data['message']=$mail->ErrorInfo;
+	        // }
         }
         else{
         	$data['message'] = 'Email tidak ditemukan';

@@ -81,7 +81,7 @@
             }
         });
         $(document).ready(function () {
-            // body...
+            
         });
         // end Handle CSRF token
         $('#loginform').submit(function (e) {
