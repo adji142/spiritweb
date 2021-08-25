@@ -343,7 +343,7 @@ class API_Payment extends CI_Controller {
 							if ($FindDataPushNotif->num_rows() == 0 && $status->transaction_status == "settlement" ) {
 
 								$getEmail = "
-									SELECT b.username,b.email FROM thistoryrequest a
+									SELECT b.username,b.email FROM topuppayment a
 									LEFT JOIN users b on a.userid = b.username
 									WHERE a.NoTransaksi = '".$key->NoTransaksi."'
 								";
