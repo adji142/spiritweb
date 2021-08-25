@@ -255,7 +255,7 @@ class API_Payment extends CI_Controller {
 
 		$userid = $this->input->post('userid');
 		$NoTransaksi = $this->input->post('NoTransaksi');
-		$checktype = $this->input->post('NoTransaksi');
+		$checktype = $this->input->post('checktype');
 		// 1 = Check and Append
 		// 0 = Only Status Cek
 		if ($checktype == 1) {
@@ -288,6 +288,7 @@ class API_Payment extends CI_Controller {
 									'TglPencatatan' => date("Y-m-d h:i:sa"),
 									'Mid_TransactionStatus' => $status->transaction_status
 								);
+								var_dump($param);
 								$updateStatus = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
 
 								if ($updateStatus) {
