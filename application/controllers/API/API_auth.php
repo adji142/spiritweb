@@ -123,7 +123,7 @@ class API_auth extends CI_Controller {
 		$androidid = $this->input->post('androidid');
 		$device = $this->input->post('device');
 		$isReset = $this->input->post('isReset');
-		// var_dump($usr.' '.$pwd);
+		var_dump($usr.' '.$pwd);
 		$SQL = "
 			SELECT * FROM users where email = '".$usr."';
 		";
