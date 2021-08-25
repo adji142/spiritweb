@@ -288,8 +288,8 @@ class API_Payment extends CI_Controller {
 									'TglPencatatan' => date("Y-m-d h:i:sa"),
 									'Mid_TransactionStatus' => $status->transaction_status
 								);
-								var_dump($param);
-								$updateStatus = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$key->NoTransaksi),'topuppaymenta');
+								// var_dump($param);
+								$updateStatus = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
 
 								if ($updateStatus) {
 									$data['success'] = true;
