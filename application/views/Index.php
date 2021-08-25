@@ -3,6 +3,8 @@
     if($user_id != ''){
         echo "<script>location.replace('".base_url()."home');</script>";
     }
+    delete_cookie('ci_session');
+    $this->session->sess_destroy();
 ?>
 <!DOCTYPE html>
 <html lang="en">
