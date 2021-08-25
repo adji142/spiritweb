@@ -15,7 +15,7 @@ class LoginMod extends CI_Model
     }
     function Validate_email($email)
     {
-        $this->db->where('emaila',$email);
+        $this->db->where('email',$email);
         return $this->db->get('users');
     }
     function Validate_Login($username,$Password)
