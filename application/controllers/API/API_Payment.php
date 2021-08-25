@@ -14,10 +14,15 @@ class API_Payment extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array(), 'token'=>'');
 
 		$token = $this->input->post('token');
+		$kode = $this->input->post('kode');
 		if ($token != "") {
 			$SQL = "";
-			$SQL .= "SELECT * FROM tpaymentmethod WHERE Active = 1";
+			$SQL .= "SELECT * FROM tpaymentmethod WHERE Active = 1 ";
 			// var_dump($SQL);
+			if ($kode != '') {
+				$SQL .= " AND id ='$kode' ";
+			}
+			$SQL .= " ORDER BY indexshow ";
 			$rs = $this->db->query($SQL);
 
 			if ($rs) {
@@ -241,7 +246,7 @@ class API_Payment extends CI_Controller {
 	}
 
 	public function cekPaymentStatus(){
-		$data = array('success' => false ,'message'=>array(),'data' => array(),'datagateway'=>array());
+		$data = array('success' => false ,'message'=>array(),'data' => array(),'datagateway'=>array(), 'url'=>'');
 
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		\Midtrans\Config::$isProduction = false;
@@ -358,12 +363,14 @@ class API_Payment extends CI_Controller {
 			}
 		}
 		else{
-
+			$x = "SELECT * FROM topuppayment where NoTransaksi = '$NoTransaksi'";
+			$rs = $this->db->query($x)->row();
 			try{
 				$status = \Midtrans\Transaction::status($NoTransaksi);
 				if ($status) {
 					$data['data'] = $status;
 					$data['success'] = true;
+					$data['url'] = $rs->Attachment;
 				}
 			}
 			catch (Exception $e) {
@@ -385,7 +392,7 @@ class API_Payment extends CI_Controller {
 		$SQL = "SELECT * FROM (
 				SELECT 
 					'0' Transaksi, B.NoTransaksi,B.TglTransaksi, COALESCE(B.GrossAmt,0) - COALESCE(B.Adminfee,0) Nominal,
-					B.MetodePembayaran, B.userid, B.Mid_TransactionStatus,'Top Up Spirit Pay' Keterangan,
+					B.MetodePembayaran, B.userid, B.Mid_TransactionStatus,CONCAT('Top Up ','- ',UPPER(B.MetodePembayaran)) Keterangan,
 					COALESCE(B.Mid_Bank,'') Bank, COALESCE(B.Mid_VANumber,'') VA_Numb,COALESCE(B.Mid_PaymentType,'') Mid_PaymentType,COALESCE(B.Attachment,'') Attachment,
 					COALESCE(B.Adminfee,0) Adminfee
 				FROM topuppayment B 
@@ -567,7 +574,7 @@ class API_Payment extends CI_Controller {
 	}
 
 	public function RequestPayment(){
-		$data = array('success' => false ,'message'=>array(),'data' => array());
+		$data = array('success' => false ,'message'=>array(),'data' => array(),'url'=>'');
 
 		$amt = $this->input->post('amt');
 		$Adminfee = $this->input->post('Adminfee');
@@ -576,6 +583,7 @@ class API_Payment extends CI_Controller {
 		$Periode = strval(date("Y")).strval(date("m"));
 		$payment_type = $this->input->post('payment_type');
 		$bank = $this->input->post('bank');
+		$payment_method = $this->input->post('payment_method');
 		// Set your Merchant Server Key
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
@@ -586,11 +594,12 @@ class API_Payment extends CI_Controller {
 		\Midtrans\Config::$is3ds = true;
 		
 		$order_id = $Periode.strval(rand());
+		$params = array();
 		if ($bank != '') {
 			$params = array(
 			    'transaction_details' => array(
 			        'order_id' => $order_id,
-			        'gross_amount' => $amt + $Adminfee,
+			        'gross_amount' => round($amt + $Adminfee),
 			    ),
 			    'payment_type' => $payment_type,
 			    'customer_details' => array(
@@ -605,7 +614,7 @@ class API_Payment extends CI_Controller {
 			$params = array(
 			    'transaction_details' => array(
 			        'order_id' => $order_id,
-			        'gross_amount' => $amt + $Adminfee,
+			        'gross_amount' => round($amt + $Adminfee),
 			    ),
 			    'payment_type' => $payment_type,
 			    'customer_details' => array(
@@ -614,7 +623,7 @@ class API_Payment extends CI_Controller {
 			    ),
 			);
 		}
-		
+		// var_dump($params);
 		// if ($bank != '') {
 		// 	$bankdetail = array(
 		// 		'bank_transfer' => array(
@@ -626,21 +635,36 @@ class API_Payment extends CI_Controller {
 		// var_dump($params);
 		$response = \Midtrans\CoreApi::charge($params);
 
+		$Attachment = "";
 		$NoTransaksi = $response->order_id;
 		$TglTransaksi = $response->transaction_time;
 		$TglPencatatan = date("Y-m-d h:i:sa");
-		$MetodePembayaran = $response->payment_type;
+		$MetodePembayaran =  $payment_method; //$response->payment_type;
 		$GrossAmt = $response->gross_amount;
 		$AdminFee = $Adminfee;
 		$Mid_PaymentType = $response->payment_type;
 		$Mid_TransactionID = $response->transaction_id;
 		$Mid_MechantID = $response->merchant_id;
-		$Mid_Bank = $response->va_numbers[0]->bank;
-		$Mid_VANumber = $response->va_numbers[0]->va_number;
+		if ($bank != '') {
+			$Mid_Bank = $response->va_numbers[0]->bank;
+			$Mid_VANumber = $response->va_numbers[0]->va_number;
+		}
+		else{
+			$Mid_Bank = '';
+			$Mid_VANumber = '';
+		}
 		$Mid_SignatureKey = "";
 		$Mid_TransactionStatus = $response->transaction_status;
 		$Mid_FraudStatus = $response->fraud_status;
 
+		if ($bank == '') {
+			$Attachment = $response->actions[0]->url;
+			$data['url'] = $response->actions[0]->url;
+		}
+		elseif ($bank == 'gopay') {
+			$Attachment = $response->actions[1]->url;
+			$data['url'] = $response->actions[1]->url;
+		}
 		$param = array(
 			'NoTransaksi' => $NoTransaksi,
 			'TglTransaksi' => $TglTransaksi,
@@ -656,7 +680,8 @@ class API_Payment extends CI_Controller {
 			'Mid_SignatureKey' => $Mid_SignatureKey,
 			'Mid_TransactionStatus' => $Mid_TransactionStatus,
 			'Mid_FraudStatus' => $Mid_FraudStatus,
-			'UserID'	=> $first_name
+			'UserID'	=> $first_name,
+			'Attachment' => $Attachment
 		);
 
 		try {

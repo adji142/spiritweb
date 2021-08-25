@@ -59,6 +59,7 @@ class C_PaymentMethod extends CI_Controller {
 		$NomorAkunPembayaran = $this->input->post('NomorAkunPembayaran');
 		$NamaPemilikAkun = $this->input->post('NamaPemilikAkun');
 		$PersenBiayaAdmin = $this->input->post('PersenBiayaAdmin');
+		$Tutorial = $this->input->post('Tutorial');
 
 		$ArticleTable 	= 'tpaymentmethod';
 		// $exploder = explode("|",$ItemGroup[0]);
@@ -72,7 +73,8 @@ class C_PaymentMethod extends CI_Controller {
 			'JenisVerifikasi' => $JenisVerifikasi,
 			'NomorAkunPembayaran' => $NomorAkunPembayaran,
 			'NamaPemilikAkun' => $NamaPemilikAkun,
-			'PersenBiayaAdmin' => $PersenBiayaAdmin
+			'PersenBiayaAdmin' => $PersenBiayaAdmin,
+			'Tutorial'		=> $Tutorial
 		);
 		if ($formtype == 'add') {
 			$this->db->trans_begin();

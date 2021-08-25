@@ -3,6 +3,7 @@
     require_once(APPPATH."views/parts/Sidebar.php");
     $active = 'dashboard';
 ?>
+
 <!-- page content -->
         <div class="right_col" role="main">
           <div class="">
@@ -100,6 +101,13 @@
                       <input type="checkbox" name="Active" id="Active" class="form-control" value="0">
                     </div>
                   </div>
+                  <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Tutorial Pembayaran <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                      <textarea class="form-control" id="Tutorial" name="Tutorial" placeholder="Tutorial" rows="5"></textarea>
+                    </div>
+                  </div>
                   <div class="item" form-group>
                     <button class="btn btn-primary" id="btn_Save">Save</button>
                   </div>
@@ -116,9 +124,11 @@
 <?php
   require_once(APPPATH."views/parts/Footer.php");
 ?>
+<!-- wysihtml core javascript with default toolbar functions --> 
 <script type="text/javascript">
   $(function () {
     $(document).ready(function () {
+      $('#Tutorial').wysihtml5();
       var where_field = '';
       var where_value = '';
       var table = 'users';
@@ -214,6 +224,7 @@
                 $('#NamaPemilikAkun').val(v.NamaPemilikAkun);
                 $('#PersenBiayaAdmin').val(v.PersenBiayaAdmin);
                 $('#Active').val(v.Active);
+                $('#Tutorial').data('wysihtml5').editor.setValue(v.Tutorial);
 
                 if (v.Active == "0") {
                   $("#Active").prop('checked', false);

@@ -60,6 +60,7 @@
 
     <script src="<?php echo base_url();?>Assets/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="<?php echo base_url();?>Assets/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="<?php echo base_url();?>Assets/css/bootstrap-wysihtml5.css" />
   </head>
   <body class="nav-md">
     <div class="container body">
