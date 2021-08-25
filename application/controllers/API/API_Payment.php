@@ -289,7 +289,7 @@ class API_Payment extends CI_Controller {
 									'Mid_TransactionStatus' => $status->transaction_status
 								);
 								var_dump($param);
-								$updateStatus = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
+								$updateStatus = $this->ModelsExecuteMaster->ExecUpdate($param,array('NoTransaksi'=>$key->NoTransaksi),'topuppaymenta');
 
 								if ($updateStatus) {
 									$data['success'] = true;
