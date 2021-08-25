@@ -132,7 +132,7 @@ class API_auth extends CI_Controller {
 		// if ($cekExist->row()->HardwareID =='') {
 
 			$Validate_username = $this->LoginMod->Validate_email($usr);
-			var_dump($Validate_username);
+			// var_dump($Validate_username);
 			if($Validate_username->num_rows()>0){
 				$SQL = "
 					SELECT * FROM users where email = '$usr'
