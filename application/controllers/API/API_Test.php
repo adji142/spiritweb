@@ -20,8 +20,8 @@ class API_Test extends CI_Controller {
 		\Midtrans\Config::$isProduction = false;
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		$notif = new \Midtrans\Notification();
-		$this->db->query("insert into testCron values('".$notif->order_id;."')");
-		echo "hayy saya dapat : ".$order_id;
+		$this->db->query("insert into testCron values('".$notif->order_id."')");
+		// echo "hayy saya dapat : ".$order_id;
 		// $registrationIds = array();
 
 		// // prep the bundle
