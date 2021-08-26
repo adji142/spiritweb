@@ -17,7 +17,8 @@ class API_Test extends CI_Controller {
 		// define( 'API_ACCESS_KEY', 'AAAAWRnKigc:APA91bF2DUbxrbIws3clI_lGq40MMbc0x9hjYZjf6xyTGukNVb8BrgIWYTMnz6NB2-ZdGYpVSo2UuKjz3YaVcN777aIU-dGNdTdEYKRtRwYMF0s8gJu5oPLg8zoivTAPQf_pZASw0w4A' );
 
 		$order_id = $this->input->get('order_id');
-		$this->db->query("insert into testCron values('$order_id')");
+		// $this->db->query("insert into testCron values('$order_id')");
+		echo "hayy saya dapat : ".$order_id;
 		// $registrationIds = array();
 
 		// // prep the bundle
