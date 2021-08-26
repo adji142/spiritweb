@@ -9,6 +9,7 @@ class API_Test extends CI_Controller {
 		$this->load->model('GlobalVar');
 		$this->load->model('Apps_mod');
 		$this->load->model('LoginMod');
+		require_once(APPPATH.'libraries/midtrans/Midtrans.php');
 	}
 
 	public function Test()
@@ -16,8 +17,10 @@ class API_Test extends CI_Controller {
 		// $this->db->query("insert into testCron values(now())");
 		// define( 'API_ACCESS_KEY', 'AAAAWRnKigc:APA91bF2DUbxrbIws3clI_lGq40MMbc0x9hjYZjf6xyTGukNVb8BrgIWYTMnz6NB2-ZdGYpVSo2UuKjz3YaVcN777aIU-dGNdTdEYKRtRwYMF0s8gJu5oPLg8zoivTAPQf_pZASw0w4A' );
 
-		$order_id = $this->input->get('order_id');
-		// $this->db->query("insert into testCron values('$order_id')");
+		\Midtrans\Config::$isProduction = false;
+		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
+		$notif = new \Midtrans\Notification();
+		$this->db->query("insert into testCron values('".$notif->order_id;."')");
 		echo "hayy saya dapat : ".$order_id;
 		// $registrationIds = array();
 
