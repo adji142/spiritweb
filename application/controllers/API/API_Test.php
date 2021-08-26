@@ -13,7 +13,7 @@ class API_Test extends CI_Controller {
 
 	public function Test()
 	{
-		$this->db->query("insert into testcron values(now())");
+		$this->db->query("insert into testCron values(now())");
 	}
 
 }
