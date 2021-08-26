@@ -134,3 +134,6 @@ $route['APIUpdateFlag'] = 'API/API_Message/UpdateFlagread';
 
 // API Promo
 $route['APIPromoGet'] = 'API/API_Promo/getPromo';
+
+// API Test
+$route['APITest'] = 'API/API_Test/Test';
