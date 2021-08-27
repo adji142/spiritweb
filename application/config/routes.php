@@ -118,6 +118,7 @@ $route['APIAUTHUserInfo'] = 'API/API_auth/GetUserInfo';
 $route['APIAUTHUserInformation'] = 'API/API_auth/send_email';
 $route['APIAUTHSaldoAkun'] = 'API/API_auth/SaldoAccount';
 $route['APIAUTHlogout'] = 'API/API_auth/logout';
+$route['APIAUTHToken'] = 'API/API_auth/UpdateToken';
 
 // API Transaction
 $route['APITrxHistory'] = 'API/API_Payment/getTransactionHistory';

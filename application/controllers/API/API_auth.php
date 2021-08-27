@@ -462,4 +462,19 @@ class API_auth extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+
+	public function UpdateToken()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+		$KodeUser = $this->input->post('username');
+		$token = $this->input->post('token');
+
+		$param = array('token'=>$token);
+
+		$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('username'=>$KodeUser),'users');
+		if ($rs) {
+			$data['success'] = true;
+		}
+		echo json_encode($data);
+	}
 }
