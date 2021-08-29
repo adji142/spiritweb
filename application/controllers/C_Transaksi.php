@@ -68,6 +68,16 @@ class C_Transaksi extends CI_Controller {
 
 		$rs = $this->ModelsExecuteMaster->ExecUpdate(array('Mid_TransactionStatus'=>'settlement'),array('NoTransaksi'=> $NoTransaksi),'topuppayment');
 		if ($rs) {
+			$SQL = "
+				SELECT b.token FROM topuppayment a 
+				INNER JOIN users b on a.UserID = b.username
+				WHERE a.NoTransaksi = '".$order_id."'
+			";
+			$rsx = $this->db->query($SQL)->row();
+			if ($rsx->token != '') {
+				$this->ModelsExecuteMaster->PushNotification($rs_user->token);
+			}
+
 			$data['success'] = true;
 		}
 		else{

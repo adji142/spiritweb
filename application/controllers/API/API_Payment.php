@@ -205,7 +205,9 @@ class API_Payment extends CI_Controller {
 					$body .= $this->ModelsExecuteMaster->Email_payment($NoTransaksi);
 
 					try{
-						$this->ModelsExecuteMaster->SendSpesificEmail($reciept,$subject,$body);
+						if ($rs_user->token != '') {
+							$this->ModelsExecuteMaster->PushNotification($rs_user->token);
+						}
 					}
 					catch (Exception $e) {
 						$data['message'] = $e->getMessage();
