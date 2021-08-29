@@ -71,7 +71,7 @@ class C_Transaksi extends CI_Controller {
 			$SQL = "
 				SELECT b.token FROM topuppayment a 
 				INNER JOIN users b on a.UserID = b.username
-				WHERE a.NoTransaksi = '".$order_id."'
+				WHERE a.NoTransaksi = '".$NoTransaksi."'
 			";
 			$rsx = $this->db->query($SQL)->row();
 			if ($rsx->token != '') {
