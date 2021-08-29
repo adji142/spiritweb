@@ -75,7 +75,7 @@ class C_Transaksi extends CI_Controller {
 			";
 			$rsx = $this->db->query($SQL)->row();
 			if ($rsx->token != '') {
-				$this->ModelsExecuteMaster->PushNotification($rs_user->token);
+				$this->ModelsExecuteMaster->PushNotification($rsx->token);
 			}
 
 			$data['success'] = true;
