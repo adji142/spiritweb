@@ -17,7 +17,7 @@ class API_Test extends CI_Controller {
 		// $this->db->query("insert into testCron values(now())");
 		define( 'API_ACCESS_KEY', 'AAAAWRnKigc:APA91bF2DUbxrbIws3clI_lGq40MMbc0x9hjYZjf6xyTGukNVb8BrgIWYTMnz6NB2-ZdGYpVSo2UuKjz3YaVcN777aIU-dGNdTdEYKRtRwYMF0s8gJu5oPLg8zoivTAPQf_pZASw0w4A' );
 
-		$notification = array("registration_ids"=>"","notification"=>array());
+		$notification = array("token"=>"","notification"=>array());
 
 		\Midtrans\Config::$isProduction = false;
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
@@ -52,12 +52,15 @@ class API_Test extends CI_Controller {
 					"body" => "Pembayran anda berhasil terkonfirmasi"
 				);
 			}
-
-			// $fields = array
-			// (
-			//     'registration_ids'  => $registrationIds,
-			//     'data'          => $msg
-			// );
+			$msg = array(
+				"message" => $notification
+			);
+			
+			$fields = array
+			(
+			    'registration_ids'  => $registrationIds,
+			    'data'          => $msg
+			);
 			  
 			$headers = array
 			(
@@ -71,7 +74,7 @@ class API_Test extends CI_Controller {
 			curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
 			curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
 			curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-			curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $notification ) );
+			curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
 			$result = curl_exec($ch );
 			curl_close( $ch );
 			echo $result;	
