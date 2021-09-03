@@ -105,7 +105,7 @@ class API_Buku extends CI_Controller {
 				// Notification block
 				$notification['notification'] = array(
 					"title" => "SpiritBooks#Update Buku",
-					"body" => "Ada buku baru untuk kamu, klik disini"
+					"body" => "Ada buku baru untuk kamu"
 				);
 				$this->ModelsExecuteMaster->PushNotification($notification);
 				// Notification block

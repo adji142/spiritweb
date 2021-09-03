@@ -592,7 +592,6 @@ class ModelsExecuteMaster extends CI_Model
 		    'Content-Type: application/json'
 		);
 		
-		echo json_encode($message);
 		$ch = curl_init();
 		curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
 		curl_setopt( $ch,CURLOPT_POST, true );
