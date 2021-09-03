@@ -17,8 +17,6 @@ class API_Test extends CI_Controller {
 		// $this->db->query("insert into testCron values(now())");
 		define( 'API_ACCESS_KEY', 'AAAAWRnKigc:APA91bF2DUbxrbIws3clI_lGq40MMbc0x9hjYZjf6xyTGukNVb8BrgIWYTMnz6NB2-ZdGYpVSo2UuKjz3YaVcN777aIU-dGNdTdEYKRtRwYMF0s8gJu5oPLg8zoivTAPQf_pZASw0w4A' );
 
-		$notification = array("token"=>"","notification"=>array());
-
 		\Midtrans\Config::$isProduction = false;
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		$notif = new \Midtrans\Notification();
@@ -38,24 +36,33 @@ class API_Test extends CI_Controller {
 			// var_dump($rs->row());
 			$registrationIds = array($rs->row()->token);
 
-			$notification['token'] = $rs->row()->token;
 			// prep the bundle
 			if ($rs->row()->Mid_TransactionStatus != 'settlement') {
-				$notification['notification'] = array(
-					"title" => "SpiritBooks#Pembayaran Di Proses",
-					"body" => "Permintaan pembayaran anda kami terima"
+				$msg = array
+				(
+				    'message'   => 'Permintaan Pembayaran anda sudah kami terima', //
+				    'title'     => 'SpiritBooks#Proses Pembayaran',
+				    'subtitle'  => 'This is a subtitle. subtitle',
+				    'tickerText'    => 'Ticker text here...Ticker text here...Ticker text here',
+				    'vibrate'   => 1,
+				    'sound'     => 1,
+				    'largeIcon' => 'large_icon',
+				    'smallIcon' => 'small_icon'
 				);
 			}
 			else{
-				$notification['notification'] = array(
-					"title" => "SpiritBooks#Pembayaran Berhasil",
-					"body" => "Pembayran anda berhasil terkonfirmasi"
+				$msg = array
+				(
+				    'message'   => 'Pembayran anda berhasil terkonfirmasi', // 
+				    'title'     => 'SpiritBooks#Pembayaran Berhasil',
+				    'subtitle'  => 'This is a subtitle. subtitle',
+				    'tickerText'    => 'Ticker text here...Ticker text here...Ticker text here',
+				    'vibrate'   => 1,
+				    'sound'     => 1,
+				    'largeIcon' => 'large_icon',
+				    'smallIcon' => 'small_icon'
 				);
 			}
-			$msg = array(
-				"message" => $notification
-			);
-			
 			$fields = array
 			(
 			    'registration_ids'  => $registrationIds,
