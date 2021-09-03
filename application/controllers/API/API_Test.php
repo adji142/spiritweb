@@ -71,7 +71,7 @@ class API_Test extends CI_Controller {
 			curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
 			curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
 			curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-			curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+			curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $notification ) );
 			$result = curl_exec($ch );
 			curl_close( $ch );
 			echo $result;	
