@@ -38,7 +38,7 @@ class API_Test extends CI_Controller {
 			// var_dump($rs->row());
 			$registrationIds = array($rs->row()->token);
 
-			$notification['token'] = $rs->row()->token;
+			$notification['registration_ids'] = $rs->row()->token;
 			// prep the bundle
 			if ($rs->row()->Mid_TransactionStatus != 'settlement') {
 				$notification['notification'] = array(
@@ -52,15 +52,15 @@ class API_Test extends CI_Controller {
 					"body" => "Pembayran anda berhasil terkonfirmasi"
 				);
 			}
-			$msg = array(
-				"message" => $notification
-			);
+			// $msg = array(
+			// 	"message" => $notification
+			// );
 			
-			$fields = array
-			(
-			    'registration_ids'  => $registrationIds,
-			    'data'          => $msg
-			);
+			// $fields = array
+			// (
+			//     'registration_ids'  => $registrationIds,
+			//     'data'          => $msg
+			// );
 			  
 			$headers = array
 			(
