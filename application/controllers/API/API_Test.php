@@ -17,7 +17,7 @@ class API_Test extends CI_Controller {
 		// $this->db->query("insert into testCron values(now())");
 		define( 'API_ACCESS_KEY', 'AAAAWRnKigc:APA91bF2DUbxrbIws3clI_lGq40MMbc0x9hjYZjf6xyTGukNVb8BrgIWYTMnz6NB2-ZdGYpVSo2UuKjz3YaVcN777aIU-dGNdTdEYKRtRwYMF0s8gJu5oPLg8zoivTAPQf_pZASw0w4A' );
 
-		$notification = array("token"=>"","notification"=>array());
+		$notification = array("registration_ids"=>"","notification"=>array());
 
 		\Midtrans\Config::$isProduction = false;
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
@@ -52,15 +52,12 @@ class API_Test extends CI_Controller {
 					"body" => "Pembayran anda berhasil terkonfirmasi"
 				);
 			}
-			$msg = array(
-				"message" => $notification
-			);
-			
-			$fields = array
-			(
-			    'registration_ids'  => $registrationIds,
-			    'data'          => $msg
-			);
+
+			// $fields = array
+			// (
+			//     'registration_ids'  => $registrationIds,
+			//     'data'          => $msg
+			// );
 			  
 			$headers = array
 			(
