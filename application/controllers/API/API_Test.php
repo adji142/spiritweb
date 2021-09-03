@@ -26,7 +26,7 @@ class API_Test extends CI_Controller {
 		$order_id = $notif->order_id;
 		// $order_id = '2021081204799914';
 		$SQL = "
-			SELECT b.token FROM topuppayment a 
+			SELECT b.token,a.Mid_TransactionStatus FROM topuppayment a 
 			INNER JOIN users b on a.UserID = b.username
 			WHERE a.NoTransaksi = '".$order_id."'
 		";
@@ -37,17 +37,32 @@ class API_Test extends CI_Controller {
 			$registrationIds = array($rs->row()->token);
 
 			// prep the bundle
-			$msg = array
-			(
-			    'message'   => 'here is a message. message',
-			    'title'     => 'This is a title. title',
-			    'subtitle'  => 'This is a subtitle. subtitle',
-			    'tickerText'    => 'Ticker text here...Ticker text here...Ticker text here',
-			    'vibrate'   => 1,
-			    'sound'     => 1,
-			    'largeIcon' => 'large_icon',
-			    'smallIcon' => 'small_icon'
-			);
+			if ($rs->row()->Mid_TransactionStatus != 'settlement') {
+				$msg = array
+				(
+				    'message'   => 'SpiritBooks#Proses Pembayaran',
+				    'title'     => 'Permintaan Pembayaran anda sudah kami terima',
+				    'subtitle'  => 'This is a subtitle. subtitle',
+				    'tickerText'    => 'Ticker text here...Ticker text here...Ticker text here',
+				    'vibrate'   => 1,
+				    'sound'     => 1,
+				    'largeIcon' => 'large_icon',
+				    'smallIcon' => 'small_icon'
+				);
+			}
+			else{
+				$msg = array
+				(
+				    'message'   => 'SpiritBooks#Pembayaran Berhasil',
+				    'title'     => 'Pembayran anda berhasil terkonfirmasi',
+				    'subtitle'  => 'This is a subtitle. subtitle',
+				    'tickerText'    => 'Ticker text here...Ticker text here...Ticker text here',
+				    'vibrate'   => 1,
+				    'sound'     => 1,
+				    'largeIcon' => 'large_icon',
+				    'smallIcon' => 'small_icon'
+				);
+			}
 			$fields = array
 			(
 			    'registration_ids'  => $registrationIds,
@@ -73,4 +88,15 @@ class API_Test extends CI_Controller {
 		}
 	}
 
+
+	public function TestNotif()
+	{
+		$notification = array("condition"=>"'SpiritBooksNotification' in topics","notification"=>array());
+		$notification['notification'] = array(
+			"title" => "temanmesra.zyz",
+			"body" => "Bohay"
+		);
+		// echo json_encode($data);
+		$this->ModelsExecuteMaster->PushNotification($data);
+	}
 }

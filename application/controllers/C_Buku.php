@@ -83,7 +83,8 @@ class C_Buku extends CI_Controller {
 		ini_set('post_max_size', '1000M');
 
 		$data = array('success' => false ,'message'=>array(),'KodeItem' => '');
-
+		$notification = array("condition"=>"'SpiritBooksNotification' in topics","notification"=>array());
+		
 		$id = $this->input->post('id');
 		$KodeItem = $this->input->post('KodeItem');
 		$kategoriID = $this->input->post('kategoriID');
@@ -343,6 +344,14 @@ class C_Buku extends CI_Controller {
 				$SQL = "UPDATE ".'tbuku'." SET status_publikasi = 1 WHERE KodeItem = '".$KodeItem."'";
 				$rs = $this->db->query($SQL);
 				if ($rs) {
+					// Notification block
+					$notification['notification'] = array(
+						"title" => "SpiritBooks#Update Buku",
+						"body" => "Ada buku baru untuk kamu, klik disini"
+					);
+					$this->ModelsExecuteMaster->PushNotification($notification);
+					// Notification block
+
 					$data['success'] = true;
 				}
 				else{

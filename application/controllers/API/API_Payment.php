@@ -340,6 +340,7 @@ class API_Payment extends CI_Controller {
 								}
 							}
 							// Notifikasi
+
 							$FindDataPushNotif = $this->ModelsExecuteMaster->FindData(array('BaseRef'=>$key->NoTransaksi),'tpushemail');
 
 							if ($FindDataPushNotif->num_rows() == 0 && $status->transaction_status == "settlement" ) {

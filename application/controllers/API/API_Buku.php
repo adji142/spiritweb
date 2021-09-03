@@ -96,12 +96,19 @@ class API_Buku extends CI_Controller {
 	}
 	public function publish(){
 		$data = array('success' => false ,'message'=>array(),'data' => array());
-
+		$notification = array("condition"=>"'SpiritBooksNotification' in topics","notification"=>array());
 		$KodeItem= $this->input->post('KodeItem');
 
 		try {
 			$rs = $this->ModelsExecuteMaster->ExecUpdate(array('status_publikasi'=>1), array('KodeItem'=>$KodeItem),'tbuku');
 			if ($rs) {
+				// Notification block
+				$notification['notification'] = array(
+					"title" => "SpiritBooks#Update Buku",
+					"body" => "Ada buku baru untuk kamu, klik disini"
+				);
+				$this->ModelsExecuteMaster->PushNotification($notification);
+				// Notification block
 				$data['success'] = true;
 			}
 			else{
