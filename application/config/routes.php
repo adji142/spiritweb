@@ -79,6 +79,7 @@ $route['pembayaran'] = 'Home/pembayaran';
 // API Kategori
 
 $route['APIkategori'] = 'API/API_Kategori/GetKategori';
+$route['APISetting'] = 'API/API_Kategori/GetAppSetting';
 
 
 // API Buku

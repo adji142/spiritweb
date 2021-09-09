@@ -30,7 +30,11 @@ class API_Buku extends CI_Controller {
 		$SQL = "";
 		if ($token != '') {
 
-			$SQL .= "SELECT x.*, CASE WHEN x.kategoriID = 0 THEN 'Gratis' ELSE y.NamaKategori END NamaKategori FROM ( SELECT 
+			$SQL .= "SELECT x.*, CASE WHEN x.kategoriID = 0 THEN 'Gratis' ELSE y.NamaKategori END NamaKategori,
+				CASE WHEN x.kategoriID NOT IN (SELECT AppValue1 FROM appsetting WHERE AppKey = 'Buku') THEN 
+	CONCAT(CASE WHEN x.kategoriID = 0 THEN 'Gratis' ELSE y.NamaKategori END, ' EDISI ', (SELECT fnGetMonthName(MONTH(releasedate))), ' ', YEAR(releasedate))
+	ELSE judul END ItemName
+				FROM ( SELECT 
 						id,KodeItem,0 kategoriID,judul,description,releasedate,
 						releaseperiod,picture,harga,ppn,otherprice,epub,
 						avgrate,status_publikasi

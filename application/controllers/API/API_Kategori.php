@@ -22,7 +22,7 @@ class API_Kategori extends CI_Controller {
 		$rs;
 		if ($token != '') {
 			$SQL = "SELECT x.id,x.NamaKategori, CASE WHEN x.id = 0 THEN 0 ELSE COALESCE(y.jml,0) END jml,ImageLink FROM (SELECT 0 id,'GRATIS !!' NamaKategori, 1 ShowHomePage,'' ImageLink FROM DUAL UNION ALL ";
-			$SQL .= "SELECT id,NamaKategori,ShowHomePage,COALESCE(ImageLink,'') ImageLink FROM tkategori) x ";
+			$SQL .= "SELECT id,NamaKategori,ShowHomePage,COALESCE(ImageLink,'') ImageLink FROM tkategori WHERE ShowHomePage = 1 ) x ";
 
 			$SQL .= " LEFT JOIN (
 							SELECT 
@@ -51,5 +51,19 @@ class API_Kategori extends CI_Controller {
 		}
 
 		echo json_encode($rs->result());
+	}
+
+	public function GetAppSetting()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$Key = $this->input->post('Key');
+
+		$rs = $this->ModelsExecuteMaster->FindData(array('AppKey'=> $Key),'appsetting');
+		if ($rs) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		echo json_encode($data);
 	}
 }
