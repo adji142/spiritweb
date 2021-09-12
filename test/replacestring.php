@@ -72,7 +72,8 @@
 			$oldAyat2 = '-->';
 			$newAyat2 = '';
 
-			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+
+				$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
 			$str=str_replace($oldTitle, $newTitle,$str);
 			$str=str_replace($oldAyat1, $newAyat1,$str);
 			$str=str_replace($oldAyat2, $newAyat2,$str);
@@ -197,6 +198,14 @@
 				file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
 				// End Manipulate Epub File
 			}
+		}
+		else{
+			$oldTitle = '<div>';
+			$newTitle = '';
+
+			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=str_replace($oldTitle, $newTitle,$str);
+			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
 		}
 	}
 
@@ -552,8 +561,7 @@
     }
     // var_dump($dataIndex);
     $index = 1;
-    $html = '
-        <?xml version="1.0" encoding="utf-8"?>
+    $html = '<?xml version="1.0" encoding="utf-8"?>
         <html xmlns="http://www.w3.org/1999/xhtml" lang="id" xml:lang="id">
             <head>
                 <title>Unknown</title>
