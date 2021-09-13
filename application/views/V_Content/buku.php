@@ -405,6 +405,16 @@
                 enabled: true,
                 fileName: "Daftar Artikel Warna"
             },
+            paging: {
+                pageSize: 10
+            },
+            pager: {
+                visible: true,
+                allowedPageSizes: [5, 10, 'all'],
+                showPageSizeSelector: true,
+                showInfo: true,
+                showNavigationButtons: true
+            },
             columns: [
                 {
                     dataField: "KodeItem",
