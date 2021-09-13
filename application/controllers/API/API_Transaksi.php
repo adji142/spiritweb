@@ -133,7 +133,10 @@ class API_Transaksi extends CI_Controller {
 
 		$SQL .= "SELECT 
 					b.KodeItem,b.judul,a.TglTransaksi, b.picture,
-					a.NoTransaksi,c.NamaKategori,b.releaseperiod
+					a.NoTransaksi,c.NamaKategori,b.releaseperiod,
+					b.kategoriID,b.description,b.releasedate,
+					b.harga,b.ppn,b.otherprice,b.epub,
+					b.avgrate,b.status_publikasi
 				FROM transaksi a
 				LEFT JOIN tbuku b on a.KodeItem = b.KodeItem
 				LEFT JOIN tkategori c on b.kategoriID = c.id
