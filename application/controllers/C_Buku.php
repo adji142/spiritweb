@@ -257,7 +257,7 @@ class C_Buku extends CI_Controller {
 				'releasedate' => $releasedate,
 				'releaseperiod' => $releaseperiod,
 				'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).''.strtolower($picture_ext),
-				'picture_base64' => $picture_base64,
+				'picture_base64' => '',//$picture_base64
 				'harga' => str_replace(',', '', $harga),
 				'ppn' => str_replace(',', '', $ppn),
 				'otherprice' => str_replace('', '', $otherprice),
@@ -296,7 +296,7 @@ class C_Buku extends CI_Controller {
 				'releasedate' => $releasedate,
 				'releaseperiod' => $releaseperiod,
 				'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).''.strtolower($picture_ext),
-				'picture_base64' => $picture_base64,
+				'picture_base64' => '', //$picture_base64
 				'harga' => str_replace(',', '', $harga),
 				'ppn' => str_replace(',', '', $ppn),
 				'otherprice' => str_replace('', '', $otherprice),
