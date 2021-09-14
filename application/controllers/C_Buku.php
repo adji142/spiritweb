@@ -105,6 +105,7 @@ class C_Buku extends CI_Controller {
 		$status_publikasi = $this->input->post('status_publikasi');
 		$createdby = $this->input->post('createdby');
 		$createdon = $this->input->post('createdon');
+		$imageLink = $this->input->post('imageLink');
 		// $exploder = explode("|",$ItemGroup[0]);
 		$formtype = $this->input->post('formtype');
 
@@ -247,7 +248,9 @@ class C_Buku extends CI_Controller {
 			$picture_ext = '.jpg';
 		}
 		// var_dump($extension);
-		
+		if ($imageLink == '') {
+			$imageLink = base_url().'localData/image/'.str_replace(' ', '', $KodeItem).''.strtolower($picture_ext);
+		}
 		if ($formtype == 'add') {
 			$param = array(
 				'KodeItem' => $KodeItem,
@@ -256,7 +259,8 @@ class C_Buku extends CI_Controller {
 				'description' => $description,
 				'releasedate' => $releasedate,
 				'releaseperiod' => $releaseperiod,
-				'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).''.strtolower($picture_ext),
+				// 'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).''.strtolower($picture_ext),
+				'picture' => $imageLink,
 				'picture_base64' => '',//$picture_base64
 				'harga' => str_replace(',', '', $harga),
 				'ppn' => str_replace(',', '', $ppn),
@@ -295,7 +299,8 @@ class C_Buku extends CI_Controller {
 				'description' => $description,
 				'releasedate' => $releasedate,
 				'releaseperiod' => $releaseperiod,
-				'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).''.strtolower($picture_ext),
+				// 'picture' => base_url().'localData/image/'.str_replace(' ', '', $KodeItem).''.strtolower($picture_ext),
+				'picture' => $imageLink,
 				'picture_base64' => '', //$picture_base64
 				'harga' => str_replace(',', '', $harga),
 				'ppn' => str_replace(',', '', $ppn),
