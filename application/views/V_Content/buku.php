@@ -95,10 +95,11 @@
                     <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Cover <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
-                      <input type="file" id="Attachment" name="Attachment" accept=".png,.jpg" />
+                      <input type="file" id="Attachment" name="Attachment" accept=".jpg" />
                       <img src="" id="profile-img-tag" width="200" />
                       <!-- <textarea id="picture_base64" name="picture_base64"></textarea> -->
                       <textarea id="picture_base64" name="picture_base64" style="display: none;"></textarea>
+                      <input type="text" name="imageLink" id="imageLink">
                     </div>
                   </div>
 
@@ -239,6 +240,7 @@
       var avgrate = 0;
       var status_publikasi = $('#status_publikasi').val();
       var formtype = $('#formtype').val();
+      var imageLink = $('#imageLink').val();
 
       e.preventDefault();
       // var me = $(this);
@@ -687,7 +689,8 @@
           $('#ppn').val(v.ppn);
           $('#otherprice').val(v.otherprice);
           $('#status_publikasi').val(v.status_publikasi).change();
-          
+          $('#imageLink').val(v.picture);
+
           if (v.harga > 0) {
             $("#harga").prop('disabled', false);
             $("#ppn").prop('disabled', false);
