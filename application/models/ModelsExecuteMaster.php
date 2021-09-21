@@ -76,7 +76,8 @@ class ModelsExecuteMaster extends CI_Model
 	}
 	public function midTransServerKey()
 	{
-		return "SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1";
+		// return "SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1";
+		return "Mid-server-4ZQdd2NheT79YY8ULAAppvTW";
 	}
 	public function SendSpesificEmail($reciept,$subject,$body)
 	{
