@@ -48,7 +48,7 @@ class API_Payment extends CI_Controller {
 		// Set your Merchant Server Key
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-		\Midtrans\Config::$isProduction = false;
+		\Midtrans\Config::$isProduction = $this->ModelsExecuteMaster->midTransProduction();
 		// Set sanitization on (default)
 		\Midtrans\Config::$isSanitized = true;
 		// Set 3DS transaction for credit card to true
@@ -114,7 +114,7 @@ class API_Payment extends CI_Controller {
 		// var_dump($NoTransaksi);
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-		\Midtrans\Config::$isProduction = false;
+		\Midtrans\Config::$isProduction = $this->ModelsExecuteMaster->midTransProduction();
 		// Set sanitization on (default)
 		\Midtrans\Config::$isSanitized = true;
 		// Set 3DS transaction for credit card to true
@@ -251,7 +251,7 @@ class API_Payment extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array(),'datagateway'=>array(), 'url'=>'');
 
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
-		\Midtrans\Config::$isProduction = false;
+		\Midtrans\Config::$isProduction = $this->ModelsExecuteMaster->midTransProduction();
 		\Midtrans\Config::$isSanitized = true;
 		\Midtrans\Config::$is3ds = true;
 
@@ -452,7 +452,7 @@ class API_Payment extends CI_Controller {
 		// Set your Merchant Server Key
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-		\Midtrans\Config::$isProduction = false;
+		\Midtrans\Config::$isProduction = $this->ModelsExecuteMaster->midTransProduction();
 		// Set sanitization on (default)
 		\Midtrans\Config::$isSanitized = true;
 		// Set 3DS transaction for credit card to true
@@ -527,7 +527,7 @@ class API_Payment extends CI_Controller {
 	public function testCharge(){
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-		// \Midtrans\Config::$isProduction = false;
+		\Midtrans\Config::$isProduction = $this->ModelsExecuteMaster->midTransProduction();
 		// Set sanitization on (default)
 		\Midtrans\Config::$isSanitized = true;
 		// Set 3DS transaction for credit card to true
@@ -591,7 +591,7 @@ class API_Payment extends CI_Controller {
 		// Set your Merchant Server Key
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-		\Midtrans\Config::$isProduction = false;
+		\Midtrans\Config::$isProduction = $this->ModelsExecuteMaster->midTransProduction();
 		// Set sanitization on (default)
 		\Midtrans\Config::$isSanitized = true;
 		// Set 3DS transaction for credit card to true

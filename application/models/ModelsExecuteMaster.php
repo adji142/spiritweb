@@ -76,8 +76,15 @@ class ModelsExecuteMaster extends CI_Model
 	}
 	public function midTransServerKey()
 	{
-		// return "SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1";
-		return "Mid-server-4ZQdd2NheT79YY8ULAAppvTW";
+		return "SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1"; // SandBox AIS
+		// return "Mid-server-Jm-OdHpu70LoN0jCl2GPQ4Mv"; // Production AIS
+
+		// return "SB-Mid-server-eHFznPfC9PBbpGe56Rnq8evS"; // SandBox Spirit
+		// return "Mid-server-4ZQdd2NheT79YY8ULAAppvTW"; // Production Spirit
+	}
+	public function midTransProduction()
+	{
+		return false;
 	}
 	public function SendSpesificEmail($reciept,$subject,$body)
 	{
