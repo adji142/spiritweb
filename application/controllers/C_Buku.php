@@ -239,14 +239,14 @@ class C_Buku extends CI_Controller {
 			goto jumpx;
 		}
 		$extension = '';
-		if ($formtype == 'add' || $formtype == 'edit') {
-			$pos  = strpos($picture_base64, ';');
-			$type = explode(':', substr($picture_base64, 0, $pos))[1];
-			$extension = explode('/', $type)[1];
-		}
-		if ($extension == 'jpeg') {
-			$picture_ext = '.jpg';
-		}
+		// if ($formtype == 'add' || $formtype == 'edit') {
+		// 	$pos  = strpos($picture_base64, ';');
+		// 	$type = explode(':', substr($picture_base64, 0, $pos))[1];
+		// 	$extension = explode('/', $type)[1];
+		// }
+		// if ($extension == 'jpeg') {
+		// 	$picture_ext = '.jpg';
+		// }
 		// var_dump($extension);
 		if ($imageLink == '') {
 			$imageLink = base_url().'localData/image/'.str_replace(' ', '', $KodeItem).''.strtolower($picture_ext);

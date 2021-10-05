@@ -73,13 +73,32 @@
 			$newAyat2 = '';
 
 
-				$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
 			$str=str_replace($oldTitle, $newTitle,$str);
 			$str=str_replace($oldAyat1, $newAyat1,$str);
 			$str=str_replace($oldAyat2, $newAyat2,$str);
 			$str=str_replace($findBody, $replaceBody,$str);
 			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
 			// End Manipulate Epub File
+
+			// Cek firstline
+			$file = file('../localData/Books/'.$folderName.'/'.$key);
+
+			$output = $file[0];
+			if (trim($output) == '') {
+	            unset($file[0]);
+        		file_put_contents('../localData/Books/'.$folderName.'/'.$key, $file);
+	        }
+			// End First line
+
+			// Check if not ended <p>
+	        $oldText = '<p class="block_"><img';
+			$newText = '<p class="block_"/><img';
+
+			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=str_replace($oldText, $newText,$str);
+			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
+			// End Check if not ended <p>
 		}
 	}
 
@@ -291,6 +310,24 @@
 			$str=str_replace($oldTitle, $newTitle,$str);
 			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
 			// End Manipulate Epub File
+
+			// Update x
+			$oldText = 'lang=IN';
+			$newText = 'lang="IN"';
+
+			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=str_replace($oldText, $newText,$str);
+			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
+			// End Update x
+
+			// Update x
+			$oldText = 'lang=EN-US';
+			$newText = 'llang="EN-US"';
+
+			$str=file_get_contents('../localData/Books/'.$folderName.'/'.$key);
+			$str=str_replace($oldText, $newText,$str);
+			file_put_contents('../localData/Books/'.$folderName.'/'.$key, $str);
+			// End Update x
 		}
 	}
 

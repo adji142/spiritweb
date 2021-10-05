@@ -539,11 +539,14 @@ class API_Payment extends CI_Controller {
 		        'order_id' => rand(),
 		        'gross_amount' => 10000,
 		    ),
-		    'payment_type' => 'gopay',
+		    'payment_type' => 'bank_transfer',
 		    'customer_details' => array(
 		        'first_name' => 'tampan',
 		        'email' => 'tampan@tampan.com'
 		    ),
+		    'bank_transfer' => array(
+		    	'bank' => 'bni'
+		    )
 		);
 		 
 		$response = \Midtrans\CoreApi::charge($params);
