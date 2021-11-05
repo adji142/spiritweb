@@ -17,7 +17,7 @@ class API_Test extends CI_Controller {
 		// $this->db->query("insert into testCron values(now())");
 		define( 'API_ACCESS_KEY', 'AAAAWRnKigc:APA91bF2DUbxrbIws3clI_lGq40MMbc0x9hjYZjf6xyTGukNVb8BrgIWYTMnz6NB2-ZdGYpVSo2UuKjz3YaVcN777aIU-dGNdTdEYKRtRwYMF0s8gJu5oPLg8zoivTAPQf_pZASw0w4A' );
 
-		\Midtrans\Config::$isProduction = false;
+		\Midtrans\Config::$isProduction = $this->ModelsExecuteMaster->midTransProduction();
 		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
 		$notif = new \Midtrans\Notification();
 		// $this->db->query("insert into testCron values('".$notif->order_id."')");
