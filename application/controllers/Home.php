@@ -170,6 +170,11 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_Banner/banner');
 	}
+
+	public function announc()
+	{
+		$this->load->view('V_Tools/publishemail');
+	}
 	// Sending Email
 
 	Public function sendMessage() {

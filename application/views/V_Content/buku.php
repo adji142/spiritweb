@@ -175,6 +175,34 @@
             </div>
           </div>
         </div>
+
+        <!-- Gift Books -->
+        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="modal_gift">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Buku</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="dx-viewport demo-container">
+                  <div id="data-grid-demo">
+                    <div id="gridContainer_gift">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <input type="hidden" name="BukuSelected" id="BukuSelected">
+                <button type="button" class="btn btn-secondary" id="btn_sendGift" >Proses</button>
+                
+              </div>
+
+            </div>
+          </div>
+        </div>
 <?php
   require_once(APPPATH."views/parts/Footer.php");
 ?>
@@ -501,8 +529,10 @@
                     }
                     else if (cellInfo.data.Status_ == 'Draft') {
                       html += "<button class='btn btn-round btn-sm btn-success' onClick = 'btAction("+cellInfo.data.KodeItem+",2)'>Publish</button>";
-                      html += "<button class='btn btn-round btn-sm btn-danger' disabled onClick = 'btAction("+cellInfo.data.KodeItem+",3)'>Take Down</button>"; 
+                      html += "<button class='btn btn-round btn-sm btn-danger' disabled onClick = 'btAction("+cellInfo.data.KodeItem+",3)'>Take Down</button>";
                     }
+
+                    html += "<button class='btn btn-round btn-sm btn-default' onClick = 'btAction("+cellInfo.data.KodeItem+",4)'>Send Free Book</button>";
 
                     cellElement.append(html);
                   }
@@ -714,6 +744,122 @@
     });
   }
 
+  var dataSelected;
+  function bindGridUser(data) {
+      let changedBySelectBox;
+      let titleSelectBox;
+      let clearSelectionButton;
+      $("#gridContainer_gift").dxDataGrid({
+        allowColumnResizing: true,
+            dataSource: data,
+            keyExpr: "username",
+            showBorders: true,
+            allowColumnReordering: true,
+            allowColumnResizing: true,
+            columnAutoWidth: true,
+            showBorders: true,
+            paging: {
+                enabled: false
+            },
+            selection: {
+              mode: 'multiple',
+            },
+            searchPanel: {
+                visible: true,
+                width: 240,
+                placeholder: "Search..."
+            },
+            paging: {
+                pageSize: 10
+            },
+            pager: {
+                visible: true,
+                allowedPageSizes: [5, 10, 'all'],
+                showPageSizeSelector: true,
+                showInfo: true,
+                showNavigationButtons: true
+            },
+            columns: [
+                {
+                    dataField: "username",
+                    caption: "Nama User",
+                    allowEditing:false
+                },
+                {
+                    dataField: "email",
+                    caption: "Email",
+                    allowEditing:false
+                },
+                {
+                    dataField: "phone",
+                    caption: "phone",
+                    allowEditing:false
+                },
+            ],
+            onSelectionChanged(selectedItems) {
+              const datax = selectedItems.selectedRowsData;
+              if (datax.length > 0) {
+                // $('#selected-items-container').text(
+                //   ,
+                // );
+                datax
+                    .map((value) => `${value.FirstName} ${value.LastName}`)
+                    .join(', ')
+              } else {
+                // $('#selected-items-container').text('Nobody has been selected');
+              }
+              dataSelected = datax;
+              // $('#dataSelected').val(datax);
+              // console.log(datax);
+            },
+        });
+
+        // add dx-toolbar-after
+        // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
+    }
+    $('#btn_sendGift').click(function(){
+      // console.log(dataSelected);
+      var errorCount = 0;
+      for (var i = 0; i < dataSelected.length; i++) {
+        $.ajax({
+          async:false,
+          type: "post",
+          url: "<?=base_url()?>APITrxAddTrx",
+          data: {KodeItem:$('#BukuSelected').val(),Qty:1,Harga:0,UserID:dataSelected[i]["username"]},
+          dataType: "json",
+          success: function (response) {
+            // console.log('done')
+            if (response.success == true) {
+              console.log('done')
+            }
+            else{
+              errorCount += 1;
+            }
+          }
+        });
+        // Things[i]
+        // console.log(dataSelected[i]["username"]);
+
+      }
+      if (errorCount == 0) {
+        Swal.fire(
+          'Success!',
+          'Data Berhasil di proses.',
+          'success'
+        ).then((result)=>{
+          location.reload();
+        });
+      }
+      else{
+        Swal.fire({
+          type: 'error',
+          title: 'Woops...',
+          // footer: '<a href>Why do I have this issue?</a>'
+        }).then((result)=>{
+          location.reload();
+        });
+      }
+    });
   function btAction(id, action) {
     // 1 edit
     // 2 publish
@@ -822,6 +968,21 @@
           }
         })
         break;
+      case 4:
+        // bindGridUser
+        skrip = " a.username NOT IN (SELECT UserID FROM transaksi where KodeItem ='"+id+"')"
+        $.ajax({
+          type: "post",
+          url: "<?=base_url()?>Auth/read",
+          data: {kriteria:'',skrip:skrip,userid:'',roleid:''},
+          dataType: "json",
+          success: function (response) {
+            bindGridUser(response.data);
+            $('#BukuSelected').val(id);
+            $('#modal_gift').modal('show');
+          }
+        });
+        break;  
     }
   }
 </script>

@@ -224,7 +224,7 @@ class Auth extends CI_Controller {
 		$skrip = $this->input->post('skrip');
 		$userid = $this->input->post('userid');
 		$roleid = $this->input->post('roleid');
-
+		
 		$SQL = "";
 
 		try {
@@ -235,7 +235,9 @@ class Auth extends CI_Controller {
 					a.nama,
 					a.HakAkses,
 					c.id RoleId,
-					c.rolename
+					c.rolename,
+					a.email,
+					a.phone
 				FROM users a
 				LEFT JOIN userrole b on a.id = b.userid
 				LEFT JOIN roles c on b.roleid = c.id 
@@ -251,6 +253,7 @@ class Auth extends CI_Controller {
 				$SQL .= " AND ".$skrip." ";
 			}
 
+			$SQL .= ' LIMIT 5';
 			$rs = $this->db->query($SQL);
 
 			if ($rs) {

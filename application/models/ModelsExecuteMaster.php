@@ -76,15 +76,15 @@ class ModelsExecuteMaster extends CI_Model
 	}
 	public function midTransServerKey()
 	{
-		return "SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1"; // SandBox AIS
+		// return "SB-Mid-server-1ZKaHFofItuDXKUri3so2Is1"; // SandBox AIS
 		// return "Mid-server-Jm-OdHpu70LoN0jCl2GPQ4Mv"; // Production AIS
 
 		// return "SB-Mid-server-eHFznPfC9PBbpGe56Rnq8evS"; // SandBox Spirit
-		// return "Mid-server-4ZQdd2NheT79YY8ULAAppvTW"; // Production Spirit
+		return "Mid-server-4ZQdd2NheT79YY8ULAAppvTW"; // Production Spirit
 	}
 	public function midTransProduction()
 	{
-		return false;
+		return true;
 	}
 	public function SendSpesificEmail($reciept,$subject,$body)
 	{
@@ -104,7 +104,9 @@ class ModelsExecuteMaster extends CI_Model
 		    'mailtype' 		=> $rs->row()->mailtype, //plaintext 'text' mails or 'html'
 		    'smtp_timeout' 	=> $rs->row()->smtp_timeout, //in seconds
 		    'charset' 		=> $rs->row()->charset,
-		    'wordwrap' 		=> $rs->row()->wordwrap
+		    'wordwrap' 		=> $rs->row()->wordwrap,
+		    'crlf'    		=> "\r\n",
+            'newline' 		=> "\r\n"
 		);
         $this->email->initialize($config);
 
@@ -114,7 +116,7 @@ class ModelsExecuteMaster extends CI_Model
         $message = $body;
 
         $this->email->set_newline("\r\n");
-        $this->email->from($from);
+        $this->email->from($from,'AIS System Information');
         $this->email->to($to);
         $this->email->subject($subject);
         $this->email->message($message);
