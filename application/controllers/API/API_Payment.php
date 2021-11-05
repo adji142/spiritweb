@@ -395,7 +395,7 @@ class API_Payment extends CI_Controller {
 
 		$SQL = "SELECT * FROM (
 				SELECT 
-					'0' Transaksi, B.NoTransaksi,B.TglTransaksi, COALESCE(B.GrossAmt,0) - COALESCE(B.Adminfee,0) Nominal,
+					'0' Transaksi, B.NoTransaksi,B.TglTransaksi, CASE WHEN B.MetodePembayaran = 'MANUAL' THEN COALESCE(B.GrossAmt,0) + COALESCE(B.Adminfee,0) ELSE COALESCE(B.GrossAmt,0) - COALESCE(B.Adminfee,0) END Nominal,
 					B.MetodePembayaran, B.userid, B.Mid_TransactionStatus,CONCAT('Top Up ','- ',UPPER(B.MetodePembayaran)) Keterangan,
 					COALESCE(B.Mid_Bank,'') Bank, COALESCE(B.Mid_VANumber,'') VA_Numb,COALESCE(B.Mid_PaymentType,'') Mid_PaymentType,COALESCE(B.Attachment,'') Attachment,
 					COALESCE(B.Adminfee,0) Adminfee
