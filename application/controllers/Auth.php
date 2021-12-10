@@ -253,7 +253,7 @@ class Auth extends CI_Controller {
 				$SQL .= " AND ".$skrip." ";
 			}
 
-			$SQL .= ' LIMIT 5';
+			// $SQL .= ' LIMIT 5';
 			$rs = $this->db->query($SQL);
 
 			if ($rs) {
