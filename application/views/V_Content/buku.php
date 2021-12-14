@@ -293,15 +293,16 @@
                   dataType: 'json',
                   success : function (snapshoot) {
                     if (snapshoot.success == true) {
-                      $('#modal_').modal('toggle');
-                      Swal.fire({
-                        type: 'success',
-                        title: 'Horay..',
-                        text: 'Data Berhasil disimpan!',
-                        // footer: '<a href>Why do I have this issue?</a>'
-                      }).then((result)=>{
-                        location.reload();
-                      });
+                      // $('#modal_').modal('toggle');
+                      // Swal.fire({
+                      //   type: 'success',
+                      //   title: 'Horay..',
+                      //   text: 'Data Berhasil disimpan!',
+                      //   // footer: '<a href>Why do I have this issue?</a>'
+                      // }).then((result)=>{
+                      //   location.reload();
+                      // });
+                      console.log("done");
                     }
                     else{
                       $('#modal_').modal('toggle');
