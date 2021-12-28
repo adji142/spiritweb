@@ -78,8 +78,9 @@ class API_Buku extends CI_Controller {
 				$SQL .= " ORDER BY ".$ordering;
 			}
 
-
-			$SQL .= "LIMIT ".$page * $maxperpage.",".$maxperpage.";";
+			if ($kriteria != "2") {
+				$SQL .= "LIMIT ".$page * $maxperpage.",".$maxperpage.";";
+			}
 			// var_dump($SQL);
 			$rs = $this->db->query($SQL);
 			if ($rs) {
