@@ -49,9 +49,6 @@ class API_Buku extends CI_Controller {
 					WHERE 1 = 1 ";
 
 			if ($publikasi != "" ) {
-				if ($publikasi == "0") {
-					$publikasi = "2";
-				}
 				$SQL .= " AND status_publikasi = ".$publikasi." ";
 			}
 			if ($KodeKategori != '') {
