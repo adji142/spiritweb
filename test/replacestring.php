@@ -589,13 +589,18 @@
 
 	$dataIndex=[];
     $extension = '';
+    $pushindex = 0;
+    // var_dump($driveResult);
     foreach ($driveResult as $key) {
         if (substr($key, 0,11) == 'index_split' ) {
             $ext = pathinfo($unzipDestination.$key, PATHINFO_EXTENSION);
             $extension = $ext;
             array_push($dataIndex, $key);
+            $pushindex +=1;
         }
     }
+    unset($dataIndex[count($dataIndex)-1]);
+    // var_dump($dataIndex);
     // var_dump($dataIndex);
     $index = 1;
     $html = '<?xml version="1.0" encoding="utf-8"?>
