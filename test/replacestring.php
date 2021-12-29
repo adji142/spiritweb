@@ -614,15 +614,15 @@
             </body>
         </html>
     ';
-
+    // var_dump(count($dataIndex));
     $xhtml = str_replace("url(images/image.jpeg)", "url('images/image.jpeg')", $html);
     foreach ($dataIndex as $key) {
         if (count($dataIndex) == $index) {
             // echo $key;
             // file_put_contents($key.'.'.$extension, "");
             file_put_contents('../localData/Books/'.$folderName.'/'.$key,$xhtml);
+            $index += 1;
         }
-        $index += 1;
     }
 
     // Step 24
@@ -672,7 +672,6 @@
 
     // var_dump($dataIndex);
     $index = 0;
-    
     foreach ($dataIndex as $key) {
         // var_dump($dataImage[$index]['FileName']);
         
