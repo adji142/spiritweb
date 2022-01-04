@@ -288,9 +288,29 @@ class Auth extends CI_Controller {
 		else{
 			$undone = $this->db->error();
 			$data['success'] = false;
-			$data['
-			message'] = $undone['message'];
+			$data['message'] = $undone['message'];
 		}
+		echo json_encode($data);
+	}
+	public function ResetLoginInfo()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array(),'decript'=>'');
+		$userid = $this->input->post('userid');
+
+		$param = array(
+			'id' => $userid
+		);
+
+		$rs = $this->ModelsExecuteMaster->ExecUpdate(array('browser'=>'','HardwareID'=> ''), $param,'users');
+		if ($rs) {
+			$data['success'] = true;
+		}
+		else{
+			$undone = $this->db->error();
+			$data['success'] = false;
+			$data['message'] = $undone['message'];
+		}
+
 		echo json_encode($data);
 	}
 }

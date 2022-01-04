@@ -245,7 +245,14 @@
             columnAutoWidth: true,
             showBorders: true,
             paging: {
-                enabled: false
+                pageSize: 10
+            },
+            pager: {
+                visible: true,
+                allowedPageSizes: [5, 10, 'all'],
+                showPageSizeSelector: true,
+                showInfo: true,
+                showNavigationButtons: true
             },
             editing: {
                 mode: "row",
@@ -277,6 +284,11 @@
                     allowEditing:false
                 },
                 {
+                    dataField: "email",
+                    caption: "Email",
+                    allowEditing:false
+                },
+                {
                     dataField: "nama",
                     caption: "Nama",
                     allowEditing:false
@@ -285,7 +297,17 @@
                     dataField: "rolename",
                     caption: "Level Akses",
                     allowEditing:false
-                }
+                },
+                {
+                  dataField: "FileItem",
+                  caption : "Action",
+                  allowEditing : false,
+                  cellTemplate: function(cellElement, cellInfo) {
+                    var html = "";
+                    html += "<button class='btn btn-round btn-sm btn-danger' onClick = 'btAction("+'"'+cellInfo.data.UserId+'"'+",1)'>Reset Login Info</button>";
+                    cellElement.append(html);
+                  }
+                },
                 // {
                 //     dataField: "NamaPenyakit",
                 //     caption: "Nama Penyakit",
@@ -382,4 +404,39 @@
         // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
     }
   });
+  function btAction(id,action) {
+    // 1 : Adjustment
+
+    switch(action){
+      case 1:
+        $.ajax({
+          type    :'post',
+          url     : '<?=base_url()?>Auth/ResetLoginInfo',
+          data    : {'userid':id},
+          dataType: 'json',
+          success : function (response) {
+            if(response.success == true){
+              Swal.fire(
+                'Reseted!',
+                'User berhasil di reset.',
+                'success'
+              ).then((result)=>{
+                location.reload();
+              });
+            }
+            else{
+              Swal.fire({
+                type: 'error',
+                title: 'Woops...',
+                text: response.message,
+                // footer: '<a href>Why do I have this issue?</a>'
+              }).then((result)=>{
+                location.reload();
+              });
+            }
+          }
+        });
+      break;
+    }
+  }
 </script>
