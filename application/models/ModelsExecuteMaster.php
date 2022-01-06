@@ -618,6 +618,6 @@ class ModelsExecuteMaster extends CI_Model
 	{
 		$SQL = "INSERT INTO tlog values(0,now(),'Request Done : ".$message."','direct')";
 		$rs = $this->db->query($SQL);
-		return $result;
+		return $rs;
 	}
 }
