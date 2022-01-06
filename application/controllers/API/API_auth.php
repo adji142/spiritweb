@@ -194,6 +194,8 @@ class API_auth extends CI_Controller {
 		// 	$data['message'] = 'User sudah login di device '.$cekExist->row()->browser;
 		// }
 		// var_dump($data);
+		$SQL = "INSERT INTO tlog values(0,now(),'Request Done : '".$usr.",'".$token."')";
+		$this->db->query($SQL);
 		echo json_encode($data);
 	}
 	public function ChangePassword()
