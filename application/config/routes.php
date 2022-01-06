@@ -140,3 +140,4 @@ $route['APIPromoGet'] = 'API/API_Promo/getPromo';
 // API Test
 $route['APITest'] = 'API/API_Test/Test';
 $route['APITestNotif'] = 'API/API_Test/TestNotif';
+$route['APILoging'] = 'API/API_Test/LogingApps';
