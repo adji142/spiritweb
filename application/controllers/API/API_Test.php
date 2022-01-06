@@ -99,4 +99,17 @@ class API_Test extends CI_Controller {
 		// echo json_encode($data);
 		$this->ModelsExecuteMaster->PushNotification($data);
 	}
+	public function LogingApps()
+	{
+		$data = array('success' => true ,'message'=>array(),'data' => array());
+
+		$Message = $this->input->post('Message');
+		$token = $this->input->post('token');
+
+		$SQL = "INSERT INTO tlog values(0,now(),'".$Message."','".$token."')";
+
+		$this->db->query($SQL);
+
+		echo json_encode($data);
+	}
 }
