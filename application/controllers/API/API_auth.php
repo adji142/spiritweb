@@ -124,6 +124,7 @@ class API_auth extends CI_Controller {
 		$device = $this->input->post('device');
 		$isReset = $this->input->post('isReset');
 		// var_dump($usr.' '.$pwd);
+		$randomData = rand();
 		try {
 			$this->ModelsExecuteMaster->loggingData("Checking parameter : email :".$usr.", pwd : ".$pwd.", adrid: ".$androidid.", dvID: ".$device." ");
 			$SQL = "
@@ -136,7 +137,7 @@ class API_auth extends CI_Controller {
 			$Validate_username = $this->LoginMod->Validate_email($usr);
 			// var_dump($usr);
 			if($Validate_username->num_rows()>0){
-				$this->ModelsExecuteMaster->loggingData("Done Validating user : ".$usr."");
+				$this->ModelsExecuteMaster->loggingData($randomData."; Done Validating user : ".$usr."");
 				$SQL = "
 					SELECT * FROM users where email = '$usr'
 				";
@@ -146,12 +147,12 @@ class API_auth extends CI_Controller {
 				$x = $this->db->query($SQL);
 
 				if ($x->num_rows() > 0) {
-					$this->ModelsExecuteMaster->loggingData("Not Using in other device");
+					$this->ModelsExecuteMaster->loggingData($randomData.";Not Using in other device");
 					$userid = $Validate_username->row()->id;
 					$pwd_decript =$Validate_username->row()->password;
 					$pass_valid = $this->encryption->decrypt($Validate_username->row()->password);
 					if($pass_valid == $pwd){
-						$this->ModelsExecuteMaster->loggingData("Password Corect");
+						$this->ModelsExecuteMaster->loggingData($randomData."; Password Corect");
 						$paramUpdate = array(
 							'browser'	=> $device,
 							'HardwareID'=> $androidid
@@ -160,7 +161,7 @@ class API_auth extends CI_Controller {
 						$updateState = $this->ModelsExecuteMaster->ExecUpdate($paramUpdate,array('email'=> $usr),'users');
 
 						if ($updateState) {
-							$this->ModelsExecuteMaster->loggingData("Done Setting Flag");
+							$this->ModelsExecuteMaster->loggingData($randomData.";Done Setting Flag");
 							$data['success'] = true;
 							$data['username'] = $Validate_username->row()->username;
 							$data['unique_id'] = $Validate_username->row()->id;
@@ -177,30 +178,30 @@ class API_auth extends CI_Controller {
 						else{
 							$undone = $this->db->error();
 							$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
-							$this->ModelsExecuteMaster->loggingData("Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message']);
+							$this->ModelsExecuteMaster->loggingData($randomData.";Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message']);
 						}
 					}
 					else{
 						$data['success'] = false;
 						$data['message'] = 'Password tidak valid'; // User password doesn't match
-						$this->ModelsExecuteMaster->loggingData("Password tidak valid");
+						$this->ModelsExecuteMaster->loggingData($randomData."; Password tidak valid");
 					}
 				}
 				else{
 					$data['success'] = false;
 					$data['message'] = 'User sudah login di device '.$cekExist->row()->browser;
-					$this->ModelsExecuteMaster->loggingData('User sudah login di device '.$cekExist->row()->browser);
+					$this->ModelsExecuteMaster->loggingData($randomData.';User sudah login di device '.$cekExist->row()->browser);
 				}
 			}
 			else{
 				$data['success'] = false;
 				$data['message'] = 'Username Tidak ditemukan'; // Username not found
-				$this->ModelsExecuteMaster->loggingData('Username Tidak ditemukan');
+				$this->ModelsExecuteMaster->loggingData($randomData.';Username Tidak ditemukan');
 			}
 		} catch (Exception $e) {
 			$data['success'] = false;
 			$data['message'] = $e->getMessage(); // Username not found
-			$this->ModelsExecuteMaster->loggingData($e->getMessage());
+			$this->ModelsExecuteMaster->loggingData($randomData.";".$e->getMessage());
 		}
 		// }
 		// else{
