@@ -67,21 +67,32 @@ class API_Transaksi extends CI_Controller {
 		$Harga = $this->input->post('Harga');
 		$StatusTransaksi = 1;
 		$UserID = $this->input->post('UserID');
+		$NoTransaksi = '';
 
+		$randomData = rand();
+
+		$this->ModelsExecuteMaster->loggingData($randomData. "Checking parameter : TglTrx :".$TglTransaksi.", TglPencatatan : ".$TglPencatatan.", KodeItem: ".$KodeItem.", Qty: ".$Qty." , Harga" . $Harga .' ,UserID '.$UserID);
 
 		// Generate No Transaksi
-		$Kolom = 'NoTransaksi';
-		$Table = 'transaksi';
-		$Prefix = strval(date("Y")).strval(date("m"));
+		try {
+			$this->ModelsExecuteMaster->loggingData($randomData. "Begin Generate NoTransaksi");
+			$Kolom = 'NoTransaksi';
+			$Table = 'transaksi';
+			$Prefix = strval(date("Y")).strval(date("m"));
 
-		$SQL = "SELECT RIGHT(MAX(".$Kolom."),6)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
+			$SQL = "SELECT RIGHT(MAX(".$Kolom."),6)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
 
-		// var_dump($SQL);
-		$rs = $this->db->query($SQL);
+			// var_dump($SQL);
+			$rs = $this->db->query($SQL);
 
-		$temp = $rs->row()->Total + 1;
+			$temp = $rs->row()->Total + 1;
 
-		$NoTransaksi = $Prefix.str_pad($temp, 3,"0",STR_PAD_LEFT);
+			$NoTransaksi = $Prefix.str_pad($temp, 3,"0",STR_PAD_LEFT);	
+
+			$this->ModelsExecuteMaster->loggingData($randomData. "Done Generate NoTransaksi : " . $NoTransaksi);
+		} catch (Exception $e) {
+			$this->ModelsExecuteMaster->loggingData($randomData. "Execption Generate NoTransaksi : " . $e->getMessage());
+		}
 
 		// Generate No Transaksi
 		$SQL = "SELECT * FROM transaksi where UserID = '".$UserID."'
@@ -107,6 +118,7 @@ class API_Transaksi extends CI_Controller {
 				);
 
 				try {
+					$this->ModelsExecuteMaster->loggingData($randomData. "Begin INsert TRX");
 					$insert = $this->ModelsExecuteMaster->ExecInsert($param,'transaksi');
 					if ($insert) {
 						$data['success'] = true;
@@ -117,8 +129,9 @@ class API_Transaksi extends CI_Controller {
 						$data['message'] = 'Gagal Melakukan Pemrosesan data : ' . $undone['message'];
 					}
 				} catch (Exception $e) {
-					$data['success'] = true;
+					$data['success'] = false;
 					$data['message'] = $e->getMessage();
+					$this->ModelsExecuteMaster->loggingData($randomData. "Execption insert : " . $e->getMessage());
 				}
 			}
 		}
