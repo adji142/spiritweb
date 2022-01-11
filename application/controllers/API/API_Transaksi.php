@@ -118,7 +118,7 @@ class API_Transaksi extends CI_Controller {
 				);
 
 				try {
-					$this->ModelsExecuteMaster->loggingData($randomData. "Begin INsert TRX : " . $param);
+					$this->ModelsExecuteMaster->loggingData($randomData. "Begin INsert TRX : " . json_encode($param));
 					$insert = $this->ModelsExecuteMaster->ExecInsert($param,'transaksi');
 					if ($insert) {
 						$data['success'] = true;
