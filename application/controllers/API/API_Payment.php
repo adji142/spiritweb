@@ -366,7 +366,7 @@ class API_Payment extends CI_Controller {
 					} catch (Exception $e) {
 						$data['success'] = true;
 						$data['message'] = $e->getMessage();
-						$this->ModelsExecuteMaster->loggingData($randomData. "Exception : ".$e->getMessage();
+						$this->ModelsExecuteMaster->loggingData($randomData. "Exception : ".$e->getMessage());
 					}
 					
 					// $param = array(
