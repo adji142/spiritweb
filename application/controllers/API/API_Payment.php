@@ -258,6 +258,9 @@ class API_Payment extends CI_Controller {
 		$userid = $this->input->post('userid');
 		$NoTransaksi = $this->input->post('NoTransaksi');
 		$checktype = $this->input->post('checktype');
+
+		$randomData = rand();
+		$this->ModelsExecuteMaster->loggingData($randomData. "Checking parameter : userid :".$userid.", NoTransaksi : ".$NoTransaksi.", checktype: ".$checktype);
 		// 1 = Check and Append
 		// 0 = Only Status Cek
 		if ($checktype == 1) {
@@ -272,6 +275,7 @@ class API_Payment extends CI_Controller {
 
 			$rs = $this->db->query($SQL);
 
+			$this->ModelsExecuteMaster->loggingData($randomData. "; Found data ".$rs->num_rows()." Rows");
 			if ($rs) {
 				$datatable = $rs->result();
 				// var_dump($datatable);
@@ -281,11 +285,14 @@ class API_Payment extends CI_Controller {
 						$status = \Midtrans\Transaction::status($key->NoTransaksi);
 						$data['data'] = $status;
 						// var_dump($status);
+						$this->ModelsExecuteMaster->loggingData($randomData. "; Found Midtrans data ".json_encode($status)."");
 						if ($status) {
 							// var_dump($status);
 							$FindData = $this->ModelsExecuteMaster->FindData(array('NoTransaksi'=>$key->NoTransaksi),'topuppayment');
 
 							if ($FindData->num_rows() >0) {
+								$this->ModelsExecuteMaster->loggingData($randomData. "; Having local data :  ".$FindData->num_rows()." With rowID : " . $key->NoTransaksi);
+
 								$param = array(
 									'TglPencatatan' => date("Y-m-d h:i:sa"),
 									'Mid_TransactionStatus' => $status->transaction_status
@@ -295,6 +302,7 @@ class API_Payment extends CI_Controller {
 
 								if ($updateStatus) {
 									$data['success'] = true;
+									$this->ModelsExecuteMaster->loggingData($randomData. "Done Udateing Status");
 								}
 							}
 							else{
@@ -337,6 +345,7 @@ class API_Payment extends CI_Controller {
 								$rs = $this->ModelsExecuteMaster->ExecInsert($param,'topuppayment');
 								if ($rs) {
 									$data['success'] = true;
+									$this->ModelsExecuteMaster->loggingData($randomData. "Done Inserting Status");
 								}
 							}
 							// Notifikasi
@@ -357,6 +366,7 @@ class API_Payment extends CI_Controller {
 					} catch (Exception $e) {
 						$data['success'] = true;
 						$data['message'] = $e->getMessage();
+						$this->ModelsExecuteMaster->loggingData($randomData. "Exception : ".$e->getMessage();
 					}
 					
 					// $param = array(

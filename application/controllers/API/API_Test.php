@@ -112,4 +112,19 @@ class API_Test extends CI_Controller {
 
 		echo json_encode($data);
 	}
+
+	public function GetTransactionStatus()
+	{
+		# code...
+		\Midtrans\Config::$serverKey = $this->ModelsExecuteMaster->midTransServerKey();
+		\Midtrans\Config::$isProduction = $this->ModelsExecuteMaster->midTransProduction();
+		\Midtrans\Config::$isSanitized = true;
+		\Midtrans\Config::$is3ds = true;
+
+		$status = \Midtrans\Transaction::status('2022011543663469');
+
+		if ($status) {
+			var_dump($status);
+		}
+	}
 }
