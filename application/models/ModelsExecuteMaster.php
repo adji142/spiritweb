@@ -146,12 +146,12 @@ class ModelsExecuteMaster extends CI_Model
         // $this->email->message($message);
         if($mail->send()){
         	$data['success'] = true;
-        	var_dump('true');
+        	// var_dump('true');
         }
         else{
         	$data['success'] = false;
         	$data['message']=$mail->ErrorInfo;
-        	var_dump($mail->ErrorInfo);
+        	// var_dump($mail->ErrorInfo);
         }
         return $data;
 	}
