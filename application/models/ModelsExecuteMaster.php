@@ -94,39 +94,63 @@ class ModelsExecuteMaster extends CI_Model
 		$this->db->where(array('id'=>2));
 		$rs = $this->db->get('temailsetting');
 		// End Get Setting
-		$config = array(
-		    'protocol' 		=> $rs->row()->protocol, // 'mail', 'sendmail', or 'smtp'
-		    'smtp_host' 	=> $rs->row()->smtp_host, 
-		    'smtp_port' 	=> $rs->row()->smtp_port,
-		    'smtp_user' 	=> $rs->row()->smtp_user,
-		    'smtp_pass' 	=> $rs->row()->smtp_pass,
-		    'smtp_crypto' 	=> $rs->row()->smtp_crypto, //can be 'ssl' or 'tls' for example
-		    'mailtype' 		=> $rs->row()->mailtype, //plaintext 'text' mails or 'html'
-		    'smtp_timeout' 	=> $rs->row()->smtp_timeout, //in seconds
-		    'charset' 		=> $rs->row()->charset,
-		    'wordwrap' 		=> $rs->row()->wordwrap,
-		    'crlf'    		=> "\r\n",
-            'newline' 		=> "\r\n"
-		);
-        $this->email->initialize($config);
+
+		// smpt options
+
+		$mail = new PHPMailer();
+		$mail->isSMTP();
+
+		$mail->Host = $rs->row()->smtp_host;
+		$mail->SMTPAuth = true;
+		$mail->Username = $rs->row()->smtp_user;
+		$mail->Password = $rs->row()->smtp_pass;
+		$mail->SMTPSecure = $rs->row()->smtp_crypto;
+		$mail->Port     = $rs->row()->smtp_port;
+		$mail->Timeout = 60;
+		$mail->SMTPKeepAlive = true;
+
+		$mail->setFrom($rs->row()->smtp_user, '');
+
+		$mail->addAddress($reciept);
+
+		// $config = array(
+		//     'protocol' 		=> $rs->row()->protocol, // 'mail', 'sendmail', or 'smtp'
+		//     'smtp_host' 	=> $rs->row()->smtp_host, 
+		//     'smtp_port' 	=> $rs->row()->smtp_port,
+		//     'smtp_user' 	=> $rs->row()->smtp_user,
+		//     'smtp_pass' 	=> $rs->row()->smtp_pass,
+		//     'smtp_crypto' 	=> $rs->row()->smtp_crypto, //can be 'ssl' or 'tls' for example
+		//     'mailtype' 		=> $rs->row()->mailtype, //plaintext 'text' mails or 'html'
+		//     'smtp_timeout' 	=> $rs->row()->smtp_timeout, //in seconds
+		//     'charset' 		=> $rs->row()->charset,
+		//     'wordwrap' 		=> $rs->row()->wordwrap,
+		//     'crlf'    		=> "\r\n",
+  //           'newline' 		=> "\r\n"
+		// );
+  //       $this->email->initialize($config);
 
         $from = $rs->row()->smtp_user;
         $to = $reciept;
         $subject = '[No-Replay]'.$subject.'[No-Replay]';
         $message = $body;
 
-        $this->email->set_newline("\r\n");
-        $this->email->from($from,'AIS System Information');
-        $this->email->to($to);
-        $this->email->subject($subject);
-        $this->email->message($message);
+        $mail->Subject = $subject;
+        $mail->isHTML(true);
 
-        if($this->email->send()){
+        $mail->Body = $message;
+
+        // $this->email->set_newline("\r\n");
+        // $this->email->from($from,'AIS System Information');
+        // $this->email->to($to);
+        // $this->email->subject($subject);
+        // $this->email->message($message);
+
+        if($mail->send()){
         	$data['success'] = true;
         }
         else{
         	$data['success'] = false;
-        	$data['message']=show_error($this->email->print_debugger());
+        	$data['message']=$mail->ErrorInfo;
         }
         return $data;
 	}
