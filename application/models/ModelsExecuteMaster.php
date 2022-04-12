@@ -91,7 +91,7 @@ class ModelsExecuteMaster extends CI_Model
 		$this->load->library('email');
 		$data = array('success' => false ,'message'=>array());
 		// Get Setting
-		$this->db->where(array('id'=>2));
+		$this->db->where(array('id'=>1));
 		$rs = $this->db->get('temailsetting');
 		// End Get Setting
 
@@ -144,13 +144,14 @@ class ModelsExecuteMaster extends CI_Model
         // $this->email->to($to);
         // $this->email->subject($subject);
         // $this->email->message($message);
-
         if($mail->send()){
         	$data['success'] = true;
+        	var_dump('true');
         }
         else{
         	$data['success'] = false;
         	$data['message']=$mail->ErrorInfo;
+        	var_dump($mail->ErrorInfo);
         }
         return $data;
 	}
