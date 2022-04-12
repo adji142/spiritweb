@@ -284,7 +284,7 @@
           contentType: false,
           success : function (response) {
             if(response.success == true){
-              if (response.KodeItem != '') {
+              if (response.KodeItem != '' && $('#kategoriID').val() <> "6") {
                 // demo
                 $.ajax({
                   type    : 'get',
@@ -353,7 +353,7 @@
               else{
                 $('#modal_').modal('toggle');
                 Swal.fire({
-                  type: 'error',
+                  type: 'info',
                   title: 'Horay..',
                   text: 'Tidak ada data untuk di manipulasi',
                   // footer: '<a href>Why do I have this issue?</a>'
