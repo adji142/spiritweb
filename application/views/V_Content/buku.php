@@ -284,7 +284,7 @@
           contentType: false,
           success : function (response) {
             if(response.success == true){
-              if (response.KodeItem != '' && $('#kategoriID').val() <> "6") {
+              if (response.KodeItem != '' && $('#kategoriID').val() != "6") {
                 // demo
                 $.ajax({
                   type    : 'get',
