@@ -284,83 +284,92 @@
           contentType: false,
           success : function (response) {
             if(response.success == true){
-              if (response.KodeItem != '' && $('#kategoriID').val() != "6") {
-                // demo
-                $.ajax({
-                  type    : 'get',
-                  url     : '<?=base_url()?>test/replacestring.php?folder='+response.KodeItem,
-                  // data    : form_data,
-                  dataType: 'json',
-                  success : function (snapshoot) {
-                    if (snapshoot.success == true) {
-                      // $('#modal_').modal('toggle');
-                      // Swal.fire({
-                      //   type: 'success',
-                      //   title: 'Horay..',
-                      //   text: 'Data Berhasil disimpan!',
-                      //   // footer: '<a href>Why do I have this issue?</a>'
-                      // }).then((result)=>{
-                      //   location.reload();
-                      // });
-                      console.log("done");
-                    }
-                    else{
-                      $('#modal_').modal('toggle');
-                      Swal.fire({
-                        type: 'Error',
-                        title: 'Horay..',
-                        text: 'File Epub Gagal di manipulasi',
-                        // footer: '<a href>Why do I have this issue?</a>'
-                      }).then((result)=>{
-                        location.reload();
-                      });
-                    }
-                  }
-                });
+            $('#modal_').modal('toggle');
+              Swal.fire({
+                type: 'success',
+                title: 'Horay..',
+                text: 'Data Berhasil disimpan!',
+                // footer: '<a href>Why do I have this issue?</a>'
+              }).then((result)=>{
+                location.reload();
+              });
+              // if (response.KodeItem != '' && $('#kategoriID').val() != "6") {
+              //   // demo
+              //   $.ajax({
+              //     type    : 'get',
+              //     url     : '<?=base_url()?>test/replacestring.php?folder='+response.KodeItem,
+              //     // data    : form_data,
+              //     dataType: 'json',
+              //     success : function (snapshoot) {
+              //       if (snapshoot.success == true) {
+              //         // $('#modal_').modal('toggle');
+              //         // Swal.fire({
+              //         //   type: 'success',
+              //         //   title: 'Horay..',
+              //         //   text: 'Data Berhasil disimpan!',
+              //         //   // footer: '<a href>Why do I have this issue?</a>'
+              //         // }).then((result)=>{
+              //         //   location.reload();
+              //         // });
+              //         console.log("done");
+              //       }
+              //       else{
+              //         $('#modal_').modal('toggle');
+              //         Swal.fire({
+              //           type: 'Error',
+              //           title: 'Horay..',
+              //           text: 'File Epub Gagal di manipulasi',
+              //           // footer: '<a href>Why do I have this issue?</a>'
+              //         }).then((result)=>{
+              //           location.reload();
+              //         });
+              //       }
+              //     }
+              //   });
 
-                // Full Version
-                $.ajax({
-                  type    : 'get',
-                  url     : '<?=base_url()?>test/replacestring.php?folder='+response.KodeItem+'_pub',
-                  // data    : form_data,
-                  dataType: 'json',
-                  success : function (snapshoot) {
-                    if (snapshoot.success == true) {
-                      $('#modal_').modal('toggle');
-                      Swal.fire({
-                        type: 'success',
-                        title: 'Horay..',
-                        text: 'Data Berhasil disimpan!',
-                        // footer: '<a href>Why do I have this issue?</a>'
-                      }).then((result)=>{
-                        location.reload();
-                      });
-                    }
-                    else{
-                      $('#modal_').modal('toggle');
-                      Swal.fire({
-                        type: 'Error',
-                        title: 'Horay..',
-                        text: 'File Epub Gagal di manipulasi',
-                        // footer: '<a href>Why do I have this issue?</a>'
-                      }).then((result)=>{
-                        location.reload();
-                      });
-                    }
-                  }
-                });
-              }
-              else{
-                $('#modal_').modal('toggle');
-                Swal.fire({
-                  type: 'info',
-                  title: 'Horay..',
-                  text: 'Tidak ada data untuk di manipulasi',
-                  // footer: '<a href>Why do I have this issue?</a>'
-                }).then((result)=>{
-                  location.reload();
-                });
-              }
+              //   // Full Version
+              //   $.ajax({
+              //     type    : 'get',
+              //     url     : '<?=base_url()?>test/replacestring.php?folder='+response.KodeItem+'_pub',
+              //     // data    : form_data,
+              //     dataType: 'json',
+              //     success : function (snapshoot) {
+              //       if (snapshoot.success == true) {
+              //         $('#modal_').modal('toggle');
+              //         Swal.fire({
+              //           type: 'success',
+              //           title: 'Horay..',
+              //           text: 'Data Berhasil disimpan!',
+              //           // footer: '<a href>Why do I have this issue?</a>'
+              //         }).then((result)=>{
+              //           location.reload();
+              //         });
+              //       }
+              //       else{
+              //         $('#modal_').modal('toggle');
+              //         Swal.fire({
+              //           type: 'Error',
+              //           title: 'Horay..',
+              //           text: 'File Epub Gagal di manipulasi',
+              //           // footer: '<a href>Why do I have this issue?</a>'
+              //         }).then((result)=>{
+              //           location.reload();
+              //         });
+              //       }
+              //     }
+              //   });
+              // }
+              // else{
+              //   $('#modal_').modal('toggle');
+              //   Swal.fire({
+              //     type: 'info',
+              //     title: 'Horay..',
+              //     text: 'Tidak ada data untuk di manipulasi',
+              //     // footer: '<a href>Why do I have this issue?</a>'
+              //   }).then((result)=>{
+              //     location.reload();
+              //   });
+              // }
             }
             else{
               $('#modal_').modal('toggle');
