@@ -232,4 +232,118 @@ class API_Buku extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+
+	public function getAllBooks(){
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$token = $this->input->post('token');
+
+		$kodeBuku 		= $this->input->post('kodeBuku');
+		$KodeKategori 	= $this->input->post('KodeKategori');
+		$script 		= $this->input->post('script');
+		$ordering 		= $this->input->post('ordering');
+		$publikasi 		= $this->input->post('publikasi');
+		$gratis 		= $this->input->post('gratis');
+		$page 			= $this->input->post('page');
+		$kriteria 		= $this->input->post('kriteria');
+
+		$maxperpage 	= 4;
+
+		$SQL = "";
+
+		if($token != ''){
+			$SQL .= "
+				SELECT 
+					a.kategoriID,
+					CASE WHEN a.kategoriID = 0 THEN 'Gratis' ELSE b.NamaKategori END NamaKategori,
+					a.harga,
+					a.ppn,
+					a.otherprice,
+					a.picture,
+					a.judul,
+					a.KodeItem,
+					CASE WHEN a.kategoriID NOT IN (SELECT AppValue1 FROM appsetting WHERE AppKey = 'Buku') THEN 
+					CONCAT(CASE WHEN a.kategoriID = 0 THEN 'Gratis' ELSE b.NamaKategori END, ' EDISI ', (SELECT fnGetMonthName(MONTH(releasedate))), ' ', YEAR(releasedate))
+					ELSE judul END ItemName,
+					a.releaseperiod,
+					a.description
+				FROM tbuku a
+				LEFT JOIN tkategori b on a.kategoriID = b.id
+				WHERE 1 = 1
+			";
+
+
+			if ($publikasi != "" ) {
+				$SQL .= " AND a.status_publikasi = ".$publikasi." ";
+			}
+			if ($KodeKategori != '') {
+				$SQL .= " AND a.kategoriID = ".$KodeKategori." ";
+			}
+
+			if ($kodeBuku != '') {
+				$SQL .= " AND a.KodeItem = '".$kodeBuku."' ";
+			}
+
+			if ($script != '') {
+				$SQL .= " AND ".$script." ";
+			}
+
+			if ($gratis == "1") {
+				$SQL .= " AND a.harga = 0 ";
+			}
+
+			if ($kriteria != "") {
+				$SQL .= " AND CONCAT(a.judul,' ', b.NamaKategori) LIKE '%".$kriteria."%'";
+			}
+
+			if ($ordering == '') {
+				$SQL .= " ORDER BY a.releasedate DESC ";
+			}
+			else{
+				$SQL .= " ORDER BY ".$ordering;
+			}
+
+			$rs = $this->db->query($SQL);
+			if ($rs) {
+				$rows = $rs->result();
+				$grouped = [];
+
+				foreach ($rows as $row) {
+					$kategoriID   = $row->kategoriID;
+					$NamaKategori = $row->NamaKategori;
+
+					// Jika kategori belum ada, buat dulu
+					if (!isset($grouped[$kategoriID])) {
+						$grouped[$kategoriID] = [
+							"kategoriID"   => $kategoriID,
+							"NamaKategori" => $NamaKategori,
+							"data"         => []
+						];
+					}
+
+					// Masukkan detail buku ke dalam "data"
+					$grouped[$kategoriID]["data"][] = [
+						"harga"        => $row->harga,
+						"ppn"          => $row->ppn,
+						"otherprice"   => $row->otherprice,
+						"picture"      => $row->picture,
+						"judul"        => $row->judul,
+						"KodeItem"     => $row->KodeItem,
+						"ItemName"     => $row->ItemName,
+						"releaseperiod"=> $row->releaseperiod,
+						"description"  => $row->description
+					];
+				}
+
+				// Reset index array agar rapi [0,1,2,...]
+				$data['success'] = true;
+				$data['data']    = array_values($grouped);
+
+			} else {
+				$undone = $this->db->error();
+				$data['message'] = 'Gagal Melakukan Pemrosesan data : ' . $undone['message'];
+			}
+		}
+		echo json_encode($data);
+	}
 }

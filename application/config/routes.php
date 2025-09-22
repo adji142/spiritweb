@@ -85,6 +85,7 @@ $route['APISetting'] = 'API/API_Kategori/GetAppSetting';
 // API Buku
 
 $route['APIbuku'] = 'API/API_Buku/GetBuku';
+$route['APIbukuV2'] = 'API/API_Buku/getAllBooks';
 $route['APIpublish'] = 'API/API_Buku/publish';
 $route['APItopSell'] = 'API/API_Buku/TopSeller';
 $route['APInewRelease'] = 'API/API_Buku/NewRelease';
