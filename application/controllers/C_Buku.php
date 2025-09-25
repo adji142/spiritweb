@@ -165,7 +165,7 @@ class C_Buku extends CI_Controller {
 	        }	
 		} catch (Exception $e) {
 			$data['success'] = false;
-			$data['message'] = $e->getMessage();
+			$data['message'] = 'Thumbnail : '.$e->getMessage();
 			goto jumpx;
 		}
 
@@ -200,7 +200,7 @@ class C_Buku extends CI_Controller {
 	        }	
 		} catch (Exception $e) {
 			$data['success'] = false;
-			$data['message'] = $e->getMessage();
+			$data['message'] = 'Sample : '.$e->getMessage();
 			goto jumpx;
 		}
 
@@ -235,7 +235,7 @@ class C_Buku extends CI_Controller {
 	        }	
 		} catch (Exception $e) {
 			$data['success'] = false;
-			$data['message'] = $e->getMessage();
+			$data['message'] = 'Full : '.$e->getMessage();
 			goto jumpx;
 		}
 		$extension = '';
@@ -287,8 +287,8 @@ class C_Buku extends CI_Controller {
 			} catch (Exception $e) {
 				jump:
 				$this->db->trans_rollback();
-				// $data['success'] = false;
-				// $data['message'] = "Gagal memproses data ". $e->getMessage();
+				$data['success'] = false;
+				$data['message'] = "Gagal memproses data ". $e->getMessage();
 			}
 		}
 		elseif ($formtype == 'edit') {
